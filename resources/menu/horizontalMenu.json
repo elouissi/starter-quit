@@ -13,12 +13,6 @@
       "slug": "pages-page-2"
     },
     {
-      "url": "app/kanban",
-      "name": "Kanban",
-      "icon": "menu-icon tf-icons ti ti-layout-kanban",
-      "slug": "app-kanban"
-    },
-    {
       "url": "pages/misc-error",
       "name": "Error",
       "icon": "menu-icon tf-icons ti ti-alert-triangle",
