@@ -39,7 +39,7 @@ Route::middleware([
   'verified',
 ])->group(function () {
   Route::get('/', [HomePage::class, 'index'])->name('pages-home');
-  Route::get('/app/kanban', [Kanban::class, 'index'])->name('app-kanban');
+  Route::get('/app/kanban', [Kanban::class, 'index'])->name('app-kanban')->middleware(['password.confirm']);;
 
   Route::get('/dashboard', function () {
     return view('dashboard');

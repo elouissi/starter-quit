@@ -123,9 +123,9 @@
                                     @enderror
                                 </div>
                             @endif
-                            <button type="submit" class="btn btn-primary d-grid w-100">Sign up</button>
+                            <button type="submit" class="btn btn-primary d-grid w-100">S'inscrire</button>
                         </form>
-
+                        
                         <p class="text-center mt-2">
                             <span>Vous avez déjà un compte ?</span>
                             @if (Route::has('login'))
@@ -134,7 +134,6 @@
                                 </a>
                             @endif
                         </p>
-
 
                         {{-- <div class="divider my-4">
                             <div class="divider-text">or</div>
