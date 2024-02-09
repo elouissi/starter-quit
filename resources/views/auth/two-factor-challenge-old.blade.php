@@ -1,51 +1,41 @@
 @php
-    $pageConfigs = ['myLayout' => 'blank'];
-
 $customizerHidden = 'customizer-hide';
+$configData = Helper::appClasses();
 @endphp
 
-@extends('layouts/layoutMaster')
+@extends('layouts/blankLayout')
 
-@section('title', 'Two Steps Verifications Basic - Pages')
-
-@section('vendor-style')
-<!-- Vendor -->
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/@form-validation/umd/styles/index.min.css')}}" />
-@endsection
+@section('title', '2 Factor Challenge')
 
 @section('page-style')
 <!-- Page -->
-<link rel="stylesheet" href="{{asset('assets/vendor/css/pages/page-auth.css')}}">
-@endsection
-
-@section('vendor-script')
-<script src="{{asset('assets/vendor/libs/cleavejs/cleave.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/@form-validation/umd/bundle/popular.min.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js')}}"></script>
-@endsection
-
-@section('page-script')
-<script src="{{asset('assets/js/pages-auth.js')}}"></script>
-<script src="{{asset('assets/js/pages-auth-two-steps.js')}}"></script>
 @endsection
 
 @section('content')
-<div class="authentication-wrapper authentication-basic px-4">
-  <div class="authentication-inner py-4">
-    <!--  Two Steps Verification -->
-    <div class="card">
-      <div class="card-body">
+<div class="authentication-wrapper authentication-cover authentication-bg">
+  <div class="authentication-inner row">
+
+    <!-- /Left Text -->
+    <div class="d-none d-lg-flex col-lg-7 p-0">
+      <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
+        <img src="{{ asset('assets/img/illustrations/auth-two-step-illustration-'.$configData['style'].'.png') }}" alt="auth-two-steps-cover" class="img-fluid my-5 auth-illustration" data-app-light-img="illustrations/auth-two-step-illustration-light.png" data-app-dark-img="illustrations/auth-two-step-illustration-dark.png">
+
+        <img src="{{ asset('assets/img/illustrations/bg-shape-image-'.$configData['style'].'.png') }}" alt="auth-two-steps-cover" class="platform-bg" data-app-light-img="illustrations/bg-shape-image-light.png" data-app-dark-img="illustrations/bg-shape-image-dark.png">
+      </div>
+    </div>
+    <!-- /Left Text -->
+
+    <!-- Two Steps Verification -->
+    <div class="d-flex col-12 col-lg-5 align-items-center p-4 p-sm-5">
+      <div class="w-px-400 mx-auto">
         <!-- Logo -->
-        <div class="app-brand justify-content-center mb-4 mt-2">
-          <a href="{{url('/')}}" class="app-brand-link gap-2">
+        <div class="app-brand mb-4">
+          <a href="{{url('/')}}" class="app-brand-link">
             <span class="app-brand-logo demo">@include('_partials.macros',['height'=>20,'withbg' => "fill: #fff;"])</span>
-            <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('variables.templateName') }}</span>
           </a>
         </div>
         <!-- /Logo -->
-        <h4 class="mb-1 pt-2">Two Step Verification 💬</h4>
-        <p class="mb-0 fw-medium">Type your 6 digit security code</p>
+        <h3 class="mb-1">Two Step Verification 💬</h3>
         <div x-data="{ recovery: false }">
           <div class="mb-3" x-show="! recovery">
             Please confirm access to your account by entering the authentication code provided by your authenticator application.
@@ -88,4 +78,5 @@ $customizerHidden = 'customizer-hide';
     <!-- / Two Steps Verification -->
   </div>
 </div>
+
 @endsection
