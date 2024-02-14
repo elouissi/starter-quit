@@ -15,7 +15,7 @@
     // Wizard form
     const wizardValidationForm = wizardValidation.querySelector('#wizard-validation-form');
     // Wizard steps
-    const wizardValidationFormStep1 = wizardValidationForm.querySelector('#account-details-validation');
+    const wizardValidationFormStep1 = wizardValidationForm.querySelector('#presentation-de-entreprise-validation');
     const wizardValidationFormStep2 = wizardValidationForm.querySelector('#personal-info-validation');
     const wizardValidationFormStep3 = wizardValidationForm.querySelector('#social-links-validation');
     // Wizard next prev button

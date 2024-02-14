@@ -7,6 +7,30 @@
       "slug": "pages-home"
     },
     {
+      "name": "Cahier de charge",
+      "slug": "specifications",
+      "icon": "menu-icon tf-icons ti ti-book-2",
+      "submenu": [
+        {
+          "url": "specifications",
+          "name": "Créer un cahier de charge",
+          "slug": "specifications.index"
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "slug": "app-user",
+      "icon": "menu-icon tf-icons ti ti-users",
+      "submenu": [
+        {
+          "url": "app/user/list",
+          "name": "List",
+          "slug": "app-user-list"
+        }
+      ]
+    },
+    {
       "url": "page-2",
       "icon": "menu-icon tf-icons ti ti-file",
       "name": "Page 2",

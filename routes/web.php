@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\apps\Kanban;
+use App\Http\Controllers\apps\UserList;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\language\LanguageController;
 use App\Http\Controllers\pages\HomePage;
@@ -8,6 +9,8 @@ use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
+use App\Http\Controllers\SpecificationsController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +43,12 @@ Route::middleware([
 ])->group(function () {
   Route::get('/', [HomePage::class, 'index'])->name('pages-home');
 
+  // users
+  Route::get('/app/user/list', [UserList::class, 'index'])->name('app-user-list');
+  Route::get('users/datatable', [UserController::class, 'indexDataTable'])->name('users-datatable');
+  Route::resource('users', UserController::class);
+  // specifications
+  Route::resource('specifications', SpecificationsController::class);
   Route::get('/dashboard', function () {
     return view('dashboard');
   })->name('dashboard');
