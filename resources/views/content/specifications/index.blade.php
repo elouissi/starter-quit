@@ -7,6 +7,23 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/@form-validation/umd/styles/index.min.css') }}" />
+    <style>
+        .rotate {
+            display: inline-block;
+            animation: rotate 2s linear infinite;
+            /* Adjust animation duration as needed */
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 @endsection
 
 @section('vendor-script')
@@ -80,7 +97,7 @@
             newRow.className = 'row mb-1';
             newRow.innerHTML = '<div class="col-11">' +
                 '<div class="input-group mb-1">' +
-                '<input type="file" class="form-control" name="fichier[]" multiple>' +
+                '<input type="file" class="form-control" name="fichier[]">' +
                 '</div>' +
                 '</div>' +
                 '<div class="col-1">' +
@@ -95,15 +112,39 @@
             var container = document.getElementById('fileInputsContainer');
             container.removeChild(element.parentNode.parentNode);
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            generateByAi(`descriptionEntreprise`);
+            generateByAi(`activitePrincipale`);
+            generateByAi(`servicesProduits`);
+        });
 
-        // document.getElementById('addFileInput').addEventListener('click', function() {
-        //     var container = document.getElementById('fileInputsContainer');
-        //     var input = document.createElement('input');
-        //     input.type = 'file';
-        //     input.className = 'form-control mb-1';
-        //     input.name = 'fichier[]';
-        //     container.appendChild(input);
-        // });
+        function generateByAi(element) {
+            $(`#${element}Ai-generate`).click(function() {
+                $(`#${element}Ai-generate`).html(
+                    `<i class="ti ti-loader rotate"></i> &nbsp; Chargement ...`);
+                $(`#${element}`).text('');
+                var promptText = $(`#${element}Ai`).val();
+                $.ajax({
+                    url: '{{ route('askToChatGpt') }}',
+                    type: 'GET',
+                    data: {
+                        prompt: promptText
+                    },
+                    success: function(response) {
+                        $(`#${element}Ai-generate`).html(
+                            ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
+                        $(`#${element}`).text(response);
+                    },
+                    error: function(xhr, status, error) {
+                        $(`#${element}Ai-generate`).html(
+                            ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        }
     </script>
 @endsection
 
@@ -120,7 +161,7 @@
             <div id="wizard-validation" class="bs-stepper mt-2">
                 <div class="bs-stepper-header">
                     <div class="step" data-target="#presentation-entreprise-validation">
-                        <button type="button" class="step-trigger ps-0 pe-1">
+                        <button type="button" class="step-trigger ">
                             <span class="bs-stepper-circle">1</span>
                             <span class="bs-stepper-label mt-1">
                                 <span class="bs-stepper-title">Présentation <br>de l'entreprise</span>
@@ -131,7 +172,7 @@
                         <i class="ti ti-chevron-right"></i>
                     </div>
                     <div class="step" data-target="#objectif-site-validation">
-                        <button type="button" class="step-trigger px-1">
+                        <button type="button" class="step-trigger">
                             <span class="bs-stepper-circle">2</span>
                             <span class="bs-stepper-label">
                                 <span class="bs-stepper-title">Objectif <br> du site</span>
@@ -142,7 +183,7 @@
                         <i class="ti ti-chevron-right"></i>
                     </div>
                     <div class="step" data-target="#analyse-existant-validation">
-                        <button type="button" class="step-trigger px-1">
+                        <button type="button" class="step-trigger">
                             <span class="bs-stepper-circle">3</span>
                             <span class="bs-stepper-label">
                                 <span class="bs-stepper-title">Analyse <br> de l'existant</span>
@@ -153,7 +194,7 @@
                         <i class="ti ti-chevron-right"></i>
                     </div>
                     <div class="step" data-target="#design-maquettage-validation">
-                        <button type="button" class="step-trigger px-1">
+                        <button type="button" class="step-trigger">
                             <span class="bs-stepper-circle">4</span>
                             <span class="bs-stepper-label">
                                 <span class="bs-stepper-title">Design <br> et maquettage</span>
@@ -164,7 +205,7 @@
                         <i class="ti ti-chevron-right"></i>
                     </div>
                     <div class="step" data-target="#deroulement-projet-validation">
-                        <button type="button" class="step-trigger px-1">
+                        <button type="button" class="step-trigger">
                             <span class="bs-stepper-circle">5</span>
                             <span class="bs-stepper-label">
                                 <span class="bs-stepper-title">Déroulement <br> du projet</span>
@@ -209,21 +250,46 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="row">
+
                                         <div class="col-12 mb-3">
                                             <label class="form-label" for="descriptionEntreprise">Description de
                                                 l'entreprise</label>
+                                            <div class="input-group mb-1">
+                                                <input type="text" class="form-control"
+                                                    placeholder="Créer votre prompt" id="descriptionEntrepriseAi">
+                                                <button class="btn btn-outline-primary" type="button"
+                                                    id="descriptionEntrepriseAi-generate">
+                                                    <i class="ti ti-file-text-ai"></i> &nbsp; Générer
+                                                </button>
+                                            </div>
                                             <textarea name="descriptionEntreprise" id="descriptionEntreprise" class="form-control" rows="4"
                                                 placeholder="Description de l'entreprise"></textarea>
                                         </div>
                                         <div class="col-12 mb-3">
                                             <label class="form-label" for="activitePrincipale">Activité principale de
                                                 l'entreprise</label>
+                                            <div class="input-group mb-1">
+                                                <input type="text" class="form-control"
+                                                    placeholder="Créer votre prompt" id="activitePrincipaleAi">
+                                                <button class="btn btn-outline-primary" type="button"
+                                                    id="activitePrincipaleAi-generate">
+                                                    <i class="ti ti-file-text-ai"></i> &nbsp; Générer
+                                                </button>
+                                            </div>
                                             <textarea name="activitePrincipale" id="activitePrincipale" class="form-control" rows="4"
                                                 placeholder="Activité principale de l'entreprise"></textarea>
                                         </div>
                                         <div class="col-12 mb-3">
                                             <label class="form-label" for="servicesProduits">Services ou produits
                                                 vendus</label>
+                                            <div class="input-group mb-1">
+                                                <input type="text" class="form-control"
+                                                    placeholder="Créer votre prompt" id="servicesProduitsAi">
+                                                <button class="btn btn-outline-primary" type="button"
+                                                    id="servicesProduitsAi-generate">
+                                                    <i class="ti ti-file-text-ai"></i> &nbsp; Générer
+                                                </button>
+                                            </div>
                                             <textarea name="servicesProduits" id="servicesProduits" class="form-control" rows="4"
                                                 placeholder="Services ou produits vendus"></textarea>
                                         </div>
@@ -414,11 +480,31 @@
                             <div class="row g-3 validation-field">
                                 <div class="col-6">
                                     <div class="row">
-                                        <div class="col-10 mb-3"> <label class="form-label" for="concurrents">Site
+                                        <div class="col-10 mb-3">
+                                            <label class="form-label" for="concurrents">Site
                                                 internet de vos principaux
                                                 concurrents :</label>
                                             <textarea class="form-control" id="concurrents" name="concurrents" rows="3"
                                                 placeholder="Saisissez les sites internet de vos principaux concurrents"></textarea>
+                                        </div>
+                                        <div class="col-sm-6 col-md-10 mb-3">
+                                            <div class="form-group">
+                                                <label for="exemples-sites" class="form-label">Exemples de sites avec
+                                                    commentaire :</label>
+                                                <textarea id="exemples-sites" class="form-control" name="commentaires" rows="5"
+                                                    placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.)."></textarea>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="telecharger-images" class="form-label">Télécharger des
+                                                    images :</label>
+                                                <input type="file" class="form-control" id="telecharger-images"
+                                                    name="images[]" accept="image/*" multiple>
+                                                <small id="images-help" class="form-text text-muted">Vous pouvez
+                                                    télécharger des images pour illustrer vos commentaires sur les
+                                                    sites.</small>
+                                            </div>
+
                                         </div>
                                         <div class="col-10 mb-3">
                                             <div class="form-group">
@@ -434,7 +520,7 @@
                                                 <div class="row mb-1">
                                                     <div class="col-11">
                                                         <div class="input-group mb-1"><input type="file"
-                                                                class="form-control" name="fichier[]" multiple="">
+                                                                class="form-control" name="fichier[]" >
                                                         </div>
                                                     </div>
                                                     <div class="col-1"><button type="button"
@@ -445,21 +531,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 mb-3"> <label class="form-label">Contenu de votre site
-                                                :</label>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="contenuClient"
-                                                    name="contenu[]" value="client">
-                                                <label class="form-check-label" for="contenuClient">Fourni par le
-                                                    client</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="contenuPrestataire"
-                                                    name="contenu[]" value="prestataire">
-                                                <label class="form-check-label" for="contenuPrestataire">À créer par le
-                                                    prestataire</label>
-                                            </div>
-                                        </div>
+
                                     </div>
 
                                 </div>
@@ -549,16 +621,16 @@
                                 </div>
 
                                 <!-- Zone de texte (non afficher au formulaire) pour langage de programmation -->
-                                <input type="hidden" id="langage" name="langage" value="wappalizer">
+                                <input type="" id="langage" name="langage" value="wappalizer">
 
                                 <!-- Zone de texte (non afficher au formulaire) pour les outils utilisées pour le développement -->
-                                <input type="hidden" id="outils" name="outils" value="wappalizer">
+                                <input type="" id="outils" name="outils" value="wappalizer">
 
                                 <!-- Zone de texte (non afficher au formulaire) pour statistiques de trafic -->
-                                <input type="hidden" id="trafic" name="trafic" value="similarweb">
+                                <input type="" id="trafic" name="trafic" value="similarweb">
 
                                 <!-- Zone de texte (non afficher au formulaire) pour Nombre de pages -->
-                                <input type="hidden" id="pages" name="pages" value="similarweb">
+                                <input type="" id="pages" name="pages" value="similarweb">
 
                                 <div class="col-12 d-flex justify-content-between">
                                     <button class="btn btn-label-secondary btn-prev"> <i
@@ -581,6 +653,22 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="row">
+                                            <div class="col-12 mb-3"> <label class="form-label">Contenu de votre site
+                                                    :</label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="contenuClient"
+                                                        name="contenu[]" value="client">
+                                                    <label class="form-check-label" for="contenuClient">Fourni par le
+                                                        client</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="contenuPrestataire" name="contenu[]" value="prestataire">
+                                                    <label class="form-check-label" for="contenuPrestataire">À créer par
+                                                        le
+                                                        prestataire</label>
+                                                </div>
+                                            </div>
                                             <div class="col-sm-6 col-md-10 mb-3">
                                                 <div class="form-group">
                                                     <label class="form-label">Style graphique attendu :</label>
@@ -677,25 +765,25 @@
                                             </div>
                                             <div class="col-sm-6 col-md-10 mb-3">
                                             </div>
-                                            <div class="form-group" style="display: none;">
+                                            <div class="form-group" style="/* display: none; */">
                                                 <label class="form-label">Zone de texte (non affichée au formulaire) :
                                                     le lien vers la maquette</label>
                                                 <input type="text" class="form-control" id="lienMaquette"
                                                     name="lienMaquette">
                                             </div>
-                                            <div class="form-group" style="display: none;">
+                                            <div class="form-group" style="/* display: none; */">
                                                 <label class="form-label">Zone de texte (non affichée au formulaire) :
                                                     le lien vers les visuels créés</label>
                                                 <input type="text" class="form-control" id="lienVisuels"
                                                     name="lienVisuels">
                                             </div>
-                                            <div class="form-group" style="display: none;">
+                                            <div class="form-group" style="/* display: none; */">
                                                 <label class="form-label">L'arborescence du site (non affichée au
                                                     formulaire) :</label>
                                                 <input type="file" class="form-control" id="arborescenceSite"
                                                     name="arborescenceSite" accept=".pdf, .doc, .docx">
                                             </div>
-                                            <div class="form-group" style="display: none;">
+                                            <div class="form-group" style="/* display: none; */">
                                                 <label class="form-label">Contenu du Site (non affiché au formulaire) :
                                                     texte à mettre dans chaque section de site</label>
                                                 <textarea class="form-control" id="contenuSite" name="contenuSite" rows="3"></textarea>
@@ -705,22 +793,22 @@
                                 </div>
 
                                 <!-- Téléchargement de fichier (non affiché au formulaire) : La maquette du site -->
-                                <input type="file" name="maquetteDuSite" style="display: none;">
+                                <input type="file" name="maquetteDuSite" style="/* display: none; */">
 
                                 <!-- Zone de texte (non affichée au formulaire) : le lien vers la maquette -->
-                                <input type="hidden" name="lienVersMaquette" value="url_vers_la_maquette">
+                                <input type="" name="lienVersMaquette" value="url_vers_la_maquette">
 
                                 <!-- Zone de texte (non affichée au formulaire) : le lien vers les visuels créés -->
-                                <input type="hidden" name="lienVersVisuels" value="url_vers_les_visuels_crees">
+                                <input type="" name="lienVersVisuels" value="url_vers_les_visuels_crees">
 
                                 <!-- L'arborescence du site (non affichée au formulaire) -->
-                                <input type="file" name="arborescenceDuSite" style="display: none;">
+                                <input type="file" name="arborescenceDuSite" style="/* display: none; */">
 
                                 <!-- Zone de texte (non affichée au formulaire) : Nombre de pages estimé -->
-                                <input type="hidden" name="nombreDePagesEstime" value="nombre_pages_estime">
+                                <input type="" name="nombreDePagesEstime" value="nombre_pages_estime">
 
                                 <!-- Contenu du Site (non affiché au formulaire) -->
-                                <input type="hidden" name="contenuDuSite" value="texte_a_mettre_dans_chaque_section">
+                                <input type="" name="contenuDuSite" value="texte_a_mettre_dans_chaque_section">
 
                                 <div class="col-12 d-flex justify-content-between">
                                     <button class="btn btn-label-secondary btn-prev"> <i

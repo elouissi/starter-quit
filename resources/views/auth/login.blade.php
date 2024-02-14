@@ -90,8 +90,8 @@
                         </form>
 
                         <p class="text-center">
-                            <span>Nouveau sur notre plateforme ?</span>
                             @if (Route::has('register'))
+                                <span>Nouveau sur notre plateforme ?</span>
                                 <a href="{{ route('register') }}">
                                     <span>Créez un compte</span>
                                 </a>

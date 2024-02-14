@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\app\ChatGPTController;
 use App\Http\Controllers\apps\Kanban;
 use App\Http\Controllers\apps\UserList;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,9 @@ Route::middleware([
   'verified',
 ])->group(function () {
   Route::get('/', [HomePage::class, 'index'])->name('pages-home');
+
+  // chatgpt
+  Route::get('/chat', [ChatGPTController::class, 'askToChatGpt'])->name('askToChatGpt');
 
   // users
   Route::get('/app/user/list', [UserList::class, 'index'])->name('app-user-list');

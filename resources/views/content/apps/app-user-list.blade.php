@@ -26,6 +26,11 @@
     {{-- <script src="{{asset('assets/js/app-user-list.js')}}"></script> --}}
     <script>
         $('#table-users').dataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json',
+                search: "Filtrer par: ",
+                searchPlaceholder: "Nom compte, Nom contact, Chargé ...",
+            },
             ajax: '{!! route('users-datatable') !!}',
             "processing": true,
             "serverSide": true,
@@ -45,7 +50,7 @@
 
 @section('content')
 
-    <div class="row g-4 mb-4">
+    <div class="row g-4 mb-4 d-none">
         <div class="col-sm-6 col-xl-3">
             <div class="card">
                 <div class="card-body">
