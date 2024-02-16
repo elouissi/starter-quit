@@ -22,9 +22,6 @@ class UserController extends Controller
     $users = User::get();
 
     return DataTables::of($users)->make(true);
-
-    // return 'aaaaaaaaa';
-    // dd('aa');
   }
 
   /**

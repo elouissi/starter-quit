@@ -11,7 +11,6 @@
         .rotate {
             display: inline-block;
             animation: rotate 2s linear infinite;
-            /* Adjust animation duration as needed */
         }
 
         @keyframes rotate {
@@ -45,10 +44,10 @@
 
             if (domaineOui.checked) {
                 nomDomaineGroup.style.display = "block";
-                nomDomaine.required = true; // Rendre le champ obligatoire
+                nomDomaine.required = true;
             } else {
                 nomDomaineGroup.style.display = "none";
-                nomDomaine.required = false; // Rendre le champ facultatif
+                nomDomaine.required = false;
             }
         }
 
@@ -59,10 +58,10 @@
 
             if (logoOui.checked) {
                 fichierLogoGroup.style.display = "block";
-                fichierLogo.required = true; // Rendre le champ obligatoire
+                fichierLogo.required = true;
             } else {
                 fichierLogoGroup.style.display = "none";
-                fichierLogo.required = false; // Rendre le champ facultatif
+                fichierLogo.required = false;
             }
         }
 
@@ -73,10 +72,10 @@
 
             if (hebergementOui.checked) {
                 nomHebergementGroup.style.display = "block";
-                nomHebergement.required = true; // Rendre le champ obligatoire
+                nomHebergement.required = true;
             } else {
                 nomHebergementGroup.style.display = "none";
-                nomHebergement.required = false; // Rendre le champ facultatif
+                nomHebergement.required = false;
             }
         }
 
@@ -121,9 +120,17 @@
         });
 
         function generateByAi(element) {
+            $(`#${element}Ai`).on("input", function() {
+                if ($(`#${element}Ai`).val().trim().length > 3) {
+                    $(`#${element}Ai-generate`).prop("disabled", false);
+                } else {
+                    $(`#${element}Ai-generate`).prop("disabled", true);
+                }
+            });
             $(`#${element}Ai-generate`).click(function() {
                 $(`#${element}Ai-generate`).html(
                     `<i class="ti ti-loader rotate"></i> &nbsp; Chargement ...`);
+                $(`#${element}Ai-generate`).prop("disabled", true);
                 $(`#${element}`).text('');
                 var promptText = $(`#${element}Ai`).val();
                 $.ajax({
@@ -135,14 +142,61 @@
                     success: function(response) {
                         $(`#${element}Ai-generate`).html(
                             ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
+                        $(`#${element}Ai-generate`).prop("disabled", false);
                         $(`#${element}`).text(response);
                     },
                     error: function(xhr, status, error) {
                         $(`#${element}Ai-generate`).html(
                             ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
+                        $(`#${element}Ai-generate`).prop("disabled", false);
                         console.error("Error:", error);
                     }
                 });
+            });
+
+            $('#pourcentage').click(function() {
+                $('#pourcentage-2').removeClass('d-none');
+                $('#pourcentage-22').removeClass('d-none');
+            })
+
+            $('#total-total').on('input', function() {
+                let total = parseFloat($(this).val()); // Using parseFloat for potential decimal values
+                if (!isNaN(total)) { // Check if total is not NaN
+                    $('#le-reste-value').text(total.toFixed(
+                        2)); // Update the text with total, rounded to two decimal places
+                }
+            });
+
+            $('#pourcentage-payer-apres-signature').on('input', function() {
+                let total = parseFloat($('#total-total').val());
+                let percentage = parseFloat($(this).val());
+
+                let result = (total * (percentage / 100)).toFixed(2);
+
+                if (!isNaN(result)) {
+                    $('#pourcentage-value').text(result);
+
+                    let pourcentage1 = parseFloat($('#pourcentage-value').text());
+                    let pourcentage2 = parseFloat($('#pourcentage-2-value').text());
+
+                    $('#le-reste-value').text(parseFloat(total - pourcentage1 - pourcentage2).toFixed(2));
+                } else {
+
+                }
+            });
+
+            $('#pourcentage-payer-apres-signature-2').on('input', function() {
+                let total = parseFloat($('#total-total').val());
+                let percentage = parseFloat($(this).val());
+
+                let result = (total * (percentage / 100)).toFixed(2);
+                if (!isNaN(result)) {
+                    $('#pourcentage-2-value').text(result);
+                    let pourcentage1 = parseFloat($('#pourcentage-value').text());
+                    let pourcentage2 = parseFloat($('#pourcentage-2-value').text());
+                    $('#le-reste-value').text(parseFloat(total - pourcentage1 - pourcentage2).toFixed(2));
+
+                }
             });
         }
     </script>
@@ -150,7 +204,7 @@
 
 @section('content')
     <h4 class="py-3 mb-4">
-        <span class="text-muted fw-light">Cahier de charge/</span> Numbered
+        <span class="text-muted fw-light">Cahier de charge/</span> Créer un cahier de charge
     </h4>
     <!-- Default -->
     <div class="row">
@@ -250,7 +304,6 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="row">
-
                                         <div class="col-12 mb-3">
                                             <label class="form-label" for="descriptionEntreprise">Description de
                                                 l'entreprise</label>
@@ -258,7 +311,7 @@
                                                 <input type="text" class="form-control"
                                                     placeholder="Créer votre prompt" id="descriptionEntrepriseAi">
                                                 <button class="btn btn-outline-primary" type="button"
-                                                    id="descriptionEntrepriseAi-generate">
+                                                    id="descriptionEntrepriseAi-generate" disabled>
                                                     <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                 </button>
                                             </div>
@@ -272,7 +325,7 @@
                                                 <input type="text" class="form-control"
                                                     placeholder="Créer votre prompt" id="activitePrincipaleAi">
                                                 <button class="btn btn-outline-primary" type="button"
-                                                    id="activitePrincipaleAi-generate">
+                                                    id="activitePrincipaleAi-generate" disabled>
                                                     <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                 </button>
                                             </div>
@@ -286,7 +339,7 @@
                                                 <input type="text" class="form-control"
                                                     placeholder="Créer votre prompt" id="servicesProduitsAi">
                                                 <button class="btn btn-outline-primary" type="button"
-                                                    id="servicesProduitsAi-generate">
+                                                    id="servicesProduitsAi-generate" disabled>
                                                     <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                 </button>
                                             </div>
@@ -301,7 +354,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
-                                    <button class="btn btn-label-secondary btn-prev" disabled> <i
+                                    <button class="btn btn-label-secondary btn-prev opacity-0" disabled> <i
                                             class="ti ti-arrow-left me-sm-1 me-0"></i>
                                         <span class="align-middle d-sm-inline-block d-none">Précédent</span>
                                     </button>
@@ -520,7 +573,7 @@
                                                 <div class="row mb-1">
                                                     <div class="col-11">
                                                         <div class="input-group mb-1"><input type="file"
-                                                                class="form-control" name="fichier[]" >
+                                                                class="form-control" name="fichier[]">
                                                         </div>
                                                     </div>
                                                     <div class="col-1"><button type="button"
@@ -619,7 +672,7 @@
                                     </div>
 
                                 </div>
-
+                                {{--
                                 <!-- Zone de texte (non afficher au formulaire) pour langage de programmation -->
                                 <input type="" id="langage" name="langage" value="wappalizer">
 
@@ -630,7 +683,7 @@
                                 <input type="" id="trafic" name="trafic" value="similarweb">
 
                                 <!-- Zone de texte (non afficher au formulaire) pour Nombre de pages -->
-                                <input type="" id="pages" name="pages" value="similarweb">
+                                <input type="" id="pages" name="pages" value="similarweb"> --}}
 
                                 <div class="col-12 d-flex justify-content-between">
                                     <button class="btn btn-label-secondary btn-prev"> <i
@@ -765,25 +818,25 @@
                                             </div>
                                             <div class="col-sm-6 col-md-10 mb-3">
                                             </div>
-                                            <div class="form-group" style="/* display: none; */">
+                                            <div class="form-group" style="display: none;">
                                                 <label class="form-label">Zone de texte (non affichée au formulaire) :
                                                     le lien vers la maquette</label>
                                                 <input type="text" class="form-control" id="lienMaquette"
                                                     name="lienMaquette">
                                             </div>
-                                            <div class="form-group" style="/* display: none; */">
+                                            <div class="form-group" style="display: none;">
                                                 <label class="form-label">Zone de texte (non affichée au formulaire) :
                                                     le lien vers les visuels créés</label>
                                                 <input type="text" class="form-control" id="lienVisuels"
                                                     name="lienVisuels">
                                             </div>
-                                            <div class="form-group" style="/* display: none; */">
+                                            <div class="form-group" style="display: none;">
                                                 <label class="form-label">L'arborescence du site (non affichée au
                                                     formulaire) :</label>
                                                 <input type="file" class="form-control" id="arborescenceSite"
                                                     name="arborescenceSite" accept=".pdf, .doc, .docx">
                                             </div>
-                                            <div class="form-group" style="/* display: none; */">
+                                            <div class="form-group" style="display: none;">
                                                 <label class="form-label">Contenu du Site (non affiché au formulaire) :
                                                     texte à mettre dans chaque section de site</label>
                                                 <textarea class="form-control" id="contenuSite" name="contenuSite" rows="3"></textarea>
@@ -793,22 +846,22 @@
                                 </div>
 
                                 <!-- Téléchargement de fichier (non affiché au formulaire) : La maquette du site -->
-                                <input type="file" name="maquetteDuSite" style="/* display: none; */">
+                                <input type="file" name="maquetteDuSite" style="display: none;">
 
                                 <!-- Zone de texte (non affichée au formulaire) : le lien vers la maquette -->
-                                <input type="" name="lienVersMaquette" value="url_vers_la_maquette">
+                                <input type="hidden" name="lienVersMaquette" value="url_vers_la_maquette">
 
                                 <!-- Zone de texte (non affichée au formulaire) : le lien vers les visuels créés -->
-                                <input type="" name="lienVersVisuels" value="url_vers_les_visuels_crees">
+                                <input type="hidden" name="lienVersVisuels" value="url_vers_les_visuels_crees">
 
                                 <!-- L'arborescence du site (non affichée au formulaire) -->
-                                <input type="file" name="arborescenceDuSite" style="/* display: none; */">
+                                <input type="file" name="arborescenceDuSite" style="display: none;">
 
                                 <!-- Zone de texte (non affichée au formulaire) : Nombre de pages estimé -->
-                                <input type="" name="nombreDePagesEstime" value="nombre_pages_estime">
+                                <input type="hidden" name="nombreDePagesEstime" value="nombre_pages_estime">
 
                                 <!-- Contenu du Site (non affiché au formulaire) -->
-                                <input type="" name="contenuDuSite" value="texte_a_mettre_dans_chaque_section">
+                                <input type="hidden" name="contenuDuSite" value="texte_a_mettre_dans_chaque_section">
 
                                 <div class="col-12 d-flex justify-content-between">
                                     <button class="btn btn-label-secondary btn-prev"> <i
@@ -819,13 +872,6 @@
                                             class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i
                                             class="ti ti-arrow-right"></i></button>
                                 </div>
-                                {{-- <div class="col-12 d-flex justify-content-between">
-                                    <button class="btn btn-label-secondary btn-prev"> <i
-                                            class="ti ti-arrow-left me-sm-1 me-0"></i>
-                                        <span class="align-middle d-sm-inline-block d-none">Précédent</span>
-                                    </button>
-                                    <button class="btn btn-success btn-next btn-submit">Submit</button>
-                                </div> --}}
                             </div>
                         </div>
                         <!-- 5 -->
@@ -901,6 +947,360 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <hr class="mb-3">
+
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="table-responsive text-nowrap">
+                                                <table class="table table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <td rowspan="15"
+                                                                style="text-align: center; vertical-align: middle;">Délais
+                                                                &
+                                                                Budgétisation</td>
+                                                            <td>Désignation</td>
+                                                            <td>Nombre de jours</td>
+                                                            <td>Montant unitaire</td>
+                                                            <td>Total HT</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Installation de l'environnement</td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-installation-environnement"
+                                                                    id="nj-installation-environnement">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-installation-environnement"
+                                                                    id="mu-installation-environnement">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-installation-environnement"
+                                                                    id="total-installation-environnement">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Intégration de la structure</td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-integration-structure"
+                                                                    id="nj-integration-structure">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-integration-structure"
+                                                                    id="mu-integration-structure">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-integration-structure"
+                                                                    id="total-integration-structure">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Ebauche Des Textes et traductions</td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-ebauche-textes-traductions"
+                                                                    id="nj-ebauche-textes-traductions">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-ebauche-textes-traductions"
+                                                                    id="mu-ebauche-textes-traductions">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-ebauche-textes-traductions"
+                                                                    id="total-ebauche-textes-traductions">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Maquettage graphique</td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-maquettage-graphique"
+                                                                    id="nj-maquettage-graphique">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-maquettage-graphique"
+                                                                    id="mu-maquettage-graphique">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-maquettage-graphique"
+                                                                    id="total-maquettage-graphique">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Développement & intégrations web </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-developpement-integrations-web"
+                                                                    id="nj-developpement-integrations-web">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-developpement-integrations-web"
+                                                                    id="mu-developpement-integrations-web">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-developpement-integrations-web"
+                                                                    id="total-developpement-integrations-web">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Intégration des textes et images</td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-integration-textes-images"
+                                                                    id="nj-integration-textes-images">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-integration-textes-images"
+                                                                    id="mu-integration-textes-images">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-integration-textes-images"
+                                                                    id="total-integration-textes-images">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Intégrationd'autres pages
+                                                                (contact, catégories
+                                                                ...etc.)
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-integration-autres-pages"
+                                                                    id="nj-integration-autres-pages">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-integration-autres-pages"
+                                                                    id="mu-integration-autres-pages">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-integration-autres-pages"
+                                                                    id="total-integration-autres-pages">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Optimisation de la version Mobile</td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-optimisation-version-mobile"
+                                                                    id="nj-optimisation-version-mobile">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-optimisation-version-mobile"
+                                                                    id="mu-optimisation-version-mobile">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-optimisation-version-mobile"
+                                                                    id="total-optimisation-version-mobile">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Intégration du multilingue </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-integration-multilingue"
+                                                                    id="nj-integration-multilingue">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-integration-multilingue"
+                                                                    id="mu-integration-multilingue">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-integration-multilingue"
+                                                                    id="total-integration-multilingue">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Optimisation Pour SEO</td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-optimisation-seo" id="nj-optimisation-seo">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-optimisation-seo" id="mu-optimisation-seo">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT" name="total-optimisation-seo"
+                                                                    id="total-optimisation-seo">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Suivi et tests</td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours" name="nj-suivi-tests"
+                                                                    id="nj-suivi-tests">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire" name="mu-suivi-tests"
+                                                                    id="mu-suivi-tests">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT" name="total-suivi-tests"
+                                                                    id="total-suivi-tests">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Gestion de projets </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours" name="nj-gestion-projet"
+                                                                    id="nj-gestion-projet">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-gestion-projet" id="mu-gestion-projet">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT" name="total-gestion-projet"
+                                                                    id="total-gestion-projet">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Remise exceptionnelle </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Nombre de jours"
+                                                                    name="nj-remise-exceptionnelle"
+                                                                    id="nj-remise-exceptionnelle">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Montant unitaire"
+                                                                    name="mu-remise-exceptionnelle"
+                                                                    id="mu-remise-exceptionnelle">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT"
+                                                                    name="total-remise-exceptionnelle"
+                                                                    id="total-remise-exceptionnelle">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Total (HT) </td>
+                                                            <td colspan="3">
+                                                                <input type="number" class="form-control h-100"
+                                                                    placeholder="Total HT" name="total-total"
+                                                                    value="9000" id="total-total">
+                                                            </td>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <hr class="my-5">
+                                        <div class="col-6 mb-3">
+                                            <div class="form-group">
+                                                <label class="form-label"
+                                                    for="pourcentage-payer-apres-signature">Pourcentage à payer après la
+                                                    signature:</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control"
+                                                        placeholder="Pourcentage à payer après la signature"
+                                                        id="pourcentage-payer-apres-signature"
+                                                        name="pourcentage-payer-apres-signature"
+                                                        aria-describedby="percentage-addon">
+                                                    <span class="input-group-text" id="percentage-addon">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="align-items-end col-2 d-flex mb-3 fs-4">
+                                            <div class="me-3">
+                                                <span id="pourcentage-value"> 00.00 </span>&nbsp;&nbsp;<span>€</span>
+                                            </div>
+                                            <div>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-icon btn-primary waves-effect waves-light"
+                                                    id="pourcentage">
+                                                    <i class="ti ti-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-2"></div>
+                                        <div class="col-6 mb-3 d-none" id="pourcentage-2">
+                                            <div class="form-group">
+                                                <label class="form-label"
+                                                    for="pourcentage-payer-apres-signature-2">Pourcentage
+                                                    à payer après la signature ( 2 ) :</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control"
+                                                        placeholder="Pourcentage à payer après la signature ( 2 )"
+                                                        id="pourcentage-payer-apres-signature-2"
+                                                        name="pourcentage-payer-apres-signature-2"
+                                                        aria-describedby="percentage-addon">
+                                                    <span class="input-group-text" id="percentage-addon">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="align-items-end col-2 d-flex mb-3 fs-4 d-none" id="pourcentage-22">
+                                            <div class="me-3">
+                                                <span id="pourcentage-2-value"> 00.00 </span>&nbsp;&nbsp;<span>€</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 mb-3 fs-4" id="le-reste">
+                                            <span>Le reste : </span><span id="le-reste-value"> 00.00
+                                            </span>&nbsp;&nbsp;<span>€</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="col-12 d-flex justify-content-between">
                                     <button class="btn btn-label-secondary btn-prev"> <i
                                             class="ti ti-arrow-left me-sm-1 me-0"></i>

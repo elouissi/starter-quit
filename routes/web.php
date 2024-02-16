@@ -10,6 +10,9 @@ use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
+use App\Http\Controllers\ExpectedFunctionController;
+use App\Http\Controllers\PromptController;
+use App\Http\Controllers\PromptTypeController;
 use App\Http\Controllers\SpecificationsController;
 use App\Http\Controllers\UserController;
 
@@ -47,8 +50,16 @@ Route::middleware([
   // chatgpt
   Route::get('/chat', [ChatGPTController::class, 'askToChatGpt'])->name('askToChatGpt');
 
+  // config
+  Route::get('configuration/expectedfunctions/datatable', [ExpectedFunctionController::class, 'indexDataTable'])->name('configuration.expectedfunctions.datatable');
+  Route::resource('configuration/expectedfunction', ExpectedFunctionController::class)->names('configuration.expectedfunction');
+  Route::get('configuration/prompt/datatable', [PromptController::class, 'indexDataTable'])->name('configuration.prompt.datatable');
+  Route::resource('configuration/prompt', PromptController::class)->names('configuration.prompt');
+  Route::get('configuration/prompttype/datatable', [PromptTypeController::class, 'indexDataTable'])->name('configuration.prompttype.datatable');
+  Route::resource('configuration/prompttype', PromptTypeController::class)->names('configuration.prompttype');
   // users
-  Route::get('/app/user/list', [UserList::class, 'index'])->name('app-user-list');
+  Route::get('/user/list', [UserList::class, 'index'])->name('user-list');
+  Route::get('/config/list', [UserList::class, 'index'])->name('config-list');
   Route::get('users/datatable', [UserController::class, 'indexDataTable'])->name('users-datatable');
   Route::resource('users', UserController::class);
   // specifications

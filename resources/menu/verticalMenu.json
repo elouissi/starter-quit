@@ -2,7 +2,7 @@
   "menu": [
     {
       "url": "/",
-      "name": "Home",
+      "name": "Acceuil",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "pages-home"
     },
@@ -19,43 +19,38 @@
       ]
     },
     {
-      "name": "Users",
-      "slug": "app-user",
+      "name": "Utilisateurs",
+      "slug": "user",
       "icon": "menu-icon tf-icons ti ti-users",
       "submenu": [
         {
-          "url": "app/user/list",
-          "name": "List",
-          "slug": "app-user-list"
+          "url": "user/list",
+          "name": "Liste des utilisateurs",
+          "slug": "user-list"
         }
       ]
     },
     {
-      "url": "page-2",
-      "icon": "menu-icon tf-icons ti ti-file",
-      "name": "Page 2",
-      "slug": "pages-page-2"
-    },
-    {
-      "url": "pages/misc-error",
-      "name": "Error",
-      "icon": "menu-icon tf-icons ti ti-alert-triangle",
-      "slug": "pages-misc-error",
-      "target": "_blank"
-    },
-    {
-      "url": "auth/login-basic",
-      "name": "Login",
-      "icon": "menu-icon tf-icons ti ti-login",
-      "slug": "auth-login-basic",
-      "target": "_blank"
-    },
-    {
-      "url": "auth/register-basic",
-      "name": "Register",
-      "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "auth-register-basic",
-      "target": "_blank"
+      "name": "Configuration",
+      "slug": "configuration",
+      "icon": "menu-icon tf-icons ti ti-settings",
+      "submenu": [
+        {
+          "url": "configuration/expectedfunction",
+          "name": "Gestion de fonctions attendues",
+          "slug": "configuration.expectedfunction.index"
+        },
+        {
+          "url": "configuration/prompt",
+          "name": "Gestion de prompts",
+          "slug": "configuration.prompt.index"
+        },
+        {
+          "url": "configuration/prompttype",
+          "name": "Gestion les types prompt",
+          "slug": "configuration.prompttype.index"
+        }
+      ]
     }
   ]
 }

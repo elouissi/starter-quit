@@ -9,6 +9,6 @@ class UserList extends Controller
 {
   public function index()
   {
-    return view('content.apps.app-user-list');
+    return view('content.users.index');
   }
 }
