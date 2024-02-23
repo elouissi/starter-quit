@@ -13,9 +13,15 @@ return new class extends Migration
   {
     Schema::create('objectif_sites', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('entreprise_id')->constrained();
-      $table->text('ObjectifsAttendus');
-      $table->string('Cible');
+      $table->foreignId('specification_id')->constrained();
+      $table->string('project_need')->nullable();
+      $table->string('project_type')->nullable();
+      $table->json('payment_options')->nullable();
+      $table->json('languages')->nullable();
+      $table->text('target_keywords')->nullable();
+      $table->json('expected_functions')->nullable();
+      $table->text('expected_objectives')->nullable();
+      $table->string('menu')->nullable();
       $table->softDeletes();
       $table->timestamps();
     });

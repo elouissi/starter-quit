@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Prompt;
+use App\Models\PromptType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -14,15 +15,18 @@ class PromptController extends Controller
   public function index()
   {
     //
-    return view('content.config.prompts.index');
+    $promptTypes = PromptType::get();
+    return view('content.config.prompts.index', compact('promptTypes'));
   }
 
   public function indexDataTable()
   {
     //
-    $prompts = Prompt::get();
+    // return DataTables::of(User::query())
+    // ->make(true);
+    // $prompts = Prompt::get();
 
-    return DataTables::of($prompts)
+    return DataTables::of(Prompt::query())
       ->addColumn('actions', function ($prompt) {
         return '<button class="btn btn-icon btn-primary edit-function" data-id="' . $prompt->id . '"
           type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditRecord" aria-controls="offcanvasEditRecord"

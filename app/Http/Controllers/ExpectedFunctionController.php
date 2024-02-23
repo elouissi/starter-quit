@@ -20,9 +20,9 @@ class ExpectedFunctionController extends Controller
   public function indexDataTable()
   {
     //
-    $expectedFunctions = ExpectedFunction::get();
+    // $expectedFunctions = ExpectedFunction::get();
 
-    return DataTables::of($expectedFunctions)
+    return DataTables::of(ExpectedFunction::query())
       ->addColumn('actions', function ($expectedFunction) {
         return '<button class="btn btn-icon btn-primary edit-function" data-id="' . $expectedFunction->id . '"
         type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditRecord" aria-controls="offcanvasEditRecord"

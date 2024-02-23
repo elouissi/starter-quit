@@ -13,8 +13,13 @@
       "submenu": [
         {
           "url": "specifications",
-          "name": "Créer un cahier de charge",
+          "name": "Liste de cahier de charge",
           "slug": "specifications.index"
+        },
+        {
+          "url": "specifications/create",
+          "name": "Créer un cahier de charge",
+          "slug": "specifications.create"
         }
       ]
     },

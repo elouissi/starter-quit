@@ -14,6 +14,7 @@ return new class extends Migration
     Schema::create('expected_functions', function (Blueprint $table) {
       $table->id();
       $table->string('name');
+      $table->string('alias');
       $table->integer('order');
       $table->softDeletes();
       $table->timestamps();

@@ -19,9 +19,11 @@ class UserController extends Controller
   public function indexDataTable()
   {
     //
-    $users = User::get();
+    // $users = User::get();
 
-    return DataTables::of($users)->make(true);
+    // return DataTables::of($users)->make(true);
+    return DataTables::of(User::query())
+      ->make(true);
   }
 
   /**

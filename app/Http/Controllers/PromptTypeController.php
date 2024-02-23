@@ -20,9 +20,9 @@ class PromptTypeController extends Controller
   public function indexDataTable()
   {
     //
-    $items = PromptType::get();
+    // $items = PromptType::get();
 
-    return DataTables::of($items)
+    return DataTables::of(PromptType::query())
       ->addColumn('actions', function ($item) {
         return '<button class="btn btn-icon btn-primary edit-function" data-id="' . $item->id . '"
             type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditRecord" aria-controls="offcanvasEditRecord"
