@@ -14,16 +14,6 @@
             visibility: hidden;
         }
 
-        .text-limited {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-select-none {
-            user-select: none;
-        }
-
         .rotate {
             display: inline-block;
             animation: rotate 2s linear infinite;
@@ -52,10 +42,6 @@
 @endsection
 
 @section('page-script')
-    <script>
-        window.csrfToken = "{{ csrf_token() }}";
-    </script>
-
     <script src="{{ asset('assets/js/form-wizard-validation.js') }}"></script>
     <script>
         function toggleNomDomaine() {
@@ -72,19 +58,19 @@
             }
         }
 
-        // function toggleLogo() {
-        //     var fichierLogoGroup = document.getElementById("fichierLogoGroup");
-        //     var logoOui = document.getElementById("logoOui");
-        //     var fichierLogo = document.getElementById("fichierLogo");
+        function toggleLogo() {
+            var fichierLogoGroup = document.getElementById("fichierLogoGroup");
+            var logoOui = document.getElementById("logoOui");
+            var fichierLogo = document.getElementById("fichierLogo");
 
-        //     if (logoOui.checked) {
-        //         fichierLogoGroup.style.display = "block";
-        //         fichierLogo.required = true;
-        //     } else {
-        //         fichierLogoGroup.style.display = "none";
-        //         fichierLogo.required = false;
-        //     }
-        // }
+            if (logoOui.checked) {
+                fichierLogoGroup.style.display = "block";
+                fichierLogo.required = true;
+            } else {
+                fichierLogoGroup.style.display = "none";
+                fichierLogo.required = false;
+            }
+        }
 
         function toggleHebergement() {
             var nomHebergementGroup = document.getElementById("nomHebergementGroup");
@@ -118,17 +104,10 @@
     </script>
     <script>
         $(document).ready(function() {
-            generateByAi(`descriptionEntreprise`, 1);
-            generateByAi(`activitePrincipale`, 1);
-            generateByAi(`servicesProduits`, 1);
-            generateByAi(`target_audience`, 1);
-            generateByAi(`expectedObjectives`, 2);
-            generateByAi(`iatext_techniques_specs`, 2);
-            generateByAi(`iatext_menu`, 4);
-            generateByAi(`iatext_competitors`, 3);
-            generateByAi(`iatext_constraints`, 3);
-            generateByAi(`iatext_target_keywords`, 2);
-            generateByAi(`iatext_exemples_sites`, 4);
+            generateByAi(`descriptionEntreprise`);
+            generateByAi(`activitePrincipale`);
+            generateByAi(`servicesProduits`);
+
             $('input[name="project_type"]').change(function() {
                 if ($(this).val() === 'E-commerce') {
                     $('#options-paiement-container').removeClass('d-none');
@@ -139,18 +118,19 @@
 
             $('#nombrePropositions').change(function() {
                 let numberOfPropositions = $(this).val();
+                console.log($(this).val());
                 if ($(this).val() === 'autre') {
                     $('#autreProposition').val('')
                     $('#autrePropositionInput').show();
                 } else {
                     $('#autreProposition').val(numberOfPropositions)
+                    // $('#autrePropositionInput').show();
                     $('#autrePropositionInput').hide();
                 }
             });
 
             for (let i = 1; i < 11; i++) {
                 $(`#plus-btn-${i}`).click(function() {
-                    console.log('clicked');
                     $(`#pourcentage-${i+1}`).removeClass('d-none');
                 })
 
@@ -160,9 +140,11 @@
                 });
 
                 $(`#delete-btn-${i}`).click(function() {
+                    console.log(i);
                     $(`#pourcentage-value-${i}`).val('');
                     $(`#pourcentage-operation-${i}`).val('');
                     $(`#titre-operation-${i}`).val('');
+                    // $(`#pourcentage-${i}`).addClass('d-none');
                 });
 
                 $(`#pourcentage-operation-${i}`).on('input', function() {
@@ -234,201 +216,41 @@
                     });
                 }
             });
-
-            $('#nomEntreprise, #website').on('blur', function() {
-                if (1) {
-                    localStorage.removeItem('askToChatGpt');
-
-                    let nomEntreprise = $('#website').val() ? $('#website').val() : $('#nomEntreprise')
-                        .val();
-                    console.log(nomEntreprise);
-                    if (!$('#descriptionEntrepriseAi').val()) {
-                        $('#descriptionEntrepriseAi').val(
-                            `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
-                        ).prop('title',
-                            `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
-                        ).trigger('input');
-                    }
-
-                    if (!$('#activitePrincipaleAi').val()) {
-                        $('#activitePrincipaleAi').val(
-                            `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur l’activité de ce client: ${nomEntreprise}`
-                        ).prop('title',
-                            `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur l’activité de ce client: ${nomEntreprise}`
-                        ).trigger('input');
-                        // `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
-                    }
-
-                    if (!$('#servicesProduitsAi').val()) {
-                        $('#servicesProduitsAi').val(
-                            `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur les services ou les produits vendu de ce client: ${nomEntreprise}`
-                        ).prop('title',
-                            `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur les services ou les produits vendu de ce client: ${nomEntreprise}`
-                            // `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
-                        ).trigger('input');
-                    }
-
-                    if (!$('#target_audienceAi').val()) {
-                        $('#target_audienceAi').val(
-                            `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur le public cible de ce client : ${nomEntreprise}`
-                        ).prop('title',
-                            `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur le public cible de ce client : ${nomEntreprise}`
-                            // `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
-                        ).trigger('input');
-                    }
-                }
-            });
-
-            $('#has_website_non').click(function() {
-                // TODO
-                $('#target_audienceAi-generate').click();
-            });
-
-            $('#website').on('blur', function() {
-                // TODO
-                $('#target_audienceAi-generate').click();
-            });
-
-            $('#objectifsAttendus').on('blur', function() {
-                let objectifsAttendus = $('#objectifsAttendus').val();
-                console.log(objectifsAttendus);
-                if (objectifsAttendus) {
-
-                    $('#expectedObjectivesAi').val(
-                        `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, les objectifs : (${objectifsAttendus}), réécrire moi un paragraphe sur les objectifs attendu de ce client`
-                    ).prop('title',
-                        `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
-                    ).trigger('input');
-                }
-                // TODO
-                $('#expectedObjectivesAi-generate').click();
-            });
-
-            $('#concurrents').on('blur', function() {
-                // TODO
-                let concurrents = $('#concurrents').val().split('\n').join(',');
-                console.log(concurrents);
-
-                console.log(
-                    `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
-                );
-                $('#iatext_competitorsAi').val(
-                    `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
-                ).prop('title',
-                    `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
-                ).trigger('input');
-
-                // TODO
-                $('#iatext_competitorsAi-generate').click();
-            });
-
-            $('#target_keywords').on('blur', function() {
-                // TODO
-                let target_keywords = $('#target_keywords').val().split('\n').join(',');
-                console.log(target_keywords);
-
-                console.log(
-                    `dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
-charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
-paragraphes : (${target_keywords})`
-                );
-                $('#iatext_target_keywordsAi').val(
-                    `dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
-charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
-paragraphes : (${target_keywords})`
-                ).prop('title',
-                    `dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
-charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
-paragraphes : (${target_keywords})`
-                ).trigger('input');
-
-                // TODO
-                $('#iatext_target_keywordsAi-generate').click();
-            });
-
-            $('#exemples-sites').on('blur', function() {
-                // TODO
-                let exemples_sites = $('#exemples-sites').val().split('\n').join(',');
-                console.log(exemples_sites);
-
-                console.log(
-                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
-site internet sur le cahier de charge de son site internet`
-                );
-                $('#iatext_exemples_sitesAi').val(
-                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
-site internet sur le cahier de charge de son site internet`
-                ).prop('title',
-                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
-site internet sur le cahier de charge de son site internet`
-                ).trigger('input');
-
-                // TODO
-                $('#iatext_exemples_sitesAi-generate').click();
-            });
-
-            $('#techniques_specs').on('blur', function() {
-                // TODO
-                let techniques_specs = $('#techniques_specs').val();
-                console.log(techniques_specs);
-
-                console.log(
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
-                );
-                $('#iatext_techniques_specsAi').val(
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
-                ).prop('title',
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
-                ).trigger('input');
-
-                // TODO
-                $('#iatext_techniques_specsAi-generate').click();
-            });
-
-            $('#menu').on('blur', function() {
-                // TODO
-                let menu = $('#menu').val();
-                var project_type = $('input[name="project_type"]').val();
-                var servicesProduits = $('#servicesProduits').val();
-                console.log(menu);
-                console.log(project_type);
-                console.log(servicesProduits);
-                if (menu) {
-
-                    console.log(
-                        `à partir de cette liste de menu : [${menu}], rédiger et designer moi une sitemap (arborescence) pour un site Internet [${project_type}] de [${servicesProduits}]`
-                    );
-                    $('#iatext_menuAi').val(
-                        `à partir de cette liste de menu : [${menu}], rédiger et designer moi une sitemap (arborescence) pour un site Internet [${project_type}] de [${servicesProduits}]`
-                    ).prop('title',
-                        `à partir de cette liste de menu : [${menu}], rédiger et designer moi une sitemap (arborescence) pour un site Internet [${project_type}] de [${servicesProduits}]`
-                    ).trigger('input');
-
-                    // TODO
-                    $('#iatext_menuAi-generate').click();
-                }
-            });
-
-            $('#contraintes').on('blur', function() {
-                // TODO
-                let contraintes = $('#contraintes').val();
-                console.log(contraintes);
-
-                console.log(
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${contraintes}) que le client souhaite avoir sur son site`
-                );
-                $('#iatext_constraintsAi').val(
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${contraintes}) que le client souhaite avoir sur son site`
-                ).prop('title',
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${contraintes}) que le client souhaite avoir sur son site`
-                ).trigger('input');
-
-                // TODO
-                $('#iatext_constraintsAi-generate').click();
-            });
         });
 
-        function generateByAi(element, step) {
+        // function generateByAi2(prompt) {
+        //     console.log('generateByAi2');
+        //     $.ajax({
+        //         url: '{{ route('askToChatgpt4') }}',
+        //         type: 'POST',
+        //         data: {
+        //             prompt: prompt
+        //         },
+        //         headers: {
+        //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        //         },
+        //         success: function(response) {
+        //             console.log(response);
+        //             // $(`#${element}Ai-generate`).html(
+        //             //     ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
+        //             // $(`#${element}Ai-generate`).prop("disabled", false);
+        //             // $(`#${element}`).text(response);
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.log('xhr', xhr);
+        //             console.log('status', status);
+        //             console.log('error', error);
+        //             // $(`#${element}Ai-generate`).html(
+        //             //     ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
+        //             // $(`#${element}Ai-generate`).prop("disabled", false);
+        //             // console.error("Error:", error);
+        //         }
+        //     });
+        // }
+
+        // generateByAi2(`Description de l'entreprise Havet digital a partie de leur site web www.havetdigital.fr`);
+
+        function generateByAi(element) {
             $(`#${element}Ai`).on("input", function() {
                 if ($(`#${element}Ai`).val().trim().length > 3) {
                     $(`#${element}Ai-generate`).prop("disabled", false);
@@ -437,12 +259,6 @@ site internet sur le cahier de charge de son site internet`
                 }
             });
             $(`#${element}Ai-generate`).click(function() {
-                $(`#${element}`).text('');
-                $('.ai-generate-button').addClass('disabled');
-                $(`#next-step-${step}`).addClass('disabled');
-                $(`#next-step-${step} > span`).text(
-                    'Génération de texte avec IA, merci de patienter un petit moment');
-                $(`#icon-next-step-${step}`).removeClass().addClass('ti ti-loader rotate');
                 $(`#${element}Ai-generate`).html(
                     `<i class="ti ti-loader rotate"></i> &nbsp; Chargement ...`);
                 $(`#${element}Ai-generate`).prop("disabled", true);
@@ -459,33 +275,15 @@ site internet sur le cahier de charge de son site internet`
                             ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
                         $(`#${element}Ai-generate`).prop("disabled", false);
                         $(`#${element}`).text(response);
-                        window.localStorage.setItem('askToChatGpt', element);
-                        $(`#next-step-${step}`).removeClass('disabled');
-                        $(`#next-step-${step} > span`).text(step == 5 ? 'Confirmer' : 'Suivant');
-                        $(`#icon-next-step-${step}`).removeClass().addClass('ti ti-arrow-right');
-                        $('.ai-generate-button').removeClass('disabled');
-
                     },
                     error: function(xhr, status, error) {
-                        setTimeout(() => {
-                            $(`#${element}Ai-generate`).html(
-                                ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
-                            $(`#${element}Ai-generate`).prop("disabled", false);
-                            $(`#${element}Ai-generate`).click();
-                        }, 10000);
+                        $(`#${element}Ai-generate`).html(
+                            ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
+                        $(`#${element}Ai-generate`).prop("disabled", false);
                         console.error("Error:", error);
                     }
                 });
             });
-
-            $('input[name="has_website"]').change(function() {
-                if ($(this).val() === 'oui') {
-                    $('#websiteInput').show();
-                } else {
-                    $('#websiteInput').hide();
-                }
-            });
-
         }
 
         const designations = ['installation-environnement', 'integration-structure', 'ebauche-textes-traductions',
@@ -530,49 +328,6 @@ site internet sur le cahier de charge de son site internet`
                 }
                 $('#reste').val(total - totalAvance);
             }
-        }
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('[data-toggle="tooltip"]').tooltip();
-
-            elementFournisOuCreer('logo', 'logo', 'logo');
-            elementFournisOuCreer('charte-graphique', 'graphical_charter', 'charte graphique');
-            elementFournisOuCreer('wireframe', 'wireframe', 'Maquette / Wireframe');
-            elementFournisOuCreer('typography', 'typography', `Typographies (police d'ecriture)`);
-            elementFournisOuCreer('description-product-services', 'description_product_services',
-                "Description services produits");
-
-
-        });
-
-        function elementFournisOuCreer(el, elName, name) {
-            $(`input[name="${elName}"]`).change(function() {
-                if ($(this).val() === 'oui') {
-                    $(`#${el}-file-upload`).removeClass('d-none');
-                    $(`#${el}-file-upload-span`).removeClass('d-none');
-                } else {
-                    $(`#${el}-file-upload`).val('');
-                    $(`#${el}-file`).val('');
-                    $(`#${el}-file`).trigger('change');
-                    $(`#${el}-file-upload-span`).addClass('d-none');
-                    $(`#${el}-file-upload`).addClass('d-none');
-                    $(`#${el}-file-upload-span`).text(`Aucun fichier`);
-                }
-            });
-
-            $(`#${el}-file-upload`).click(function() {
-                $(`#${el}-file`).click();
-            });
-
-            $(`#${el}-file`).change(function() {
-                var fileName = $(this).val().split('\\').pop() ? $(this).val().split('\\').pop() :
-                    `Aucun fichier`;
-                $(`#${el}-file-upload-span`).text(fileName);
-                $(`#${el}-file-upload-span`).prop('title', fileName);
-                $(`#${el}-file-upload-span`).click();
-                $(`#${el}-file-upload-span`).trigger('click');
-            });
         }
     </script>
     <script src="{{ asset('assets/js/ui-popover.js') }}"></script>
@@ -662,29 +417,11 @@ site internet sur le cahier de charge de son site internet`
                                                     class="form-control" placeholder="Nom de l'entreprise" />
                                             </div>
                                             <div class="col-10 mb-3">
-                                                <label class="form-label">Avez-vous un site web ?</label><br>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="has_website"
-                                                        id="has_website_oui" value="oui">
-                                                    <label class="form-check-label" for="has_website_oui">Oui</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="has_website"
-                                                        id="has_website_non" value="non">
-                                                    <label class="form-check-label" for="has_website_non">Non</label>
-                                                </div>
-                                            </div>
-                                            <div id="websiteInput" class="col-10 mb-3" style="display: none;">
-                                                <label class="form-label" for="website">Site web de l'entreprise</label>
-                                                <input type="text" name="website_domaine" id="website"
-                                                    class="form-control" placeholder="URL du site web" />
-                                            </div>
-                                            <div class="col-10 mb-3">
-                                                <label class="form-label" for="personneContacte">Personne à
-                                                    contacter</label>
+                                                <label class="form-label" for="personneContacte">Personne à contacter (nom
+                                                    et
+                                                    prénom)</label>
                                                 <input type="text" name="contact_person" id="personneContacte"
-                                                    class="form-control"
-                                                    placeholder="Personne à contacter (nom et prénom)" />
+                                                    class="form-control" placeholder="Nom de l'entreprise" />
                                             </div>
                                             <div class="col-10 mb-3">
                                                 <label class="form-label" for="telephone">Téléphone</label>
@@ -697,10 +434,7 @@ site internet sur le cahier de charge de son site internet`
                                                     placeholder="Adresse email" />
                                             </div>
                                             <div class="col-10 mb-3">
-                                                <label class="form-label" for="cible">
-                                                    Cible
-
-                                                </label>
+                                                <label class="form-label" for="cible">Cible</label>
                                                 <input type="text" name="target" id="cible" class="form-control"
                                                     placeholder="Cible">
                                             </div>
@@ -715,12 +449,12 @@ site internet sur le cahier de charge de son site internet`
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control" name="prompt_description"
                                                         placeholder="Créer votre prompt" id="descriptionEntrepriseAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="descriptionEntrepriseAi-generate" disabled>
+                                                    <button class="btn btn-outline-primary" type="button"
+                                                        id="descriptionEntrepriseAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="description" id="descriptionEntreprise" class="form-control" rows="3"
+                                                <textarea name="description" id="descriptionEntreprise" class="form-control" rows="4"
                                                     placeholder="Description de l'entreprise"></textarea>
                                             </div>
                                             <div class="col-12 mb-3">
@@ -730,12 +464,12 @@ site internet sur le cahier de charge de son site internet`
                                                     <input type="text" class="form-control"
                                                         name="prompt_main_activities" placeholder="Créer votre prompt"
                                                         id="activitePrincipaleAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="activitePrincipaleAi-generate" disabled>
+                                                    <button class="btn btn-outline-primary" type="button"
+                                                        id="activitePrincipaleAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="main_activities" id="activitePrincipale" class="form-control" rows="3"
+                                                <textarea name="main_activities" id="activitePrincipale" class="form-control" rows="4"
                                                     placeholder="Activité principale de l'entreprise"></textarea>
                                             </div>
                                             <div class="col-12 mb-3">
@@ -745,30 +479,15 @@ site internet sur le cahier de charge de son site internet`
                                                     <input type="text" class="form-control"
                                                         name="prompt_services_products" placeholder="Créer votre prompt"
                                                         id="servicesProduitsAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="servicesProduitsAi-generate" disabled>
+                                                    <button class="btn btn-outline-primary" type="button"
+                                                        id="servicesProduitsAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="services_products" id="servicesProduits" class="form-control" rows="3"
+                                                <textarea name="services_products" id="servicesProduits" class="form-control" rows="4"
                                                     placeholder="Services ou produits vendus"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3 d-none">
-                                                <label class="form-label" for="target_audience">
-                                                    Public Cible (ai content)
-                                                </label>
-                                                <div class="input-group mb-1">
-                                                    <input type="text" class="form-control"
-                                                        name="prompt_target_audience" placeholder="Créer votre prompt"
-                                                        id="target_audienceAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="target_audienceAi-generate" disabled>
-                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                    </button>
-                                                </div>
-                                                <textarea name="target_audience" id="target_audience" class="form-control" rows="3"
-                                                    placeholder="Activité principale de l'entreprise"></textarea>
-                                            </div>
+
                                         </div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-between">
@@ -797,85 +516,68 @@ site internet sur le cahier de charge de son site internet`
                                         class="d-none">
                                     <div class="col-sm-6">
                                         <div class="row">
-                                            <div class="col-10 mb-3">
+                                            <div class="col-12 mb-3">
                                                 <label class="form-label" for="besoinProjet">Besoin de projet :</label>
                                                 @php
                                                     $project_needs = [['name' => 'Refonte de site web', 'alias' => 'refonte'], ['name' => 'Création de site web', 'alias' => 'creation']];
                                                 @endphp
-                                                <div class="row">
-                                                    @foreach ($project_needs as $item)
-                                                        <div class="col-auto">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    id="besoin_{{ $item['alias'] }}" name="project_need"
-                                                                    value="{{ $item['name'] }}">
-                                                                <label class="form-check-label"
-                                                                    for="besoin_{{ $item['alias'] }}">
-                                                                    {{ $item['name'] }}
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
+                                                @foreach ($project_needs as $item)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            id="besoin_{{ $item['alias'] }}" name="project_need"
+                                                            value="{{ $item['name'] }}">
+                                                        <label class="form-check-label"
+                                                            for="besoin_{{ $item['alias'] }}">
+                                                            {{ $item['name'] }}
+                                                        </label>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                            <div class="col-10 mb-3">
+                                            <div class="col-12 mb-3">
                                                 <label class="form-label">Type de projet :</label>
                                                 @php
                                                     $project_needs = [['name' => 'Site Vitrine', 'alias' => 'siteVitrine'], ['name' => 'E-commerce', 'alias' => 'eCommerce'], ['name' => 'Blog', 'alias' => 'blog'], ['name' => "Site d'affiliation", 'alias' => 'siteAffiliation']];
                                                 @endphp
-                                                <div class="row">
-                                                    @foreach ($project_needs as $item)
-                                                        <div class="col-auto">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    id="{{ $item['alias'] }}" name="project_type"
-                                                                    value="{{ $item['name'] }}">
-                                                                <label class="form-check-label"
-                                                                    for="{{ $item['alias'] }}">
-                                                                    {{ $item['name'] }}</label>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
+                                                @foreach ($project_needs as $item)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            id="{{ $item['alias'] }}" name="project_type"
+                                                            value="{{ $item['name'] }}">
+                                                        <label class="form-check-label" for="{{ $item['alias'] }}">
+                                                            {{ $item['name'] }}</label>
+                                                    </div>
+                                                @endforeach
                                             </div>
                                             <div class="col-12 mb-3 d-none" id="options-paiement-container">
                                                 <label class="form-label">Options de paiement :</label>
                                                 @php
                                                     $payment_options = [['name' => 'Stripe', 'alias' => 'stripe'], ['name' => 'Paypal', 'alias' => 'payment'], ['name' => 'COD (Paiement à la livraison)', 'alias' => 'cod'], ['name' => 'Demande de devis', 'alias' => 'demande_devis'], ['name' => 'Aucun', 'alias' => 'aucun']];
                                                 @endphp
-                                                <div class="row">
-                                                    @foreach ($payment_options as $item)
-                                                        <div class="col-auto">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                    id="paiement_{{ $item['alias'] }}"
-                                                                    name="payment_options[]" value="{{ $item['name'] }}">
-                                                                <label class="form-check-label"
-                                                                    for="paiement_{{ $item['alias'] }}">{{ $item['name'] }}</label>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
+                                                @foreach ($payment_options as $item)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="paiement_{{ $item['alias'] }}" name="payment_options[]"
+                                                            value="{{ $item['name'] }}">
+                                                        <label class="form-check-label"
+                                                            for="paiement_{{ $item['alias'] }}">{{ $item['name'] }}</label>
+                                                    </div>
+                                                @endforeach
                                             </div>
                                             <div class="col-12 mb-3"> <label class="form-label">Langue :</label>
                                                 @php
                                                     $languages = [['name' => 'Français', 'alias' => 'fr'], ['name' => 'Anglais', 'alias' => 'en'], ['name' => 'Italien', 'alias' => 'it']];
                                                 @endphp
-                                                <div class="row">
-                                                    @foreach ($languages as $item)
-                                                        <div class="col-auto">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                    id="langue_{{ $item['alias'] }}" name="languages[]"
-                                                                    value="{{ $item['name'] }}">
-                                                                <label class="form-check-label"
-                                                                    for="langue_{{ $item['alias'] }}">{{ $item['name'] }}</label>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
+                                                @foreach ($languages as $item)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="langue_{{ $item['alias'] }}" name="languages[]"
+                                                            value="{{ $item['name'] }}">
+                                                        <label class="form-check-label"
+                                                            for="langue_{{ $item['alias'] }}">{{ $item['name'] }}</label>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                            <div class="col-10 mb-3">
+                                            <div class="col-12 mb-3">
                                                 <label class="form-label" for="menu">
                                                     Mots-clés cibles (Avez-vous des mots-clés spécifiques à cibler sur le
                                                     site) :
@@ -883,111 +585,39 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" name="target_keywords" rows="3" id="target_keywords"
                                                     placeholder="Saisissez vos mots-clés cibles pour le site"></textarea>
                                             </div>
-                                            <div class="col-10 mb-3 d-none">
-                                                <label class="form-label" for="iatext_target_keywordsAi">
-                                                    Mots-clés cibles (ai content)
-                                                </label>
-                                                <div class="input-group mb-1">
-                                                    <input type="text" class="form-control"
-                                                        name="prompt_iatext_target_keywords"
-                                                        placeholder="Créer votre prompt" id="iatext_target_keywordsAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="iatext_target_keywordsAi-generate" disabled>
-                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                    </button>
-                                                </div>
-                                                <textarea name="iatext_target_keywords" id="iatext_target_keywords" class="form-control" rows="3"></textarea>
-                                            </div>
-                                            <div class="col-10 mb-3">
-                                                <label class="form-label" for="objectifsAttendus">
-                                                    Objectifs attendus :
-                                                </label>
-                                                <textarea name="expected_objectives" id="objectifsAttendus" class="form-control"
-                                                    placeholder="Entrez les objectifs attendus" rows="3"></textarea>
-                                            </div>
-                                            <div class="col-10 mb-3 d-none">
-                                                <label class="form-label" for="expectedObjectives">
-                                                    Objectifs attendus du client (ai content)
-                                                </label>
-                                                <div class="input-group mb-1">
-                                                    <input type="text" class="form-control"
-                                                        name="prompt_expected_client_objectives"
-                                                        placeholder="Créer votre prompt" id="expectedObjectivesAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="expectedObjectivesAi-generate" disabled>
-                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                    </button>
-                                                </div>
-                                                <textarea name="expected_client_objectives" id="expectedObjectives" class="form-control" rows="3"
-                                                    placeholder="Activité principale de l'entreprise"></textarea>
-                                            </div>
+
+
+
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-12 mb-3"><label class="form-label">Fonctions attendues
                                                     :</label>
-                                                <div class="row">
-                                                    @foreach ($expected_functions as $item)
-                                                        <div class="col-4">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox"
-                                                                    id="{{ $item->alias }}" name="expected_functions[]"
-                                                                    value="{{ $item->name }}">
-                                                                <label class="form-check-label"
-                                                                    for="{{ $item->alias }}">
-                                                                    {{ $item->name }}
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
+                                                @foreach ($expected_functions as $item)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="{{ $item->alias }}" name="expected_functions[]"
+                                                            value="{{ $item->name }}">
+                                                        <label class="form-check-label" for="{{ $item->alias }}">
+                                                            {{ $item->name }}
+                                                        </label>
+                                                    </div>
+                                                @endforeach
                                             </div>
-
-
+                                            <div class="col-12 mb-3"> <label class="form-label"
+                                                    for="objectifsAttendus">Objectifs attendus</label>
+                                                <textarea name="expected_objectives" id="objectifsAttendus" class="form-control" placeholder="Objectifs attendus"
+                                                    rows="4"></textarea>
+                                            </div>
                                             <div class="col-12 mb-3">
-                                                <label class="form-label" for="menu">
-                                                    Menu (Avez vous une préférence des menus à ajouter sur le site) :
-                                                </label>
+                                                <label class="form-label" for="menu">Menu (Avez vous une préférence
+                                                    des
+                                                    menus à ajouter sur le site) :</label>
                                                 <textarea class="form-control" id="menu" name="menu" rows="3"
                                                     placeholder="Indiquez votre préférence des menus à ajouter sur le site"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3 d-none">
-                                                <label class="form-label" for="iatext_menuAi">
-                                                    Menu (ai content)
-                                                </label>
-                                                <div class="input-group mb-1">
-                                                    <input type="text" class="form-control" name="prompt_iatext_menu"
-                                                        placeholder="Créer votre prompt" id="iatext_menuAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="iatext_menuAi-generate" disabled>
-                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                    </button>
-                                                </div>
-                                                <textarea name="iatext_menu" id="iatext_menu" class="form-control" rows="3"></textarea>
-                                            </div>
-                                            <div class="col-12 mb-3">
-                                                <label class="form-label" for="techniques_specs">Spécifications Techniques
-                                                    :</label>
-                                                <textarea class="form-control" id="techniques_specs" name="techniques_specs" rows="3"
-                                                    placeholder="Entrez les spécifications techniques"></textarea>
-                                            </div>
-                                            <div class="col-12 mb-3 d-none">
-                                                <label class="form-label" for="iatext_techniques_specsAi">Spécifications
-                                                    Techniques (ai content)
-                                                </label>
-                                                <div class="input-group mb-1">
-                                                    <input type="text" class="form-control"
-                                                        name="prompt_iatext_techniques_specs"
-                                                        placeholder="Créer votre prompt" id="iatext_techniques_specsAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="iatext_techniques_specsAi-generate" disabled>
-                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                    </button>
-                                                </div>
-                                                <textarea name="iatext_techniques_specs" id="iatext_techniques_specs" class="form-control" rows="3"
-                                                    placeholder="Activité principale de l'entreprise"></textarea>
-                                            </div>
+
                                         </div>
                                     </div>
                                     <div class="col-12 d-flex justify-content-between">
@@ -1024,28 +654,12 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" id="concurrents" name="competitors" rows="3"
                                                     placeholder="Saisissez les sites internet de vos principaux concurrents"></textarea>
                                             </div>
-                                            <div class="col-10 mb-3 d-none">
-                                                <label class="form-label" for="iatext_competitors">
-                                                    Concurrence (ai content)
-                                                </label>
-                                                <div class="input-group mb-1">
-                                                    <input type="text" class="form-control"
-                                                        name="prompt_iatext_competitors" placeholder="Créer votre prompt"
-                                                        id="iatext_competitorsAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="iatext_competitorsAi-generate" disabled>
-                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                    </button>
-                                                </div>
-                                                <textarea name="iatext_competitors" id="iatext_competitors" class="form-control" rows="3"
-                                                    placeholder="Activité principale de l'entreprise"></textarea>
-                                            </div>
                                             <div class="col-sm-6 col-md-10">
                                                 <div class="form-group">
                                                     <label for="exemples-sites" class="form-label">
                                                         Exemples de sites avec commentaire :
                                                     </label>
-                                                    <textarea id="exemples-sites" class="form-control" name="sample_sites" rows="3"
+                                                    <textarea id="exemples-sites" class="form-control" name="sample_sites" rows="5"
                                                         placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.)."></textarea>
                                                 </div>
                                             </div>
@@ -1062,27 +676,6 @@ site internet sur le cahier de charge de son site internet`
                                                         Vous pouvez télécharger des images pour illustrer vos commentaires
                                                         sur les sites.
                                                     </small>
-                                                    <div class="row my-3" id="sample_sites_files_container">
-                                                        @for ($i = 0; $i < 4; $i++)
-                                                            {{-- <div class="col-3">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-1 rounded"
-                                                                        style="width: 100px; padding-top: 100px; background-size: cover; background-posidition: center; background-image: url({{asset('assets/img/avatars/1.png')}})">
-                                                                    </div>
-                                                                    <div class="col-auto">
-                                                                        <a type="button" title="Voir" href="{{asset('assets/img/avatars/1.png')}}" target="_blank"
-                                                                            class="btn btn-icon btn-sm btn-label-info"><i
-                                                                                class="tf-icons ti ti-eye"></i></a>
-                                                                    </div>
-                                                                    <div class="col-auto">
-                                                                        <button type="button" title="Supprimer"
-                                                                            class="btn btn-icon btn-sm btn-label-danger"><i
-                                                                                class=" ti ti-trash"></i></button>
-                                                                    </div>
-                                                                </div>
-                                                            </div> --}}
-                                                        @endfor
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1096,30 +689,14 @@ site internet sur le cahier de charge de son site internet`
                                                         Contraintes (donner des exemples de sites internet, dont vous
                                                         appréciez un élément) :
                                                     </label>
-                                                    <textarea class="form-control" id="contraintes" name="constraints" rows="3"
+                                                    <textarea class="form-control" id="contraintes" name="constraints" rows="4"
                                                         placeholder="Veuillez fournir des exemples de sites internet que vous appréciez et décrire les éléments que vous aimez."></textarea>
                                                 </div>
-                                            </div>
-                                            <div class="col-12 mb-3 d-none">
-                                                <label class="form-label" for="iatext_constraintsAi">
-                                                    Contraintes (ai content)
-                                                </label>
-                                                <div class="input-group mb-1">
-                                                    <input type="text" class="form-control"
-                                                        name="prompt_iatext_constraints" placeholder="Créer votre prompt"
-                                                        id="iatext_constraintsAi">
-                                                    <button class="btn btn-outline-primary ai-generate-button"
-                                                        type="button" id="iatext_constraintsAi-generate" disabled>
-                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                    </button>
-                                                </div>
-                                                <textarea name="iatext_constraints" id="iatext_constraints" class="form-control" rows="3"
-                                                    placeholder="Activité principale de l'entreprise"></textarea>
                                             </div>
                                             <div class="col-12 mb-3">
                                                 <div class="form-group">
                                                     <label for="telecharger-images" class="form-label">
-                                                        Télécharger des images:
+                                                        Télécharger desimages:
                                                     </label>
                                                     <input type="file" class="form-control" id="telecharger-images"
                                                         name="constraints_files[]"
@@ -1134,30 +711,22 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-12 mb-3">
                                                 <div class="col-sm-6  col-md-12">
                                                     <div class="form-group">
-                                                        <label class="form-label">Avez-vous un nom de domaine ?</label>
+                                                        <label class="form-label">Nom de domaine :</label>
                                                         <div class="radio-group">
-                                                            <div class="row">
-                                                                <div class="col-auto">
-                                                                    <div class="form-check pe-3">
-                                                                        <input class="form-check-input" type="radio"
-                                                                            id="domaineOui" name="domain" value="Oui"
-                                                                            onchange="toggleNomDomaine()">
-                                                                        <label class="form-check-label"
-                                                                            for="domaineOui">Oui</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-auto">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio"
-                                                                            id="domaineNon" name="domain" value="Non"
-                                                                            onchange="toggleNomDomaine()">
-                                                                        <label class="form-check-label"
-                                                                            for="domaineNon">Non</label>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="domaineOui" name="domain" value="Oui"
+                                                                    onchange="toggleNomDomaine()">
+                                                                <label class="form-check-label"
+                                                                    for="domaineOui">Oui</label>
                                                             </div>
-
-
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="domaineNon" name="domain" value="Non"
+                                                                    onchange="toggleNomDomaine()">
+                                                                <label class="form-check-label"
+                                                                    for="domaineNon">Non</label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group" id="nomDomaineGroup" style="display: none">
@@ -1170,7 +739,7 @@ site internet sur le cahier de charge de son site internet`
                                                     </div>
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-12 mb-3">
+                                            <div class="col-12 mb-3">
                                                 <div class="col-sm-6  col-md-12">
                                                     <label class="form-label">Logo :</label>
                                                     <div class="form-check">
@@ -1192,33 +761,26 @@ site internet sur le cahier de charge de son site internet`
                                                         </small>
                                                     </div>
                                                 </div>
-                                            </div> --}}
+                                            </div>
                                             <div class="col-12 mb-3">
                                                 <div class="col-sm-6 col-md-12">
                                                     <div class="form-group">
                                                         <label class="form-label">Hébergement :</label>
                                                         <div class="radio-group">
-                                                            <div class="row">
-                                                                <div class="col-auto">
-                                                                    <div class="form-check pe-3">
-                                                                        <input class="form-check-input" type="radio"
-                                                                            id="hebergementOui" name="hosting"
-                                                                            value="Oui" onchange="toggleHebergement()">
-                                                                        <label class="form-check-label"
-                                                                            for="hebergementOui">Oui</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-auto">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="radio"
-                                                                            id="hebergementNon" name="hosting"
-                                                                            value="Non" onchange="toggleHebergement()">
-                                                                        <label class="form-check-label"
-                                                                            for="hebergementNon">Non</label>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="hebergementOui" name="hosting" value="Oui"
+                                                                    onchange="toggleHebergement()">
+                                                                <label class="form-check-label"
+                                                                    for="hebergementOui">Oui</label>
                                                             </div>
-
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="hebergementNon" name="hosting" value="Non"
+                                                                    onchange="toggleHebergement()">
+                                                                <label class="form-check-label"
+                                                                    for="hebergementNon">Non</label>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="form-group" id="nomHebergementGroup"
@@ -1265,7 +827,7 @@ site internet sur le cahier de charge de son site internet`
                         <!-- 4 -->
                         <div id="step-4-validation" class="content">
                             <div class="content-header mb-3">
-                                <h6 class="mb-0">Design et contenu</h6>
+                                <h6 class="mb-0">Design et Maquettage</h6>
                             </div>
                             <form id="step-4-validation-form">
                                 <div class="row g-3 validation-field">
@@ -1274,132 +836,23 @@ site internet sur le cahier de charge de son site internet`
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="row">
-                                                <div class="col-12 mb-3">
-                                                    <div class="border mt-2 rounded-2 table-responsive text-nowrap">
-                                                        <table class="table table-striped">
-                                                            <thead class="table-dark">
-                                                                <tr>
-                                                                    <th>élément</th>
-                                                                    <th>Fournis</th>
-                                                                    <th>à créer</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="table-border-bottom-0">
-                                                                @php
-                                                                    $elements = [
-                                                                        [
-                                                                            'el' => 'logo',
-                                                                            'el-name' => 'logo',
-                                                                            'name' => 'Logo',
-                                                                        ],
-                                                                        [
-                                                                            'el' => 'charte-graphique',
-                                                                            'el-name' => 'graphical_charter',
-                                                                            'name' => 'charte graphique',
-                                                                        ],
-                                                                        [
-                                                                            'el' => 'wireframe',
-                                                                            'el-name' => 'wireframe',
-                                                                            'name' => 'Maquette / Wireframe',
-                                                                        ],
-                                                                        [
-                                                                            'el' => 'typography',
-                                                                            'el-name' => 'typography',
-                                                                            'name' => "Typographies (police d'ecriture)",
-                                                                        ],
-                                                                        [
-                                                                            'el' => 'description-product-services',
-                                                                            'el-name' => 'description_product_services',
-                                                                            'name' => 'Description services produit',
-                                                                        ],
-                                                                    ];
-                                                                @endphp
-                                                                @foreach ($elements as $item)
-                                                                    <tr style="min-height: 50px;">
-                                                                        <td title="{{ strtolower($item['name']) }}"
-                                                                            style="max-width: 150px;line-break: auto;min-height: 50px;"
-                                                                            class="small text-limited">{{ $item['name'] }}
-                                                                        </td>
-                                                                        <td class="align-items-center d-flex"
-                                                                            style="min-height: 50px;">
-                                                                            <div class="form-check">
-                                                                                <input name="{{ $item['el-name'] }}"
-                                                                                    class="form-check-input"
-                                                                                    type="radio" value="oui"
-                                                                                    id="{{ $item['el'] }}-fourni-oui" />
-                                                                            </div>
-                                                                            @if ($item['el'] == 'typography')
-                                                                                <textarea type="text" title="Indiquez les préférences de typographie pour votre site"
-                                                                                    placeholder="Indiquez les préférences de typographie pour votre site" class="form-control d-none"
-                                                                                    id="{{ $item['el'] }}-file-upload" name="{{ $item['el-name'] }}_text"></textarea>
-                                                                                {{-- <input type="text"
-                                                                                    style="width: 120px; height: 30px;"
-                                                                                    title="Indiquez les préférences de typographie pour votre site"
-                                                                                    placeholder="Indiquez les préférences de typographie pour votre site"
-                                                                                    class="form-control d-none"
-                                                                                    id="{{ $item['el'] }}-file-upload"
-                                                                                    name="{{ $item['el-name'] }}_text"> --}}
-                                                                            @else
-                                                                                <button type="button"
-                                                                                    data-toggle="tooltip"
-                                                                                    data-placement="top"
-                                                                                    title="Choisir {{ strtolower($item['name']) }}"
-                                                                                    class="btn btn-icon btn-sm btn-label-primary waves-effect waves-light mx-1 d-none"
-                                                                                    id="{{ $item['el'] }}-file-upload">
-                                                                                    <i class="ti ti-upload"></i>
-                                                                                </button>
-                                                                                <span
-                                                                                    id="{{ $item['el'] }}-file-upload-span"
-                                                                                    class="p-0 text-limited small d-none"
-                                                                                    {{-- title="Choisir {{ strtolower($item['name']) }}" --}}
-                                                                                    style="max-width: 100px;">
-                                                                                    {{-- Choisir {{ strtolower($item['name']) }} --}}
-                                                                                    Aucun fichier
-                                                                                </span>
-                                                                                <input type="file"
-                                                                                    class="form-control-sm d-none"
-                                                                                    id="{{ $item['el'] }}-file"
-                                                                                    name="{{ $item['el-name'] }}_file"
-                                                                                    accept=".jpg, .jpeg, .png, .gif, .bmp, .svg, .webp, .pdf, .doc, .docx">
-                                                                            @endif
-
-                                                                        </td>
-                                                                        <td style="min-height: 50px;">
-                                                                            <div class="form-check">
-                                                                                <input name="{{ $item['el-name'] }}"
-                                                                                    class="form-check-input"
-                                                                                    type="radio" value="non"
-                                                                                    id="{{ $item['el'] }}-fourni-non" />
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                @endforeach
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                {{-- <div class="col-12 mb-3"> <label class="form-label">
+                                                <div class="col-12 mb-3"> <label class="form-label">
                                                         Contenu de votre site:
                                                     </label>
                                                     @php
                                                         $contents = [['name' => 'Fourni par le client', 'alias' => 'contenuClient'], ['name' => 'À créer par le prestataire', 'alias' => 'contenuPrestataire']];
                                                     @endphp
-                                                    <div class="row">
-                                                        @foreach ($contents as $item)
-                                                            <div class="col-auto">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        id="{{ $item['alias'] }}" name="content"
-                                                                        value="{{ $item['name'] }}">
-                                                                    <label class="form-check-label"
-                                                                        for="{{ $item['alias'] }}">
-                                                                        {{ $item['name'] }}
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div> --}}
+                                                    @foreach ($contents as $item)
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio"
+                                                                id="{{ $item['alias'] }}" name="content"
+                                                                value="{{ $item['name'] }}">
+                                                            <label class="form-check-label" for="{{ $item['alias'] }}">
+                                                                {{ $item['name'] }}
+                                                            </label>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
                                                 <div class="col-sm-6 col-md-10 mb-3">
                                                     <div class="form-group">
                                                         <label class="form-label">Style graphique attendu :</label>
@@ -1407,25 +860,19 @@ site internet sur le cahier de charge de son site internet`
                                                             @php
                                                                 $graphic_styles = [['name' => 'Flat design', 'alias' => 'flatDesign'], ['name' => 'Futuriste', 'alias' => 'futuriste'], ['name' => 'Interactif', 'alias' => 'interactif'], ['name' => 'Moderne', 'alias' => 'moderne'], ['name' => 'Retro', 'alias' => 'retro'], ['name' => 'Autres', 'alias' => 'autres']];
                                                             @endphp
-                                                            <div class="row">
-                                                                @foreach ($graphic_styles as $item)
-                                                                    <div class="col-auto">
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input"
-                                                                                type="checkbox"
-                                                                                id="{{ $item['alias'] }}_StyleGraphique"
-                                                                                name="style_graphiques[]"
-                                                                                value="{{ $item['name'] }}"
-                                                                                @if ($item['name'] == 'Autres') onchange="toggleAutresStyle()" @endif>
-                                                                            <label class="form-check-label"
-                                                                                for="{{ $item['alias'] }}_StyleGraphique">
-                                                                                {{ $item['name'] }}
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                @endforeach
-                                                            </div>
-
+                                                            @foreach ($graphic_styles as $item)
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="{{ $item['alias'] }}_StyleGraphique"
+                                                                        name="style_graphiques[]"
+                                                                        value="{{ $item['name'] }}"
+                                                                        @if ($item['name'] == 'Autres') onchange="toggleAutresStyle()" @endif>
+                                                                    <label class="form-check-label"
+                                                                        for="{{ $item['alias'] }}_StyleGraphique">
+                                                                        {{ $item['name'] }}
+                                                                    </label>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
                                                         <div class="col-sm-12" id="zoneTexteAutresStyle"
                                                             style="display: none;">
@@ -1454,10 +901,6 @@ site internet sur le cahier de charge de son site internet`
                                                         <input placeholder="Saisissez votre autre proposition ici..."
                                                             class="form-control" id="autreProposition" type="number"
                                                             name="number_of_propositions" />
-                                                        <small id="msg_autreProposition" class="invalid-feedback d-none">
-                                                            Le nombre de propositions est
-                                                            requis
-                                                        </small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1474,19 +917,19 @@ site internet sur le cahier de charge de son site internet`
                                                     </div>
                                                 </div>
 
-                                                {{-- <div class="col-12 mb-3">
+                                                <div class="col-12 mb-3">
                                                     <div class="form-group">
                                                         <label for="typographie" class="form-label">Typographie :</label>
                                                         <textarea type="text" id="typographie" class="form-control" name="typography"
                                                             placeholder="Indiquez les préférences de typographie pour votre site"></textarea>
                                                     </div>
-                                                </div> --}}
+                                                </div>
                                                 <div class="col-12 ">
                                                     <div class="form-group">
                                                         <label for="exemples-sites" class="form-label">
                                                             Exemples de sites avec commentaire :
                                                         </label>
-                                                        <textarea id="exemples-sites" class="form-control" name="exemples_sites" rows="3"
+                                                        <textarea id="exemples-sites" class="form-control" name="exemples_sites" rows="5"
                                                             placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.)."></textarea>
                                                     </div>
 
@@ -1502,21 +945,7 @@ site internet sur le cahier de charge de son site internet`
                                                             commentaires sur les sites.
                                                         </small>
                                                     </div>
-                                                </div>
-                                                <div class="col-12 mb-3 d-none">
-                                                    <label class="form-label" for="iatext_exemples_sitesAi">
-                                                        Les éléments sur Mesure (ai content)
-                                                    </label>
-                                                    <div class="input-group mb-1">
-                                                        <input type="text" class="form-control"
-                                                            name="prompt_iatext_exemples_sites"
-                                                            placeholder="Créer votre prompt" id="iatext_exemples_sitesAi">
-                                                        <button class="btn btn-outline-primary ai-generate-button"
-                                                            type="button" id="iatext_exemples_sitesAi-generate" disabled>
-                                                            <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                        </button>
-                                                    </div>
-                                                    <textarea name="iatext_exemples_sites" id="iatext_exemples_sites" class="form-control" rows="3"></textarea>
+
                                                 </div>
                                                 {{-- <div class="col-sm-6 col-md-10 mb-3">
                                                 </div>
@@ -1594,29 +1023,20 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="row">
                                                 <div class="col-10 mb-3">
                                                     <label class="form-label">Gestion de projet :</label>
-                                                    <div class="row">
-                                                        <div class="col-auto">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    id="gestionProjetBoutEnBout" name="gestion_projet"
-                                                                    value="Bout en bout">
-                                                                <label class="form-check-label"
-                                                                    for="gestionProjetBoutEnBout">
-                                                                    Bout en bout
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="radio"
-                                                                    id="gestionProjetAgile" name="gestion_projet"
-                                                                    value="Agile">
-                                                                <label class="form-check-label" for="gestionProjetAgile">
-                                                                    Agile - être informé régulièrement de l’avancement du
-                                                                    projet
-                                                                </label>
-                                                            </div>
-                                                        </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            id="gestionProjetBoutEnBout" name="gestion_projet"
+                                                            value="Bout en bout">
+                                                        <label class="form-check-label" for="gestionProjetBoutEnBout">
+                                                            Bout en bout
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio"
+                                                            id="gestionProjetAgile" name="gestion_projet" value="Agile">
+                                                        <label class="form-check-label" for="gestionProjetAgile">
+                                                            Agile - être informé régulièrement de l’avancement du projet
+                                                        </label>
                                                     </div>
                                                 </div>
                                                 <div class="col-10 mb-3">
@@ -1625,22 +1045,17 @@ site internet sur le cahier de charge de son site internet`
                                                     @php
                                                         $communications = [['name' => 'Téléphone', 'alias' => 'telephone'], ['name' => 'E-mail', 'alias' => 'email'], ['name' => 'Visio-conférences', 'alias' => 'visio_conference']];
                                                     @endphp
-                                                    <div class="row">
-                                                        @foreach ($communications as $item)
-                                                            <div class="col-auto">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="checkbox"
-                                                                        id="communication_{{ $item['alias'] }}"
-                                                                        name="communication[]"
-                                                                        value="{{ $item['name'] }}">
-                                                                    <label class="form-check-label"
-                                                                        for="communication_{{ $item['alias'] }}"">
-                                                                        {{ $item['name'] }}
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
+                                                    @foreach ($communications as $item)
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="communication_{{ $item['alias'] }}"
+                                                                name="communication[]" value="{{ $item['name'] }}">
+                                                            <label class="form-check-label"
+                                                                for="communication_{{ $item['alias'] }}"">
+                                                                {{ $item['name'] }}
+                                                            </label>
+                                                        </div>
+                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
@@ -1798,7 +1213,7 @@ site internet sur le cahier de charge de son site internet`
                                                                             <input type="number"
                                                                                 class="form-control py-1" placeholder="00"
                                                                                 readonly id="total-{{ $item['alias'] }}"
-                                                                                name="total_{{ $item['name'] }}" />
+                                                                                name="unit_amount_{{ $item['name'] }}" />
                                                                         </div>
                                                                     </td>
                                                                 </tr>
@@ -1836,26 +1251,20 @@ site internet sur le cahier de charge de son site internet`
                                                 @endphp
 
                                                 @for ($i = 1; $i <= 10; $i++)
-                                                    <div class="row  @if ($index > 1) d-none @endif"
-                                                        id="pourcentage-{{ $index }}">
-                                                        <div
-                                                            class="border border-bottom-0 border-dark border-start-0 border-top-0 col-7 pb-4">
+                                                    <div class="row">
+                                                        <div class="col-7">
                                                             <div class="row">
-                                                                <div class="col-2 mt-auto">
+                                                                <div class="col-3 mt-auto">
                                                                     <div class="form-group">
                                                                         <label class="form-label"
                                                                             id="label-pourcentage-operation-{{ $index }}"
                                                                             for="pourcentage-operation-{{ $index }}">
-                                                                            @if ($index == 1)
-                                                                                Pourcentage à payer après la signature:
-                                                                            @endif
+                                                                            Pourcentage à payer après la signature:
                                                                         </label>
                                                                         <div class="input-group input-group-merge">
                                                                             <span class="input-group-text">%</span>
                                                                             <input type="number" class="form-control"
-                                                                                name="installment_{{ $index }}_percentage"
                                                                                 id="pourcentage-operation-{{ $index }}"
-                                                                                @if ($index == 1) value="20" @endif
                                                                                 placeholder="00" />
                                                                         </div>
                                                                     </div>
@@ -1870,24 +1279,18 @@ site internet sur le cahier de charge de son site internet`
                                                                         <div class="input-group input-group-merge">
                                                                             <span class="input-group-text">€</span>
                                                                             <input type="number" class="form-control"
-                                                                                name="installment_{{ $index }}_amount"
                                                                                 id="pourcentage-value-{{ $index }}"
                                                                                 placeholder="00" readonly />
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-5 mt-auto">
-                                                                    <label class="form-label"
-                                                                        for="titre-operation-{{ $index }}">
+                                                                <div class="col-4 mt-auto">
+                                                                    <label class="form-label" for="titre-operation-{{ $index }}">
                                                                         Titre de l'operation:
                                                                     </label>
                                                                     <input type="text" class="form-control"
                                                                         placeholder="Titre de l'operation"
-                                                                        name="installment_{{ $index }}_title"
-                                                                        id="titre-operation-{{ $index }}"
-                                                                        @if ($index == 1) readonly
-                                                                        title="Pourcentage à payer après la signature"
-                                                                        value="Pourcentage à payer après la signature" @endif>
+                                                                        name="titre-operation-{{ $index }}" id="titre-operation-{{ $index }}">
                                                                 </div>
                                                                 <div class="col-1 mt-auto">
                                                                     <button type="button" data-bs-toggle="tooltip"
@@ -1898,80 +1301,162 @@ site internet sur le cahier de charge de son site internet`
                                                                     </button>
                                                                 </div>
                                                                 <div class="col-1 mt-auto">
-                                                                    @if ($index < 10)
-                                                                        <button type="button" data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top" title="Ajouter"
-                                                                            class="btn btn-icon btn-label-primary waves-effect waves-light"
-                                                                            id="plus-btn-{{ $index }}">
-                                                                            <i class="ti ti-plus"></i>
-                                                                        </button>
-                                                                    @endif
+                                                                    <button type="button" data-bs-toggle="tooltip"
+                                                                        data-bs-placement="top" title="Ajouter"
+                                                                        class="btn btn-icon btn-label-primary waves-effect waves-light"
+                                                                        id="plus-btn-{{ $index }}">
+                                                                        <i class="ti ti-plus"></i>
+                                                                    </button>
                                                                 </div>
                                                                 <div class="col-1 mt-auto">
-                                                                    @if ($index > 1)
-                                                                        <button type="button" data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top" title="Supprimer"
-                                                                            class="btn btn-icon  btn-label-danger waves-effect waves-light"
-                                                                            id="delete-btn-{{ $index }}">
-                                                                            <i class="ti ti-trash"></i>
-                                                                        </button>
-                                                                    @endif
+                                                                    <button type="button" data-bs-toggle="tooltip"
+                                                                        data-bs-placement="top" title="Ajouter"
+                                                                        class="btn btn-icon  btn-label-danger waves-effect waves-light"
+                                                                        id="delete-btn-{{ $index }}">
+                                                                        <i class="ti ti-trash"></i>
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        @if ($index == 1)
-                                                            <div class="col-5">
-                                                                <div class="form-group">
-                                                                    <label class="form-label fs-4"> <b> Le reste :</b>
-                                                                    </label>
+                                                    </div>
+                                                    
+                                                    <div class="row  @if ($index > 1) d-none @endif"
+                                                        id="pourcentage-{{ $index }}">
+                                                        <div class="col-2 mb-3">
+                                                            <div class="form-group">
+                                                                <label class="form-label"
+                                                                    id="label-pourcentage-operation-{{ $index }}"
+                                                                    for="pourcentage-operation-{{ $index }}">
+                                                                    @if ($index == 1)
+                                                                        Pourcentage à payer après la signature:
+                                                                    @endif
+
+                                                                </label>
+                                                                <div class="input-group input-group-merge">
+                                                                    <span class="input-group-text">%</span>
+                                                                    <input type="number" class="form-control"
+                                                                        id="pourcentage-operation-{{ $index }}"
+                                                                        placeholder="00" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-9 d-flex flex-column mb-3">
+                                                            <div class="row mt-auto">
+                                                                <div class="align-items-end col-2 d-flex">
                                                                     <div class="input-group input-group-merge">
                                                                         <span class="input-group-text">€</span>
                                                                         <input type="number" class="form-control"
-                                                                            placeholder="00" id="reste"
-                                                                            name="rest" />
+                                                                            placeholder="00"
+                                                                            id="pourcentage-value-{{ $index }}"
+                                                                            name="pourcentage-value-{{ $index }}"
+                                                                            readonly>
                                                                     </div>
                                                                 </div>
-                                                                <hr class="my-3">
-                                                                <div class="row">
 
-                                                                    <div class="col-6 mb-3 mt-auto">
-                                                                        <div class="form-group">
-                                                                            <label class="form-label fs-4"
-                                                                                id="label-pourcentage-operation-maintenance"
-                                                                                for="pourcentage-operation-maintenance">
-                                                                                <b> Maintenance :</b>
-                                                                            </label>
-                                                                            <div class="input-group input-group-merge">
-                                                                                <span class="input-group-text">%</span>
-                                                                                <input type="number" class="form-control"
-                                                                                    id="pourcentage-operation-maintenance"
-                                                                                    name="maintenance_percentage"
-                                                                                    placeholder="00" value="20" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-6 mb-3 mt-auto">
-                                                                        <div class="form-group">
-
-                                                                            <div class="input-group input-group-merge">
-                                                                                <span class="input-group-text">€</span>
-                                                                                <input type="number" class="form-control"
-                                                                                    id="pourcentage-value-maintenance"
-                                                                                    name="maintenance_amount"
-                                                                                    placeholder="00" value="20"
-                                                                                    readonly />
-                                                                            </div>
-                                                                        </div>
+                                                                <div class="col-4">
+                                                                    <label class="form-label"
+                                                                        for="titre-operation-{{ $index }}">
+                                                                        Titre de l'operation:
+                                                                    </label>
+                                                                    <input type="text" class="form-control"
+                                                                        placeholder="Titre de l'operation"
+                                                                        name="titre-operation-{{ $index }}"
+                                                                        id="titre-operation-{{ $index }}"
+                                                                        @if ($index == 1) readonly value="Pourcentage à payer après la signature" @endif>
+                                                                </div>
+                                                                <div class="align-items-end col-auto d-flex">
+                                                                    <div>
+                                                                        <button type="button" data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Confirmer"
+                                                                            class="btn btn-icon btn-label-success waves-effect waves-light"
+                                                                            id="confirm-btn-{{ $index }}">
+                                                                            <i class="ti ti-check"></i>
+                                                                        </button>
                                                                     </div>
                                                                 </div>
+                                                                <div class="align-items-end col-auto d-flex">
+                                                                    <div>
+                                                                        <button type="button" data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Ajouter"
+                                                                            class="btn btn-icon btn-primary waves-effect waves-light @if ($index >= 10) visibility-hidden @endif"
+                                                                            id="plus-btn-{{ $index }}">
+                                                                            <i class="ti ti-plus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="align-items-end col-auto d-flex">
+                                                                    @if ($index > 1)
+                                                                        <div>
+                                                                            <button type="button"
+                                                                                data-bs-toggle="tooltip"
+                                                                                data-bs-placement="top" title="Supprimer"
+                                                                                class="btn btn-icon btn-danger waves-effect waves-light"
+                                                                                id="delete-btn-{{ $index }}">
+                                                                                <i class="ti ti-trash"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+
                                                             </div>
-                                                        @endif
+                                                        </div>
+                                                        <div class="col-3"></div>
                                                     </div>
                                                     @php
                                                         $index++;
                                                     @endphp
                                                 @endfor
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="col-10 py-3 rounded-3">
+                                                            <div class="form-group">
+                                                                <label class="form-label fs-4"> <b> Le reste :</b> </label>
+                                                                <div class="input-group input-group-merge">
+                                                                    <span class="input-group-text">€</span>
+                                                                    <input type="number" class="form-control"
+                                                                        placeholder="00" id="reste" name="reste" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-8 my-3">
+                                                        <div class="row">
+
+                                                            <div class="col-3 mb-3">
+                                                                <div class="form-group">
+                                                                    <label class="form-label fs-4"
+                                                                        id="label-pourcentage-operation-maintenance"
+                                                                        for="pourcentage-operation-maintenance">
+                                                                        <b> Maintenance :</b>
+                                                                    </label>
+                                                                    <div class="input-group input-group-merge">
+                                                                        <span class="input-group-text">%</span>
+                                                                        <input type="number" class="form-control"
+                                                                            id="pourcentage-operation-maintenance"
+                                                                            placeholder="00" value="20" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-9 d-flex flex-column mb-3">
+                                                                <div class="row mt-auto">
+                                                                    <div class="align-items-end col-2 d-flex">
+                                                                        <div class="input-group input-group-merge">
+                                                                            <span class="input-group-text">€</span>
+                                                                            <input type="number" class="form-control"
+                                                                                placeholder="00"
+                                                                                id="pourcentage-value-maintenance"
+                                                                                name="pourcentage-value-maintenance"
+                                                                                readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <hr class="my-5">
 
                                         </div>
                                     </div>
@@ -1982,7 +1467,7 @@ site internet sur le cahier de charge de son site internet`
                                             <span class="align-middle d-sm-inline-block d-none">Précédent</span>
                                         </button>
                                         <button type="button" class="btn btn-success btn-next btn-submit"
-                                            id="next-step-5">
+                                            id="next-step-1">
                                             <span>
                                                 Confirmer
                                             </span>

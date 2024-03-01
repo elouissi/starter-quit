@@ -8,6 +8,10 @@
             font-family: Arial, sans-serif;
         }
 
+        * {
+            text-align: justify;
+        }
+
         .page-break {
             page-break-after: always;
         }
@@ -43,6 +47,10 @@
             color: inherit;
             cursor: pointer;
         }
+
+        .to-confirm {
+            background-color: orange;
+        }
     </style>
 </head>
 
@@ -53,11 +61,19 @@
     $contact_person = $specification->contact_person;
     $phone = $specification->phone;
     $email = $specification->email;
-    $project_type = $specification->objectif_site->project_type;
+    $main_activities = $specification->main_activities;
+    $services_products = $specification->services_products;
+    $target_audience = $specification->target_audience;
 
     // objectif_site
+    $project_type = $specification->objectif_site->project_type;
     $project_need = $specification->objectif_site->project_need;
     $target_keywords = $specification->objectif_site->target_keywords;
+    $expected_client_objectives = $specification->objectif_site->expected_client_objectives;
+    $iatext_techniques_specs = $specification->objectif_site->iatext_techniques_specs;
+    $iatext_target_keywords = $specification->objectif_site->iatext_target_keywords;
+    $menu = $specification->objectif_site->menu;
+    $iatext_menu = $specification->objectif_site->iatext_menu;
     $languages = $specification->objectif_site->languages ?? [];
     $expected_functions = $specification->objectif_site->expected_functions ?? [];
     $payment_options = $specification->objectif_site->payment_options ?? [];
@@ -65,13 +81,17 @@
     // existing_analysis
     $hosting = $specification->existing_analysis->hosting;
     $domain_name = $specification->existing_analysis->domain_name;
+    $iatext_competitors = $specification->existing_analysis->iatext_competitors;
+    $iatext_constraints = $specification->existing_analysis->iatext_constraints;
     $sample_sites_files = $specification->existing_analysis->sample_sites_files ?? [];
     $constraints_files = $specification->existing_analysis->constraints_files ?? [];
 
     // design_content
     $color_palette = $specification->design_content->color_palette;
-    $typography = $specification->design_content->typography;
+    $typography_text = $specification->design_content->typography_text;
+    $typography_text = $specification->design_content->typography_text;
     $number_of_propositions = $specification->design_content->number_of_propositions;
+    $iatext_exemples_sites = $specification->design_content->iatext_exemples_sites;
     $style_graphiques = $specification->design_content->style_graphiques ?? [];
 
     // deadline_and_budget
@@ -84,8 +104,156 @@
 
 
 
+    {{-- <div class="page-break">
+        <table style="width: 100%;">
+            <thead>
+                <tr style="background: gray;color: white;">
+                    <th style="width: 40%;padding: 5px 10px;text-transform: capitalize;">éléments</th>
+                    <th style="width: 30%;padding: 5px 10px;text-transform: capitalize;">fournis</th>
+                    <th style="width: 30%;padding: 5px 10px;text-transform: capitalize;">à créer</th>
+                </tr>
+                <tr>
+                    <th>
+                    </th>
+                    <th style="font-size: 12px;font-weight: 400;font-style: italic; padding: 0 10px;">
+                        <small>
+                            Transmis avec le cahier des charges
+                        </small>
+                    </th>
+                    <th style="font-size: 12px;font-weight: 400;font-style: italic; padding: 0 10px;">
+                        <small>
+                            Devront être réalisés par le prestataire
+                        </small>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background-color: rgb(240, 240, 240)">
+                    <td style="padding: 5px 10px;">Logo</td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->logo == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->logo == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->logo == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->logo == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                </tr>
+                <tr style="background-color: rgb(250, 250, 250)">
+                    <td style="padding: 5px 10px;">Charte graphique</td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->graphical_charter == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->graphical_charter == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->graphical_charter == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->graphical_charter == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                </tr>
+                <tr style="background-color: rgb(250, 250, 250)">
+                    <td style="padding: 5px 10px;">Maquette / Wireframe</td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->wireframe == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->wireframe == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->wireframe == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->wireframe == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                </tr>
+                <tr style="background-color: rgb(250, 250, 250)">
+                    <td style="padding: 5px 10px;">Typographies (polices d'écritue)</td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->typography == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->typography == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->typography == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->typography == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                </tr>
+                <tr style="background-color: rgb(250, 250, 250)">
+                    <td style="padding: 5px 10px;">Description services produits</td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->description_product_services == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->description_product_services == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                    <td style="padding: 5px 10px;">
+                        @if ($specification->design_content->description_product_services == 'non')
+                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @elseif($specification->design_content->description_product_services == 'oui')
+                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                style="width: 20px; height: 20px;">
+                        @endif
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div> --}}
+
     <div class="page-break">
-        <h1 class="primary-color" style="text-align: center" id="presentation_entreprise">Présentation de Havet Digital
+        <div
+            style="position: relative; width: 100%; height: 100%;background-image: url({{ public_path('assets/img/pdf/page-de-garde.png') }}); background-size: cover; background-position: center;">
+            <span
+                style="color: #59c0d7; position: absolute; top: 80px; right: 60px; letter-spacing: 20px; font-size: 50px;font-family: emoji;font-weight: 600;">
+                2024
+            </span>
+            <span style="position: absolute; bottom: 20px; left: 20px; max-width: 250px;">
+                <h1 style="font-family: emoji;margin: 0; padding: 0;color: #1d2542;">
+
+                    {{ $entreprise_name }}
+                </h1>
+            </span>
+        </div>
+    </div>
+    <div class="page-break">
+        <h1 class="primary-color" style="text-align: center">Présentation de Havet Digital
         </h1>
         <p>
             Bienvenue chez Havet Digital, où l'innovation digitale rencontre l'excellence et la créativité pour
@@ -209,12 +377,14 @@
                 Introduction
                 <ol>
                     <li>
-                        <a href="#presentation_entreprise">
+                        <a>
                             Présentation de l'entreprise
                         </a>
                     </li>
                     <li>
-                        Contexte et objectifs du projet
+                        <a>
+                            Contexte et objectifs du projet
+                        </a>
                     </li>
                     <li>
                         Portée du document
@@ -807,18 +977,16 @@
             </li>
             <li>
                 <h3 class="primary-color">Présentation de l’activité </h3>
-                <p class="prompt-todo">
-                    Prompt : [étant qu’expert en rédaction des cahiers des charges pour le développement d’un site
-                    internet, écrire moi un paragraphe sur l’activité de ce client : (site internet) ]
+                <p>
+                    {{-- {{ $main_activities }} --}}
+                    {!! nl2br(e($main_activities)) !!}
                 </p>
             </li>
             <li>
                 <h3 class="primary-color">Service / produit Vendu</h3>
-                <p class="prompt-todo">
-                    Prompt [étant qu’expert en rédaction des cahiers des charges pour le développement d’un site
-                    internet, écrire moi un paragraphe sur les services ou les produits vendu de ce client : (site
-                    internet)
-                    ]
+                <p>
+                    {{-- {{ $services_products }} --}}
+                    {!! nl2br(e($services_products)) !!}
                 </p>
             </li>
         </ol>
@@ -972,28 +1140,27 @@
             </li>
             <li>
                 <h3 class="primary-color">Objectifs du projet </h3>
-                <p class="prompt-todo">
-                    Prompt [étant qu’expert en rédaction des cahiers des charges pour le développement d’un site
-                    internet, les objectifs : (objectifs), réécrire moi un paragraphe sur les objectifs attendu de ce
-                    client
-                    ]
+                <p>
+                    {{-- {{ $expected_client_objectives }} --}}
+                    {!! nl2br(e($expected_client_objectives)) !!}
                 </p>
             </li>
             <li>
                 <h3 class="primary-color">Public Cible </h3>
-                <p class="prompt-todo">
+                {{-- <p class="prompt-todo">
                     Prompt [étant qu’expert en rédaction des cahiers des charges pour le développement d’un site
                     internet, écrire moi un paragraphe sur le public cible de ce client : (site internet) ]
+                </p> --}}
+                <p>
+                    {{-- {{ $target_audience }} --}}
+                    {!! nl2br(e($target_audience)) !!}
                 </p>
             </li>
             <li>
                 <h3 class="primary-color">Concurrence </h3>
-                <p class="prompt-todo">
-                    Prompt [voici les concurrents (valeur des sites concurrents), étant qu’expert en rédaction des
-                    cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur
-                    l’analyse des principaux concurrents et identification des points forts à intégrer sur le site
-                    internet
-                    que le client souhaite]
+                <p>
+                    {{-- {{ $iatext_competitors }} --}}
+                    {!! nl2br(e($iatext_competitors)) !!}
                 </p>
             </li>
         </ol>
@@ -1604,93 +1771,111 @@
                                 produits, sans se préoccuper des détails du paiement.
                             </p>
                         @endif
-                        <p style="background: violet">
+                        {{-- <p style="background: violet">
                             [S’il a rempli le champ de spécifications techniques que le client souhaite] <br>
                             Prompt [étant qu’expert en rédaction des cahiers des charges pour le développement d’un site
                             internet, récrire moi en 3 paragraphes les spécifications techniques (spécifications
                             techniques) que
                             le client souhaite avoir sur son site]
+                        </p> --}}
+                        <p>
+                            {!! nl2br(e($iatext_techniques_specs)) !!}
                         </p>
                     </li>
-                    <li>
-                        <h4>Intégrations tierces</h4>
-                        @if (in_array('Plugins sur mesure', $expected_functions))
-                            <p>
-                                Nous allons développer et intégrer des plugins sur mesure pour enrichir les
-                                fonctionnalités du site.
-                                Ces outils personnalisés sont conçus pour répondre spécifiquement aux besoins uniques de
-                                notre
-                                activité et de nos utilisateurs, offrant des fonctionnalités qui ne sont pas disponibles
-                                via les
-                                solutions standard. Les plugins sur mesure nous permettent d'offrir une expérience
-                                utilisateur
-                                unique et
-                                différenciée.
-                            </p>
-                        @endif
-                        @if (in_array('Besoin des APIs', $expected_functions))
-                            <p>
-                                Le site utilisera des APIs pour se connecter avec des applications tierces, permettant
-                                ainsi une
-                                intégration fluide de services externes. Que ce soit pour l'analyse de données, les
-                                paiements en
-                                ligne, le marketing par e-mail ou les réseaux sociaux, ces connexions API facilitent
-                                l'automatisation
-                                des processus et l'enrichissement de l'expérience utilisateur sur notre plateforme.
-                            </p>
-                        @endif
-                        @if (in_array('Google Analytics', $expected_functions))
-                            <p>
-                                L'intégration de Google Analytics au sein de notre site internet développé sous
-                                WordPress
-                                constitue une démarche stratégique essentielle pour mesurer et comprendre le
-                                comportement des
-                                utilisateurs sur notre plateforme. Cet outil d'analyse puissant nous permettra de
-                                recueillir des
-                                données précieuses sur les visites, les sources de trafic, les taux de conversion et
-                                bien d'autres
-                                indicateurs clés de performance. En exploitant ces informations, nous serons en mesure
-                                d'optimiser continuellement l'expérience utilisateur, d'ajuster nos stratégies de
-                                contenu et de
-                                marketing, et ainsi, de maximiser l'efficacité de notre présence en ligne.
-                                L'installation de Google
-                                Analytics sera réalisée de manière à garantir la collecte de données fiables et
-                                conformes aux
-                                normes de protection de la vie privée.
-                            </p>
-                        @endif
-                        @if (in_array('Réseaux sociaux', $expected_functions))
-                            <p>
-                                L'intégration des réseaux sociaux sur un site internet est une stratégie indispensable
-                                dans le
-                                contexte digital actuel, permettant de renforcer la visibilité de la marque et
-                                d'encourager
-                                l'engagement des utilisateurs. Cette démarche consiste à incorporer des fonctionnalités
-                                sociales
-                                directement sur le site, telles que des boutons de partage vers Facebook, Twitter,
-                                Instagram ou
-                                LinkedIn, qui facilitent la diffusion du contenu par les visiteurs sur leurs propres
-                                réseaux. De
-                                plus,
-                                l'affichage de flux en direct provenant des comptes sociaux de la marque sur le site web
-                                offre une
-                                dynamique de contenu renouvelé et incite les utilisateurs à suivre l'entreprise sur ces
-                                plateformes.
-                                L'intégration des réseaux sociaux contribue également à améliorer le référencement
-                                naturel (SEO)
-                                du site, car les interactions générées (partages, likes, commentaires) sont des
-                                indicateurs de
-                                qualité pris en compte par les moteurs de recherche. En somme, cette intégration crée un
-                                pont
-                                entre le site de l'entreprise et ses plateformes sociales, favorisant ainsi une
-                                meilleure
-                                interaction
-                                avec la communauté, l'accroissement du trafic web et l'élargissement de la portée de la
-                                marque
-                                sur internet.
-                            </p>
-                        @endif
-                    </li>
+                    @if (in_array('Plugins sur mesure', $expected_functions) ||
+                            in_array('Besoin des APIs', $expected_functions) ||
+                            in_array('Google Analytics', $expected_functions) ||
+                            in_array('Réseaux sociaux', $expected_functions))
+                        <li>
+                            <h4>Intégrations tierces</h4>
+                            @if (in_array('Plugins sur mesure', $expected_functions))
+                                <p>
+                                    Nous allons développer et intégrer des plugins sur mesure pour enrichir les
+                                    fonctionnalités du site.
+                                    Ces outils personnalisés sont conçus pour répondre spécifiquement aux besoins
+                                    uniques de
+                                    notre
+                                    activité et de nos utilisateurs, offrant des fonctionnalités qui ne sont pas
+                                    disponibles
+                                    via les
+                                    solutions standard. Les plugins sur mesure nous permettent d'offrir une expérience
+                                    utilisateur
+                                    unique et
+                                    différenciée.
+                                </p>
+                            @endif
+                            @if (in_array('Besoin des APIs', $expected_functions))
+                                <p>
+                                    Le site utilisera des APIs pour se connecter avec des applications tierces,
+                                    permettant
+                                    ainsi une
+                                    intégration fluide de services externes. Que ce soit pour l'analyse de données, les
+                                    paiements en
+                                    ligne, le marketing par e-mail ou les réseaux sociaux, ces connexions API facilitent
+                                    l'automatisation
+                                    des processus et l'enrichissement de l'expérience utilisateur sur notre plateforme.
+                                </p>
+                            @endif
+                            @if (in_array('Google Analytics', $expected_functions))
+                                <p>
+                                    L'intégration de Google Analytics au sein de notre site internet développé sous
+                                    WordPress
+                                    constitue une démarche stratégique essentielle pour mesurer et comprendre le
+                                    comportement des
+                                    utilisateurs sur notre plateforme. Cet outil d'analyse puissant nous permettra de
+                                    recueillir des
+                                    données précieuses sur les visites, les sources de trafic, les taux de conversion et
+                                    bien d'autres
+                                    indicateurs clés de performance. En exploitant ces informations, nous serons en
+                                    mesure
+                                    d'optimiser continuellement l'expérience utilisateur, d'ajuster nos stratégies de
+                                    contenu et de
+                                    marketing, et ainsi, de maximiser l'efficacité de notre présence en ligne.
+                                    L'installation de Google
+                                    Analytics sera réalisée de manière à garantir la collecte de données fiables et
+                                    conformes aux
+                                    normes de protection de la vie privée.
+                                </p>
+                            @endif
+                            @if (in_array('Réseaux sociaux', $expected_functions))
+                                <p>
+                                    L'intégration des réseaux sociaux sur un site internet est une stratégie
+                                    indispensable
+                                    dans le
+                                    contexte digital actuel, permettant de renforcer la visibilité de la marque et
+                                    d'encourager
+                                    l'engagement des utilisateurs. Cette démarche consiste à incorporer des
+                                    fonctionnalités
+                                    sociales
+                                    directement sur le site, telles que des boutons de partage vers Facebook, Twitter,
+                                    Instagram ou
+                                    LinkedIn, qui facilitent la diffusion du contenu par les visiteurs sur leurs propres
+                                    réseaux. De
+                                    plus,
+                                    l'affichage de flux en direct provenant des comptes sociaux de la marque sur le site
+                                    web
+                                    offre une
+                                    dynamique de contenu renouvelé et incite les utilisateurs à suivre l'entreprise sur
+                                    ces
+                                    plateformes.
+                                    L'intégration des réseaux sociaux contribue également à améliorer le référencement
+                                    naturel (SEO)
+                                    du site, car les interactions générées (partages, likes, commentaires) sont des
+                                    indicateurs de
+                                    qualité pris en compte par les moteurs de recherche. En somme, cette intégration
+                                    crée un
+                                    pont
+                                    entre le site de l'entreprise et ses plateformes sociales, favorisant ainsi une
+                                    meilleure
+                                    interaction
+                                    avec la communauté, l'accroissement du trafic web et l'élargissement de la portée de
+                                    la
+                                    marque
+                                    sur internet.
+                                </p>
+                            @endif
+                        </li>
+                    @endif
                 </ol>
             </li>
         </ol>
@@ -1703,16 +1888,17 @@
                 <h3 class="primary-color">Préférences de Design et d'Interface</h3>
                 <ul>
                     <li>
-                        <b>Style visuel : </b> A faire
+                        <b>Style visuel : </b> {{ implode(', ', $style_graphiques) }}
                     </li>
                     <li>
-                        <b>Palette de couleurs : </b> {{ $color_palette }}
+                        <b>Palette de couleurs : </b> {{ str_replace("\n", ', ', $color_palette) }}
                     </li>
                     <li>
-                        <b>Typographie : </b> {{ $typography }}
+                        <b>Typographie : </b>
+                        {{ $typography_text ? str_replace("\n", ', ', $typography_text) : 'Non définie' }}
                     </li>
                     <li>
-                        <b>Disposition de Menu : </b> A faire
+                        <b>Disposition de Menu : </b> {{ str_replace("\n", ', ', $menu) }}
                     </li>
                 </ul>
             </li>
@@ -1721,7 +1907,138 @@
                 <ul>
                     <li>
                         <b>Plan de contenu :</b>
-                        <p style="background: yellow"> a faire [Tableau de contenu]</p>
+                        <p>
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr style="background: gray;color: white;">
+                                    <th style="width: 40%;padding: 5px 10px;text-transform: capitalize;">éléments</th>
+                                    <th style="width: 30%;padding: 5px 10px;text-transform: capitalize;">fournis</th>
+                                    <th style="width: 30%;padding: 5px 10px;text-transform: capitalize;">à créer</th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                    </th>
+                                    <th style="font-size: 10px;font-weight: 400;font-style: italic; padding: 0 10px;">
+                                        <small>
+                                            Transmis avec le cahier des charges
+                                        </small>
+                                    </th>
+                                    <th style="font-size: 10px;font-weight: 400;font-style: italic; padding: 0 10px;">
+                                        <small>
+                                            Devront être réalisés par le prestataire
+                                        </small>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background-color: rgb(240, 240, 240)">
+                                    <td style="padding: 5px 10px;">Logo</td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->logo == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->logo == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->logo == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->logo == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr style="background-color: rgb(250, 250, 250)">
+                                    <td style="padding: 5px 10px;">Charte graphique</td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->graphical_charter == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->graphical_charter == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->graphical_charter == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->graphical_charter == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr style="background-color: rgb(250, 250, 250)">
+                                    <td style="padding: 5px 10px;">Maquette / Wireframe</td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->wireframe == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->wireframe == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->wireframe == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->wireframe == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr style="background-color: rgb(250, 250, 250)">
+                                    <td style="padding: 5px 10px;">Typographies (polices d'écritue)</td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->typography == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->typography == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->typography == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->typography == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr style="background-color: rgb(250, 250, 250)">
+                                    <td style="padding: 5px 10px;">Description services produits</td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->description_product_services == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->description_product_services == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                    <td style="padding: 5px 10px;">
+                                        @if ($specification->design_content->description_product_services == 'non')
+                                            <img src="{{ public_path('assets/img/pdf/square-check.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @elseif($specification->design_content->description_product_services == 'oui')
+                                            <img src="{{ public_path('assets/img/pdf/square.png') }}"
+                                                style="width: 20px; height: 20px;">
+                                        @endif
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </p>
                         <p>
                             Dans le processus de création et de développement de votre site internet, notre équipe
                             s'engage
@@ -1746,29 +2063,34 @@
                     </li>
                     <li>
                         <b>Arborescence du site :</b>
-                        <p style="background: violet">
-                            Prompt avec une api
+                        <p>
+                            {!! nl2br(e($iatext_menu)) !!}
                         </p>
                     </li>
                     <li>
                         <b>Les éléments sur Mesure :</b>
-                        <p style="background: violet">
+                        {{-- <p style="background: violet">
                             Prompt [écrire un paragraphe détaillé pour élaborer Les éléments à développer sur mesure
                             (valeur
                             de champ Contraintes) que le client voulait inclure sur le site internet sur le cahier de
                             charge de
                             son site internet]
+                        </p> --}}
+                        <p>
+                            {!! nl2br(e($iatext_constraints)) !!}
+                            {{-- {{ $iatext_constraints }} --}}
                         </p>
-                        <p style="background: violet">
-                            Prompt [écrire un paragraphe détaillé pour élaborer Les éléments suivants (valeur de champ
+                        <p>
+                            {!! nl2br(e($iatext_exemples_sites)) !!}
+                            {{-- Prompt [écrire un paragraphe détaillé pour élaborer Les éléments suivants (valeur de champ
                             des
                             exemples de sites avec un commentaire) que le client voulait inclure sur le site internet
                             sur le
                             cahier
-                            de charge de son site internet]
+                            de charge de son site internet] --}}
                         </p>
                     </li>
-                    <p style="background-color: red">
+                    {{-- <p style="background-color: red">
                         [Si le Designer à mis en place la maquette merci d’afficher les éléments suivants]
                     </p>
                     <li>
@@ -1779,7 +2101,7 @@
                         <p style="background-color: red">
                             Vous trouverez en ce lien les visuels crées :
                         </p>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
         </ol>
@@ -1791,10 +2113,12 @@
             <li>
                 <h3 class="primary-color">Mots-clés cibles</h3>
                 @if ($target_keywords)
-                    <p style="background-color: violet">
-                        Prompt [dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
+                    <p>
+                        {{-- Prompt [dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
                         charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
-                        paragraphes : (valeur de champs des mots clés)]
+                        paragraphes : (valeur de champs des mots clés)] --}}
+
+                        {!! nl2br(e($iatext_target_keywords)) !!}
                     </p>
                 @else
                     <p>
@@ -1852,9 +2176,9 @@
                     nous assurons que votre site est conçu dès le départ avec les meilleures pratiques SEO en tête,
                     favorisant ainsi sa visibilité et son attractivité sur le long terme.
                 </p>
-                <p class="todo">
+                {{-- <p class="todo">
                     Rubrique fait par le seo [Balises de titre, méta descriptions, structure des URL, sitemap]
-                </p>
+                </p> --}}
             </li>
             <li>
                 <h3 class="primary-color">Création de contenu SEO</h3>
@@ -2240,7 +2564,7 @@
         </ol>
     </div>
 
-    <div class="page-break-off">
+    <div class="page-break">
         <h1 class="primary-color" style="text-align: center">Budget et Délais </h1>
         <ol>
             <li>
@@ -2319,39 +2643,63 @@
                             $budgetisation = [
                                 [
                                     'title' => "Installation de l'environnement",
+                                    'alias' => 'installation-environnement',
+                                    'name' => 'installation_environment',
                                 ],
                                 [
                                     'title' => 'Intégration de la structure',
+                                    'alias' => 'integration-structure',
+                                    'name' => 'integration_structure',
                                 ],
                                 [
                                     'title' => 'Ebauche Des Textes et traductions',
+                                    'alias' => 'ebauche-textes-traductions',
+                                    'name' => 'draft_texts_translations',
                                 ],
                                 [
                                     'title' => 'Maquettage graphique',
+                                    'alias' => 'maquettage-graphique',
+                                    'name' => 'graphic_modeling',
                                 ],
                                 [
                                     'title' => 'Développement & intégrations web',
+                                    'alias' => 'developpement-integrations-web',
+                                    'name' => 'web_development_integrations',
                                 ],
                                 [
                                     'title' => 'Intégration des textes et images',
+                                    'alias' => 'integration-textes-images',
+                                    'name' => 'text_image_integration',
                                 ],
                                 [
                                     'title' => "Intégration d'autres pages (contact, catégories ...etc.)",
+                                    'alias' => 'integration-autres-pages',
+                                    'name' => 'other_pages_integration',
                                 ],
                                 [
                                     'title' => 'Optimisation de la version Mobile',
+                                    'alias' => 'optimisation-version-mobile',
+                                    'name' => 'mobile_version_optimization',
                                 ],
                                 [
                                     'title' => 'Intégration du multilingue',
+                                    'alias' => 'integration-multilingue',
+                                    'name' => 'multilingual_integration',
                                 ],
                                 [
                                     'title' => 'Optimisation Pour SEO',
+                                    'alias' => 'optimisation-seo',
+                                    'name' => 'seo_optimisation',
                                 ],
                                 [
                                     'title' => 'Suivi et tests',
+                                    'alias' => 'suivi-tests',
+                                    'name' => 'testing_tracking',
                                 ],
                                 [
                                     'title' => 'Gestion de projets',
+                                    'alias' => 'gestion-projet',
+                                    'name' => 'project_management',
                                 ],
                             ];
                         @endphp
@@ -2367,11 +2715,17 @@
                             @endphp
                             <tr>
                                 <td style="padding: 2px 10px;">{{ $item['title'] }}</td>
-                                <td style="padding: 2px 10px; text-align: center;">{{ $randomNumber }}</td>
                                 <td style="padding: 2px 10px; text-align: center;">
-                                    {{ number_format($randomEuroAmount, 2, ',', '.') }} €</td>
+                                    {{ $specification->facturation->{'number_of_days_' . $item['name']} }}
+                                </td>
                                 <td style="padding: 2px 10px; text-align: center;">
-                                    {{ $randomNumber * $randomEuroAmount }} €
+                                    {{-- {{ $specification->facturation->{'unit_amount_' . $item['name']} }} --}}
+                                    {{ number_format($specification->facturation->{'unit_amount_' . $item['name']}, 2, ',', '.') }}
+                                    €</td>
+                                <td style="padding: 2px 10px; text-align: center;">
+                                    {{ number_format($specification->facturation->{'total_' . $item['name']}, 2, ',', '.') }}
+                                    €</td>
+                                {{-- {{ $randomNumber * $randomEuroAmount }} € --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -2379,14 +2733,14 @@
                         <tr>
                             <td style="padding: 2px 10px;">Remise exceptionnelle </td>
                             <td style="padding: 2px 10px; text-align: center;" colspan="3">
-                                {{ number_format(rand(2000, 10000) / 100, 2, ',', '.') }} €
+                                {{ number_format($specification->facturation->exceptional_discount, 2, ',', '.') }} €
                             </td>
                         </tr>
 
                         <tr>
                             <td style="padding: 2px 10px;">Total (HT) </td>
                             <td style="padding: 2px 10px; text-align: center;" colspan="3">
-                                {{ number_format($total, 2, ',', '.') }} €
+                                {{ number_format($specification->facturation->total, 2, ',', '.') }} €
                             </td>
                         </tr>
                     </thead>
@@ -2400,50 +2754,70 @@
                     services complémentaires optionnels. Voici un aperçu clair et structuré des engagements
                     financiers à prévoir :
                 <ul>
-                    <li style="background: yellow">
+                    <li>
                         <b>Acomptes :</b>
                         <ul>
                             <li>
-                                [Premier acompte] :
-                                [valeur de champ de pourcentage] %
-                                à la signature du contrat,
-                                soit [valeur de prix précalculé] € HT.
+                                {{ $specification->facturation->{'installment_1_title'} }} :
+                                {{ $specification->facturation->{'installment_1_percentage'} }} %
+                                à la signature du contrat, soit
+                                {{ number_format($specification->facturation->{'installment_1_amount'}, 2, ',', '.') }}
+                                € HT.
                             </li>
-                            <li>
+                            @for ($i = 2; $i <= 10; $i++)
+                                @if (
+                                    $specification->facturation->{'installment_' . $i . '_title'} &&
+                                        $specification->facturation->{'installment_' . $i . '_title'})
+                                    <li>
+                                        {{ $specification->facturation->{'installment_' . $i . '_title'} }} :
+                                        {{ $specification->facturation->{'installment_' . $i . '_percentage'} }} %
+                                        {{-- à la signature du contrat, --}}
+                                        du total, également
+                                        {{ number_format($specification->facturation->{'installment_' . $i . '_amount'}, 2, ',', '.') }}
+                                        € HT.
+                                    </li>
+                                @endif
+                            @endfor
+                            {{-- <li>
                                 [Second acompte] :
                                 [valeur de champ de pourcentage] %
                                 du total, également [valeur de prix précalculé] € HT.
-                            </li>
+                            </li> --}}
                         </ul>
                     </li>
-                    <li style="background: yellow">
+                    <li>
                         <b>Solde :</b>
                         <ul>
                             <li>
-                                Paiement du solde : [valeur de prix précalculé] € HT à régler à la fin de la recette
+                                Paiement du solde :
+                                {{ number_format($specification->facturation->total, 2, ',', '.') }} € HT à régler à la
+                                fin de la recette
                                 globale, validée par un Procès-Verbal (PV) de réception, confirmant la satisfaction
                                 du client et l'achèvement du projet.
                             </li>
                         </ul>
                     </li>
-                    <li style="background: yellowgreen">
-                        <b>Mise en place de l'hébergement :</b>
-                        <ul>
-                            <li>
-                                Frais de configuration et allocation d'un espace d'hébergement sur nos
-                                serveurs sécurisés : 500 € HT.
-                            </li>
-                        </ul>
-                    </li>
-                    <li style="background: yellow">
+                    @if ($specification->existing_analysis->hosting == 'Non')
+                        <li>
+                            <b>Mise en place de l'hébergement :</b>
+                            <ul>
+                                <li>
+                                    Frais de configuration et allocation d'un espace d'hébergement sur nos
+                                    serveurs sécurisés : 500 € HT.
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
+                    <li>
                         <b> Maintenance Annuelle : </b>
                         <ul>
                             <li>
-                                [Valeur de champ de pourcentage] % du coût de développement, applicable
+                                {{ $specification->facturation->maintenance_percentage }} % du coût de développement,
+                                applicable
                                 à partir de 6 mois suivant la date anniversaire du PV de recette globale.
                                 Cette maintenance inclut les évolutions mineures, les mises à jour et les
-                                corrections pour une durée d'un an, payable en une fois de [valeur de prix
-                                précalculé] € HT
+                                corrections pour une durée d'un an, payable en une fois de
+                                {{ $specification->facturation->maintenance_amount }} € HT
                             </li>
                         </ul>
                     </li>
@@ -2527,7 +2901,37 @@
 
     </div>
 
+    <div >
+      <div style="position: relative; width: 100%; height: 70%;">
+          <img src="{{ public_path('assets/img/pdf/logo.png') }}" alt="image"
+              style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%; max-height: 80%;">
 
+      </div>
+      <div style=" width: 100%; height: 30%;">
+          <div style="padding: 0 0 0 20px;">
+              <p style="color: #1c2649; font-weight: 700;font-size: 20px; text-align: center; ">
+                Du Lundi Au Vendredi:
+                <br>
+                De 8h30 à 19h00
+                <br>
+                +33 (0)3 21 63 19 19
+              </p>
+              <br>
+              <p style="color: #1c2649; font-weight: 700;font-size: 20px; text-align: center; ">
+                Arteparc, 9 Rue Des Bouleaux
+                <br>
+                59810 LESQUIN, France
+              </p>
+              <br>
+              <p style="color: #1c2649; font-weight: 700;font-size: 20px; text-align: center; ">
+                service@havetdigital.fr
+              </p>
+          </div>
+
+      </div>
+
+
+  </div>
 
 
 </body>

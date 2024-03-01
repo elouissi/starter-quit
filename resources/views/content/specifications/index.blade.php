@@ -45,6 +45,7 @@
     <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
+
 @endsection
 
 @section('page-script')
@@ -75,237 +76,16 @@
                         data: 'email'
                     },
                     {
+                        data: 'step'
+                    },
+                    {
                         data: 'actions'
                     }
                 ],
-                // drawCallback: function() {
-                //     const deleteFunctions = document.querySelectorAll('.delete-function');
-                //     deleteFunctions.forEach(deleteFunction => {
-                //         deleteFunction.onclick = function() {
-                //             const deleteButton = this; // Store reference to the button
-                //             const itemId = this.dataset.id;
-                //             Swal.fire({
-                //                 title: 'Êtes-vous sûr(e) ?',
-                //                 text: "Vous ne pourrez pas revenir en arrière !",
-                //                 icon: 'warning',
-                //                 showCancelButton: true,
-                //                 confirmButtonText: 'Oui, supprimez-le !',
-                //                 customClass: {
-                //                     confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
-                //                     cancelButton: 'btn btn-label-secondary waves-effect waves-light'
-                //                 },
-                //                 buttonsStyling: false
-                //             }).then(function(result) {
-                //                 if (result.value) {
-                //                     $(deleteButton).html(
-                //                             '<i class="ti ti-loader rotate"></i>')
-                //                         .prop('disabled', true);
-                //                     $.ajax({
-                //                         type: 'DELETE',
-                //                         url: `prompt/${itemId}`,
-                //                         data: {
-                //                             '_token': '{{ csrf_token() }}',
-                //                             id: itemId
-                //                         },
-                //                         success: function(data) {
-                //                             Swal.fire({
-                //                                 icon: 'success',
-                //                                 title: 'Supprimé !',
-                //                                 text: 'Votre {{ strtolower($crudTitle) }}  a été supprimé.',
-                //                                 customClass: {
-                //                                     confirmButton: 'btn btn-success waves-effect waves-light'
-                //                                 }
-                //                             });
-                //                             dataTable.ajax.reload();
-                //                         },
-                //                         error: function(error) {
-                //                             console.error('Erreur :',
-                //                                 error);
-                //                             Swal.fire({
-                //                                 icon: 'error',
-                //                                 title: 'Oups...',
-                //                                 text: 'Quelque chose s\'est mal passé !',
-                //                                 customClass: {
-                //                                     confirmButton: 'btn btn-danger waves-effect waves-light'
-                //                                 }
-                //                             });
-                //                         }
-                //                     });
-                //                 }
-                //             });
-                //         };
-                //     });
-
-                //     const editFunctions = document.querySelectorAll('.edit-function');
-                //     editFunctions.forEach(editFunction => {
-                //         editFunction.onclick = function() {
-                //             $('#form-update-record').addClass(
-                //                 'd-none');
-                //             $('#placeholder-form-update-record')
-                //                 .removeClass('d-none');
-                //             const fields = ['name', 'type', 'order'];
-                //             fields.forEach(function(field) {
-                //                 // $(`#${field}-edit`).val(``);
-                //                 $(`#${field}-edit`).val(null).trigger('change');
-                //                 $(`#${field}-update-error`).addClass('d-none');
-                //             });
-                //             const itemId = this.dataset.id;
-                //             $.ajax({
-                //                 type: 'GET',
-                //                 url: `prompt/${itemId}/edit`,
-                //                 data: {
-                //                     id: itemId
-                //                 },
-                //                 success: function(data) {
-                //                     $.each(data.result, function(key, value) {
-                //                         $(`#${key}-edit`).val(value)
-                //                             .trigger('change');
-
-                //                         // $(`#${key}-edit`).val(value);
-                //                     });
-                //                     $('#form-update-record').removeClass(
-                //                         'd-none');
-                //                     $('#placeholder-form-update-record')
-                //                         .addClass('d-none');
-                //                 },
-                //                 error: function(error) {
-                //                     Swal.fire({
-                //                         icon: 'error',
-                //                         title: 'Oups...',
-                //                         text: 'Quelque chose s\'est mal passé ! Veuillez contacter l\'équipe de support.',
-                //                         customClass: {
-                //                             confirmButton: 'btn btn-danger waves-effect waves-light'
-                //                         }
-                //                     });
-                //                 }
-                //             });
-                //         }
-                //     })
-                // }
             });
-
-            // $("#form-update-record").submit(function(event) {
-            //     event.preventDefault();
-            //     $('.error-message').addClass('d-none').text('');
-            //     $('#update-record-btn').prop('disabled', true).html(
-            //         `<i class="ti ti-loader rotate"></i>`);
-            //     $('#close-offcanvas-edit').prop('disabled', true);
-            //     var formData = $(this).serialize();
-            //     var csrfToken = $('meta[name="csrf-token"]').attr('content');
-            //     formData += '&_token=' + encodeURIComponent(csrfToken);
-            //     var form = $(this);
-            //     var idEdit = $('#id-edit').val();
-            //     $.ajax({
-            //         type: 'PUT',
-            //         url: `prompt/${idEdit}`,
-            //         data: formData,
-            //         success: function(response) {
-            //             $('#type').val(null).trigger('change');
-            //             form.trigger('reset');
-            //             $('#update-record-btn').prop('disabled', false).html(`Modifier`);
-            //             $('#close-offcanvas-edit').prop('disabled', false);
-            //             $('#close-offcanvas-edit').click();
-            //             dataTable.ajax.reload();
-            //         },
-            //         error: function(xhr, status, error) {
-            //             $('#update-record-btn').prop('disabled', false).html(`Modifier`);
-            //             $('#close-offcanvas-edit').prop('disabled', false);
-
-            //             if (xhr.status == 422) {
-            //                 $.each(xhr.responseJSON.errors, function(key, value) {
-            //                     $(`#${key}-update-error`).removeClass('d-none').text(
-            //                         value);
-            //                 });
-            //             } else {
-            //                 Swal.fire({
-            //                     icon: 'error',
-            //                     title: 'Oups...',
-            //                     text: 'Quelque chose s\'est mal passé ! Veuillez contacter l\'équipe de support.',
-            //                     customClass: {
-            //                         confirmButton: 'btn btn-danger waves-effect waves-light'
-            //                     }
-            //                 });
-            //             }
-            //         }
-            //     });
-            // });
-
-            // $('#openOffcanvasAddRecord').click(function() {
-            //     const fields = ['name', 'type', 'order'];
-            //     fields.forEach(function(field) {
-            //         $(`#${field}-add-error`).addClass('d-none');
-            //     });
-            // });
-
-            // const select2 = $('.select2')
-
-            // if (select2.length) {
-            //     select2.each(function() {
-            //         var $this = $(this);
-            //         $this.wrap('<div class="position-relative"></div>');
-            //         $this
-            //             .select2({
-            //                 placeholder: 'Sélectionnez une option',
-            //                 dropdownParent: $this.parent()
-            //             })
-            //     });
-            // }
-
-            // $("#form-add-new-record").submit(function(event) {
-            //     event.preventDefault();
-            //     $('.error-message').addClass('d-none').text('');
-            //     $('#add-new-record-btn').prop('disabled', true).html(
-            //         `<i class="ti ti-loader rotate"></i>`);
-            //     $('#close-offcanvas-add').prop('disabled', true);
-            //     var formData = $(this).serialize();
-            //     var csrfToken = $('meta[name="csrf-token"]').attr('content');
-            //     formData += '&_token=' + encodeURIComponent(csrfToken);
-            //     var form = $(this);
-            //     $.ajax({
-            //         url: '{!! route('configuration.prompt.store') !!}',
-            //         type: "POST",
-            //         data: formData,
-            //         success: function(response) {
-            //             console.log(response);
-            //             Swal.fire({
-            //                 icon: 'success',
-            //                 title: 'Créé !',
-            //                 text: 'Votre {{ strtolower($crudTitle) }} a été ajouté avec succès.',
-            //                 customClass: {
-            //                     confirmButton: 'btn btn-success waves-effect waves-light'
-            //                 }
-            //             });
-            //             $('#add-new-record-btn').prop('disabled', false).html(`Ajouter`);
-            //             $('#close-offcanvas-add').prop('disabled', false);
-
-            //             form.trigger('reset');
-            //             $('#close-offcanvas-add').click();
-            //             dataTable.ajax.reload();
-            //         },
-            //         error: function(xhr, status, error) {
-            //             $('#add-new-record-btn').prop('disabled', false).html(`Ajouter`);
-            //             $('#close-offcanvas-add').prop('disabled', false);
-
-            //             if (xhr.status == 422) {
-            //                 $.each(xhr.responseJSON.errors, function(key, value) {
-            //                     $(`#${key}-add-error`).removeClass('d-none').text(
-            //                         value);
-            //                 });
-            //             } else {
-            //                 Swal.fire({
-            //                     icon: 'error',
-            //                     title: 'Oups...',
-            //                     text: 'Quelque chose s\'est mal passé ! Veuillez contacter l\'équipe de support.',
-            //                     customClass: {
-            //                         confirmButton: 'btn btn-danger waves-effect waves-light'
-            //                     }
-            //                 });
-            //             }
-            //         }
-            //     });
-            // });
         });
     </script>
+    <script src="{{ asset('assets/js/ui-popover.js') }}"></script>
 @endsection
 
 @section('content')
@@ -329,10 +109,11 @@
                 <thead class="border-top">
                     <tr>
                         <th>ID</th>
-                        <th>Nom</th>
-                        <th>Type</th>
-                        <th>Order</th>
-                        <th>Order</th>
+                        <th>Nom de l'entreprise</th>
+                        <th>Personne à contacter</th>
+                        <th>Téléphone</th>
+                        <th>Email</th>
+                        <th>Step</th>
                         <th>Action</th>
                     </tr>
                 </thead>

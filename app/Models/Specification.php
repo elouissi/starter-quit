@@ -31,4 +31,9 @@ class Specification extends Model
   {
       return $this->hasOne(DeadlineAndBudget::class);
   }
+
+  public function facturation()
+  {
+      return $this->hasOne(Facturation::class);
+  }
 }

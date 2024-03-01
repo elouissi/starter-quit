@@ -69,11 +69,11 @@ Route::middleware([
   // 1
   Route::post('specifications/step1', [SpecificationsController::class, 'storestep1'])->name('specifications.storestep1');
   Route::get('specifications/step1/{id}', [SpecificationsController::class, 'showstep1'])->name('specifications.showstep1');
-  Route::put('specifications/step1/{id}', [SpecificationsController::class, 'updatestep1'])->name('specifications.updatestep1');
+  Route::post('specifications/step1/{id}', [SpecificationsController::class, 'updatestep1'])->name('specifications.updatestep1');
   // 2
   Route::post('specifications/step2', [SpecificationsController::class, 'storestep2'])->name('specifications.storestep2');
   Route::get('specifications/step2/{id}', [SpecificationsController::class, 'showstep2'])->name('specifications.showstep2');
-  Route::put('specifications/step2/{id}', [SpecificationsController::class, 'updatestep2'])->name('specifications.updatestep2');
+  Route::post('specifications/step2/{id}', [SpecificationsController::class, 'updatestep2'])->name('specifications.updatestep2');
   // 3
   Route::post('specifications/step3', [SpecificationsController::class, 'storestep3'])->name('specifications.storestep3');
   Route::get('specifications/step3/{id}', [SpecificationsController::class, 'showstep3'])->name('specifications.showstep3');

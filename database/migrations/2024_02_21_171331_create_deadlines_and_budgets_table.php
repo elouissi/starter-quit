@@ -15,10 +15,10 @@ return new class extends Migration
       $table->id();
       $table->foreignId('specification_id')->onDelete('cascade');
       $table->string('gestion_projet');
-      $table->json('communication');
+      $table->longText('communication');
       $table->string('deadline');
-      $table->string('budget_from');
-      $table->string('budget_to');
+      $table->float('budget_from');
+      $table->float('budget_to');
       $table->softDeletes();
       $table->timestamps();
     });
