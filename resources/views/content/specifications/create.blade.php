@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/@form-validation/umd/styles/index.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/spinkit/spinkit.css') }}" />
 
     <style>
         .visibility-hidden {
@@ -118,28 +119,6 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#next-step-1').click(function() {
-                // console.log('step 1 clicked');
-                // if ($('#descriptionEntrepriseAi').val() && (!$('#descriptionEntreprise').val())) {
-                //     $('#descriptionEntrepriseAi-generate').click();
-                // }
-                // // setTimeout(() => {
-                // if ($('#activitePrincipaleAi').val() && (!$('#activitePrincipale').val())) {
-                //     $('#activitePrincipaleAi-generate').click();
-                // }
-                // // }, 10000);
-                // // setTimeout(() => {
-                // if ($('#servicesProduitsAi').val() && (!$('#servicesProduits').val())) {
-                //     $('#servicesProduitsAi-generate').click();
-                // }
-                // // }, 20000);
-                // // setTimeout(() => {
-                // if ($('#target_audienceAi').val() && (!$('#target_audience').val())) {
-                //     $('#target_audienceAi-generate').click();
-                // }
-                // }, 30000);
-            });
-
             generateByAi(`descriptionEntreprise`, 1);
             generateByAi(`activitePrincipale`, 1);
             generateByAi(`servicesProduits`, 1);
@@ -341,6 +320,7 @@
 
                 if ($('#expectedObjectivesAi').val() && !$('#expectedObjectives').val()) {
                     // TODO
+                    $('#expectedObjectives').text('');
                     $('#expectedObjectivesAi-generate').click();
                 }
                 // TODO
@@ -367,6 +347,7 @@
                 if ($('#iatext_target_keywordsAi').val() && !$('#iatext_target_keywords').val()) {
 
                     // TODO
+                    $('#iatext_target_keywords').text('');
                     $('#iatext_target_keywordsAi-generate').click();
                 }
             });
@@ -393,6 +374,7 @@
                     if ($('#iatext_menuAi').val() && !$('#iatext_menu').val()) {
 
                         // TODO
+                        $('#iatext_menu').text('');
                         $('#iatext_menuAi-generate').click();
                     }
 
@@ -408,14 +390,17 @@
                 console.log(
                     `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
                 );
-                $('#iatext_techniques_specsAi').val(
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
-                ).prop('title',
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
-                ).trigger('input');
+                if (techniques_specs) {
+                    $('#iatext_techniques_specsAi').val(
+                        `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
+                    ).prop('title',
+                        `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
+                    ).trigger('input');
+                }
 
                 if ($('#iatext_techniques_specsAi').val() && !$('#iatext_techniques_specs').val()) {
                     // TODO
+                    $('#iatext_techniques_specs').text('');
                     $('#iatext_techniques_specsAi-generate').click();
                 }
             });
@@ -437,6 +422,7 @@
                 if ($('#iatext_competitorsAi').val() && !$('#iatext_competitors').val()) {
 
                     // TODO
+                    $('#iatext_competitors').text('');
                     $('#iatext_competitorsAi-generate').click();
                 }
             });
@@ -451,16 +437,26 @@
                     `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
 site internet sur le cahier de charge de son site internet`
                 );
-                $('#iatext_exemples_sitesAi').val(
-                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
+                if (exemples_sites) {
+                    $('#iatext_exemples_sitesAi').val(
+                        `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
 site internet sur le cahier de charge de son site internet`
-                ).prop('title',
-                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
+                    ).prop('title',
+                        `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
 site internet sur le cahier de charge de son site internet`
-                ).trigger('input');
+                    ).trigger('input');
+                } else {
+                    $('#iatext_exemples_sitesAi').val(
+                        ``
+                    ).prop('title',
+                        ``
+                    ).trigger('input');
+                }
+
 
                 if ($('#iatext_exemples_sitesAi').val() && !$('#iatext_exemples_sites').val()) {
                     // TODO
+                    $('#iatext_exemples_sites').text('');
                     $('#iatext_exemples_sitesAi-generate').click();
                 }
             });
@@ -472,15 +468,25 @@ site internet sur le cahier de charge de son site internet`
                 console.log(
                     `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${contraintes}) que le client souhaite avoir sur son site`
                 );
-                $('#iatext_constraintsAi').val(
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${contraintes}) que le client souhaite avoir sur son site`
-                ).prop('title',
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${contraintes}) que le client souhaite avoir sur son site`
-                ).trigger('input');
+                if (contraintes) {
+                    $('#iatext_constraintsAi').val(
+                        `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${contraintes}) que le client souhaite avoir sur son site`
+                    ).prop('title',
+                        `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${contraintes}) que le client souhaite avoir sur son site`
+                    ).trigger('input');
+                } else {
+                    $('#iatext_constraintsAi').val(
+                        ``
+                    ).prop('title',
+                        ``
+                    ).trigger('input');
+                }
+
 
                 if ($('#iatext_constraintsAi').val() && !$('#iatext_constraints').val()) {
 
                     // TODO
+                    $('#iatext_constraints').text('');
                     $('#iatext_constraintsAi-generate').click();
                 }
             });
@@ -495,7 +501,6 @@ site internet sur le cahier de charge de son site internet`
                 }
             });
             $(`#${element}Ai-generate`).click(function() {
-                $(`#${element}`).text('');
                 // $('.ai-generate-button').addClass('disabled');
                 // $(`#next-step-${step}`).addClass('disabled');
                 // $(`#next-step-${step} > span`).text(
@@ -505,6 +510,7 @@ site internet sur le cahier de charge de son site internet`
                     `<i class="ti ti-loader rotate"></i> &nbsp; Chargement ...`);
                 $(`#${element}Ai-generate`).prop("disabled", true);
                 $(`#${element}`).text('');
+                $(`#${element}`).text('loading');
                 var promptText = $(`#${element}Ai`).val();
                 $.ajax({
                     url: '{{ route('askToChatGpt') }}',
@@ -724,7 +730,7 @@ site internet sur le cahier de charge de son site internet`
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-10 mb-3">
-                                                <label class="form-label" for="nomEntreprise">Nom de l'entreprise</label>
+                                                <label class="form-label" for="nomEntreprise">Nom de l'entreprise <span class="text-danger">*</span> </label>
                                                 <input type="text" name="entreprise_name" id="nomEntreprise"
                                                     class="form-control" placeholder="Nom de l'entreprise" />
                                             </div>
@@ -748,7 +754,7 @@ site internet sur le cahier de charge de son site internet`
                                             </div>
                                             <div class="col-10 mb-3">
                                                 <label class="form-label" for="personneContacte">Personne à
-                                                    contacter</label>
+                                                    contacter <span class="text-danger">*</span></label>
                                                 <input type="text" name="contact_person" id="personneContacte"
                                                     class="form-control"
                                                     placeholder="Personne à contacter (nom et prénom)" />
@@ -760,12 +766,12 @@ site internet sur le cahier de charge de son site internet`
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-12 mb-3">
-                                                <label class="form-label" for="telephone">Téléphone</label>
+                                                <label class="form-label" for="telephone">Téléphone <span class="text-danger">*</span></label>
                                                 <input type="tel" name="phone" id="telephone" class="form-control"
                                                     placeholder="Numéro de téléphone" />
                                             </div>
                                             <div class="col-12 mb-3">
-                                                <label class="form-label" for="email">Email</label>
+                                                <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
                                                 <input type="email" name="email" id="email" class="form-control"
                                                     placeholder="Adresse email" />
                                             </div>
@@ -777,7 +783,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <input type="text" name="target" id="cible" class="form-control"
                                                     placeholder="Cible">
                                             </div>
-                                            <div class="col-12 mb-3 d-none">
+                                            <div class="col-12 mb-3 d-none ai-content">
                                                 <label class="form-label" for="descriptionEntreprise">
                                                     Description de l'entreprise (ai content)
                                                 </label>
@@ -793,7 +799,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea name="iatext_description" id="descriptionEntreprise" class="form-control" rows="3" readonly
                                                     placeholder="Description de l'entreprise"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3  d-none">
+                                            <div class="col-12 mb-3  d-none ai-content">
                                                 <label class="form-label" for="activitePrincipale">
                                                     Activité principale de l'entreprise (ai content)
                                                 </label>
@@ -809,7 +815,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea name="iatext_main_activities" id="activitePrincipale" class="form-control" rows="3" readonly
                                                     placeholder="Activité principale de l'entreprise"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3  d-none">
+                                            <div class="col-12 mb-3  d-none ai-content">
                                                 <label class="form-label" for="servicesProduits">
                                                     Services ou produits vendus (ai content)
                                                 </label>
@@ -825,7 +831,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea name="iatext_services_products" id="servicesProduits" class="form-control" rows="3" readonly
                                                     placeholder="Services ou produits vendus"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3  d-none">
+                                            <div class="col-12 mb-3  d-none ai-content">
                                                 <label class="form-label" for="target_audience">
                                                     Public Cible (ai content)
                                                 </label>
@@ -870,7 +876,7 @@ site internet sur le cahier de charge de son site internet`
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-10 mb-3">
-                                                <label class="form-label" for="besoinProjet">Besoin de projet :</label>
+                                                <label class="form-label" for="besoinProjet">Besoin de projet : <span class="text-danger">*</span></label>
                                                 @php
                                                     $project_needs = [['name' => 'Refonte de site web', 'alias' => 'refonte'], ['name' => 'Création de site web', 'alias' => 'creation']];
                                                 @endphp
@@ -891,7 +897,7 @@ site internet sur le cahier de charge de son site internet`
                                                 </div>
                                             </div>
                                             <div class="col-10 mb-3">
-                                                <label class="form-label">Type de projet :</label>
+                                                <label class="form-label">Type de projet : <span class="text-danger">*</span></label>
                                                 @php
                                                     $project_needs = [['name' => 'Site Vitrine', 'alias' => 'siteVitrine'], ['name' => 'E-commerce', 'alias' => 'eCommerce'], ['name' => 'Blog', 'alias' => 'blog'], ['name' => "Site d'affiliation", 'alias' => 'siteAffiliation']];
                                                 @endphp
@@ -929,7 +935,7 @@ site internet sur le cahier de charge de son site internet`
                                                     @endforeach
                                                 </div>
                                             </div>
-                                            <div class="col-12 mb-3"> <label class="form-label">Langue :</label>
+                                            <div class="col-12 mb-3"> <label class="form-label">Langue : <span class="text-danger">*</span></label>
                                                 @php
                                                     $languages = [['name' => 'Français', 'alias' => 'fr'], ['name' => 'Anglais', 'alias' => 'en'], ['name' => 'Italien', 'alias' => 'it']];
                                                 @endphp
@@ -955,7 +961,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" name="target_keywords" rows="3" id="target_keywords"
                                                     placeholder="Saisissez vos mots-clés cibles pour le site"></textarea>
                                             </div>
-                                            <div class="col-10 mb-3  d-none">
+                                            <div class="col-10 mb-3  d-none ai-content">
                                                 <label class="form-label" for="iatext_target_keywordsAi">
                                                     Mots-clés cibles (ai content)
                                                 </label>
@@ -977,7 +983,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea name="expected_objectives" id="objectifsAttendus" class="form-control"
                                                     placeholder="Entrez les objectifs attendus" rows="3"></textarea>
                                             </div>
-                                            <div class="col-10 mb-3  d-none">
+                                            <div class="col-10 mb-3  d-none ai-content">
                                                 <label class="form-label" for="expectedObjectives">
                                                     Objectifs attendus du client (ai content)
                                                 </label>
@@ -998,7 +1004,7 @@ site internet sur le cahier de charge de son site internet`
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-12 mb-3"><label class="form-label">Fonctions attendues
-                                                    :</label>
+                                                    : <span class="text-danger">*</span></label>
                                                 <div class="row">
                                                     @foreach ($expected_functions as $item)
                                                         <div class="col-4">
@@ -1019,12 +1025,12 @@ site internet sur le cahier de charge de son site internet`
 
                                             <div class="col-12 mb-3">
                                                 <label class="form-label" for="menu">
-                                                    Menu (Avez vous une préférence des menus à ajouter sur le site) :
+                                                    Menu (Avez vous une préférence des menus à ajouter sur le site) : <span class="text-danger">*</span>
                                                 </label>
                                                 <textarea class="form-control" id="menu" name="menu" rows="3"
                                                     placeholder="Indiquez votre préférence des menus à ajouter sur le site"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3  d-none">
+                                            <div class="col-12 mb-3 d-none ai-content">
                                                 <label class="form-label" for="iatext_menuAi">
                                                     Menu (ai content)
                                                 </label>
@@ -1044,7 +1050,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" id="techniques_specs" name="techniques_specs" rows="3"
                                                     placeholder="Entrez les spécifications techniques"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3  d-none">
+                                            <div class="col-12 mb-3 d-none ai-content">
                                                 <label class="form-label" for="iatext_techniques_specsAi">Spécifications
                                                     Techniques (ai content)
                                                 </label>
@@ -1091,12 +1097,12 @@ site internet sur le cahier de charge de son site internet`
                                         <div class="row">
                                             <div class="col-10 mb-3">
                                                 <label class="form-label" for="concurrents">
-                                                    Site internet de vos principaux concurrents :
+                                                    Site internet de vos principaux concurrents : <span class="text-danger">*</span>
                                                 </label>
                                                 <textarea class="form-control" id="concurrents" name="competitors" rows="3"
                                                     placeholder="Saisissez les sites internet de vos principaux concurrents"></textarea>
                                             </div>
-                                            <div class="col-10 mb-3  d-none">
+                                            <div class="col-10 mb-3 d-none ai-content">
                                                 <label class="form-label" for="iatext_competitors">
                                                     Concurrence (ai content)
                                                 </label>
@@ -1115,7 +1121,7 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-sm-6 col-md-10">
                                                 <div class="form-group">
                                                     <label for="exemples-sites" class="form-label">
-                                                        Exemples de sites avec commentaire :
+                                                        Exemples de sites avec commentaire : <span class="text-danger">*</span>
                                                     </label>
                                                     <textarea id="exemples-sites" class="form-control" name="sample_sites" rows="3"
                                                         placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.)."></textarea>
@@ -1123,10 +1129,10 @@ site internet sur le cahier de charge de son site internet`
                                             </div>
                                             <div class="col-sm-6 col-md-10">
                                                 <div class="form-group">
-                                                    <label for="telecharger-images" class="form-label">
+                                                    <label for="telecharger-images-1" class="form-label">
                                                         Télécharger des images :
                                                     </label>
-                                                    <input type="file" class="form-control" id="telecharger-images"
+                                                    <input type="file" class="form-control" id="telecharger-images-1"
                                                         name="sample_sites_files[]"
                                                         accept=".jpg, .jpeg, .png, .gif, .bmp, .svg, .webp, .pdf, .doc, .docx"
                                                         multiple>
@@ -1172,7 +1178,7 @@ site internet sur le cahier de charge de son site internet`
                                                         placeholder="Veuillez fournir des exemples de sites internet que vous appréciez et décrire les éléments que vous aimez."></textarea>
                                                 </div>
                                             </div>
-                                            <div class="col-12 mb-3  d-none">
+                                            <div class="col-12 mb-3 d-none ai-content">
                                                 <label class="form-label" for="iatext_constraintsAi">
                                                     Contraintes (ai content)
                                                 </label>
@@ -1190,10 +1196,10 @@ site internet sur le cahier de charge de son site internet`
                                             </div>
                                             <div class="col-12 mb-3">
                                                 <div class="form-group">
-                                                    <label for="telecharger-images" class="form-label">
+                                                    <label for="telecharger-images-2" class="form-label">
                                                         Télécharger des images:
                                                     </label>
-                                                    <input type="file" class="form-control" id="telecharger-images"
+                                                    <input type="file" class="form-control" id="telecharger-images-2"
                                                         name="constraints_files[]"
                                                         accept=".jpg, .jpeg, .png, .gif, .bmp, .svg, .webp, .pdf, .doc, .docx"
                                                         multiple>
@@ -1206,7 +1212,7 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-12 mb-3">
                                                 <div class="col-sm-6  col-md-12">
                                                     <div class="form-group">
-                                                        <label class="form-label">Avez-vous un nom de domaine ?</label>
+                                                        <label class="form-label">Avez-vous un nom de domaine ? <span class="text-danger">*</span></label>
                                                         <div class="radio-group">
                                                             <div class="row">
                                                                 <div class="col-auto">
@@ -1268,7 +1274,7 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-12 mb-3">
                                                 <div class="col-sm-6 col-md-12">
                                                     <div class="form-group">
-                                                        <label class="form-label">Hébergement :</label>
+                                                        <label class="form-label">Hébergement : <span class="text-danger">*</span></label>
                                                         <div class="radio-group">
                                                             <div class="row">
                                                                 <div class="col-auto">
@@ -1509,7 +1515,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <div class="col-sm-6 col-md-10 mb-3">
                                                     <label class="form-label" for="nombrePropositions">Nombre de
                                                         propositions
-                                                        attendues :</label>
+                                                        attendues :  <span class="text-danger">*</span></label>
                                                     <select class="select2" id="nombrePropositions"
                                                         name="nombrePropositions">
                                                         <option label=" "></option>
@@ -1563,10 +1569,10 @@ site internet sur le cahier de charge de son site internet`
                                                     </div>
 
                                                     <div class="form-group mb-3">
-                                                        <label for="telecharger-images" class="form-label">Télécharger des
+                                                        <label for="telecharger-images-3" class="form-label">Télécharger des
                                                             images :</label>
                                                         <input type="file" class="form-control"
-                                                            id="telecharger-images" name="exemples_sites_files[]"
+                                                            id="telecharger-images-3" name="exemples_sites_files[]"
                                                             accept=".jpg, .jpeg, .png, .gif, .bmp, .svg, .webp, .pdf, .doc, .docx"
                                                             multiple>
                                                         <small id="images-help" class="form-text text-muted">
@@ -1575,7 +1581,7 @@ site internet sur le cahier de charge de son site internet`
                                                         </small>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 mb-3  d-none">
+                                                <div class="col-12 mb-3 d-none ai-content">
                                                     <label class="form-label" for="iatext_exemples_sitesAi">
                                                         Les éléments sur Mesure (ai content)
                                                     </label>
@@ -1665,7 +1671,7 @@ site internet sur le cahier de charge de son site internet`
                                         <div class="col-6">
                                             <div class="row">
                                                 <div class="col-10 mb-3">
-                                                    <label class="form-label">Gestion de projet :</label>
+                                                    <label class="form-label">Gestion de projet : <span class="text-danger">*</span></label>
                                                     <div class="row">
                                                         <div class="col-auto">
                                                             <div class="form-check">
@@ -1692,7 +1698,7 @@ site internet sur le cahier de charge de son site internet`
                                                     </div>
                                                 </div>
                                                 <div class="col-10 mb-3">
-                                                    <label>Communication :</label>
+                                                    <label>Communication : <span class="text-danger">*</span></label>
                                                     <br>
                                                     @php
                                                         $communications = [['name' => 'Téléphone', 'alias' => 'telephone'], ['name' => 'E-mail', 'alias' => 'email'], ['name' => 'Visio-conférences', 'alias' => 'visio_conference']];
@@ -1721,7 +1727,7 @@ site internet sur le cahier de charge de son site internet`
 
                                                 <div class="col-md-12 mb-3">
                                                     <div class="form-group">
-                                                        <label class="form-label">Délais :</label>
+                                                        <label class="form-label">Délais : <span class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" id="delais"
                                                             name="deadline" placeholder="Délais">
                                                     </div>
@@ -1961,14 +1967,14 @@ site internet sur le cahier de charge de son site internet`
                                                                         title="Pourcentage à payer après la signature"
                                                                         value="Pourcentage à payer après la signature" @endif>
                                                                 </div>
-                                                                <div class="col-1 mt-auto">
+                                                                {{-- <div class="col-1 mt-auto">
                                                                     <button type="button" data-bs-toggle="tooltip"
                                                                         data-bs-placement="top" title="Confirmer"
                                                                         class="btn btn-icon btn-label-success waves-effect waves-light"
                                                                         id="confirm-btn-{{ $index }}">
                                                                         <i class="ti ti-check"></i>
                                                                     </button>
-                                                                </div>
+                                                                </div> --}}
                                                                 <div class="col-1 mt-auto">
                                                                     @if ($index < 10)
                                                                         <button type="button" data-bs-toggle="tooltip"
@@ -2069,12 +2075,45 @@ site internet sur le cahier de charge de son site internet`
                             <div class="content-header mb-3">
                                 <h6 class="mb-0">Confirmation</h6>
                             </div>
-                            <form id="step-6-validation-form">
-                                <div class="row g-3 validation-field">
+                            {{-- <form id="step-6-validation-form"> --}}
+                            <div class="row">
 
-                                    <h4 id="confirmation">Loading .....</h4>
+                                {{-- <h4 id="confirmation">Loading .....</h4> --}}
+                                <div class="col-12 my-5" id="spec-loading">
+                                    <div class="sk-chase sk-primary m-auto">
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                    </div>
+                                    <h5 class="text-primary text-center mt-5 mb-2">Préparation du cahier des charges</h5>
+                                </div>
 
-                                    <div class="col-12 d-flex justify-content-between">
+                                <div class="col-12 mt-5 mb-2 d-none" id="spec-done">
+                                    <p class="text-center">
+                                        <span class="ti ti-checks text-primary fs-1"></span>
+                                    </p>
+                                    <h5 class="text-primary text-center mt-5 mb-2">Votre cahier de charges est prêt</h5>
+                                </div>
+
+                                <div class="col-12 d-flex justify-content-center my-5 d-none" id="spec-button">
+                                    <a href="#" class="btn btn-label-primary text-primary mx-1" target="_blank"
+                                        id="spec-button-show">
+                                        <span class="ti-xs ti ti-eye me-1"></span>Voir
+                                    </a>
+                                    <a href="#" class="btn btn-label-primary text-primary mx-1" target="_blank"
+                                        id="spec-button-download">
+                                        <span class="ti-xs ti ti-download me-1"></span>Télécharger
+                                    </a>
+                                    <a href="/specifications" class="btn btn-label-primary text-primary mx-1"
+                                        id="spec-button-liste">
+                                        <span class="ti-xs ti ti-list me-1"></span>Liste des cahiers des charges
+                                    </a>
+                                </div>
+
+                                {{-- <div class="col-12 d-flex justify-content-between">
                                         <button type="button" class="btn btn-label-secondary btn-prev"> <i
                                                 class="ti ti-arrow-left me-sm-1 me-0"></i>
                                             <span class="align-middle d-sm-inline-block d-none">Précédent</span>
@@ -2086,9 +2125,9 @@ site internet sur le cahier de charge de son site internet`
                                             </span>
                                             <i class="ti ti-check" id="icon-next-step-6"></i>
                                         </button>
-                                    </div>
-                                </div>
-                            </form>
+                                    </div> --}}
+                            </div>
+                            {{-- </form> --}}
                         </div>
                     </div>
                 </div>

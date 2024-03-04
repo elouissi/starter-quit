@@ -33,26 +33,28 @@ class SpecificationsController extends Controller
   {
 
     return DataTables::of(Specification::query())
+      ->editColumn('step', function (Specification $specification) {
+        if ($specification->step == 1 || $specification->step == 2 || $specification->step == 3 || $specification->step == 4) {
+          return '<span class="badge rounded-pill bg-label-danger">' . $specification->step * 20 . ' %</span>';
+        } elseif ($specification->step == 5) {
+          return '<span class="badge rounded-pill bg-label-success">terminé</span>';
+        }
+      })
       ->addColumn('actions', function ($item) {
         if ($item->step == 5) {
           return '
                 <a class="btn btn-icon btn-primary text-white" target="_blank" href="specifications/' . $item->id . '" data-id="' . $item->id . '">
                     <i class="ti ti-eye"></i>
                 </a>
-                <a class="btn btn-icon btn-primary text-white" target="_blank" href="specifications/showUpload/' . $item->id . '" data-id="' . $item->id . '">
+                <a class="btn btn-icon btn-primary text-white" target="_blank" href="specifications/upload/' . $item->id . '" data-id="' . $item->id . '">
                     <i class="ti ti-download"></i>
                 </a>
-               
-                ';
-        } else {
-          return '
-               
                 ';
         }
+        return '';
       })
-      ->rawColumns(['actions'])
-      ->make(true)
-      ;
+      ->rawColumns(['actions','step'])
+      ->make(true);
   }
 
   /**
@@ -85,7 +87,8 @@ class SpecificationsController extends Controller
       $pdf = PDF::loadView('content.pdf.index', compact('specification'));
 
       // Stream the PDF
-      return $pdf->stream('pdf.pdf');
+      return $pdf->stream('pdf.pdf'); 
+      return view('content.pdf.index', compact('specification'));
 
       // Download the PDF
       // return $pdf->download('pdf.pdf');
@@ -99,7 +102,7 @@ class SpecificationsController extends Controller
     // }
   }
 
-  public function showUpload(string $id)
+  public function upload(string $id)
   {
     // try {
     $specification = Specification::with('objectif_site', 'existing_analysis', 'design_content', 'deadline_and_budget', 'facturation')->findOrFail($id);
@@ -897,12 +900,12 @@ class SpecificationsController extends Controller
       $objectifSite->iatext_menu = $validatedData['iatext_menu'];
       $objectifSite->iatext_techniques_specs = $validatedData['iatext_techniques_specs'];
       $objectifSite->save();
-      
+
       $existingAnalysis =  ExistingAnalysis::where('specification_id', $request->specification_id)->first();
       $existingAnalysis->iatext_competitors = $validatedData['iatext_competitors'];
       $existingAnalysis->iatext_constraints = $validatedData['iatext_constraints'];
       $existingAnalysis->save();
-      
+
       $designContent =  DesignContent::where('specification_id', $request->specification_id)->first();
       $designContent->iatext_exemples_sites = $validatedData['iatext_exemples_sites'];
       $designContent->save();

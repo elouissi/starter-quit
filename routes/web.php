@@ -86,7 +86,7 @@ Route::middleware([
   // 5
   Route::post('specifications/step6', [SpecificationsController::class, 'storestep6'])->name('specifications.storestep5');
   // Route::get('specifications/step5/{id}', [SpecificationsController::class, 'showstep5'])->name('specifications.showstep5');
-  Route::get('specifications/showUpload/{id}', [SpecificationsController::class, 'showUpload'])->name('specifications.showUpload');
+  Route::get('specifications/upload/{id}', [SpecificationsController::class, 'upload'])->name('specifications.upload');
   // ressources
   Route::resource('specifications', SpecificationsController::class);
   Route::get('/dashboard', function () {

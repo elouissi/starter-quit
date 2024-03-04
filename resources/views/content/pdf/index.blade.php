@@ -51,6 +51,20 @@
         .to-confirm {
             background-color: orange;
         }
+
+        p {
+            font-size: 16px;
+        }
+
+        ol,
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin: 0 0 0 10px;
+        }
     </style>
 </head>
 
@@ -372,8 +386,8 @@
 
     <div class="page-break sommaire">
         <h1 class="primary-color" style="text-align: center">Table des Matières </h1>
-        <ol>
-            <li style="margin-top: 30px">
+        <ol style="margin: 0;padding: 0">
+            <li style="margin: 0; margin-top: 30px">
                 Introduction
                 <ol>
                     <li>
@@ -978,14 +992,14 @@
                 <h3 class="primary-color">Présentation de l’activité </h3>
                 <p>
                     {{-- {{ $main_activities }} --}}
-                    {!! nl2br(($main_activities)) !!}
+                    {!! nl2br($main_activities) !!}
                 </p>
             </li>
             <li>
                 <h3 class="primary-color">Service / produit Vendu</h3>
                 <p>
                     {{-- {{ $services_products }} --}}
-                    {!! nl2br(($services_products)) !!}
+                    {!! nl2br($services_products) !!}
                 </p>
             </li>
         </ol>
@@ -1141,7 +1155,7 @@
                 <h3 class="primary-color">Objectifs du projet </h3>
                 <p>
                     {{-- {{ $expected_client_objectives }} --}}
-                    {!! nl2br(($expected_client_objectives)) !!}
+                    {!! nl2br($expected_client_objectives) !!}
                 </p>
             </li>
             <li>
@@ -1152,14 +1166,14 @@
                 </p> --}}
                 <p>
                     {{-- {{ $target_audience }} --}}
-                    {!! nl2br(($target_audience)) !!}
+                    {!! nl2br($target_audience) !!}
                 </p>
             </li>
             <li>
                 <h3 class="primary-color">Concurrence </h3>
                 <p>
                     {{-- {{ $iatext_competitors }} --}}
-                    {!! nl2br(($iatext_competitors)) !!}
+                    {!! nl2br($iatext_competitors) !!}
                 </p>
             </li>
         </ol>
@@ -1778,7 +1792,7 @@
                             le client souhaite avoir sur son site]
                         </p> --}}
                         <p>
-                            {!! nl2br(($iatext_techniques_specs)) !!}
+                            {!! nl2br($iatext_techniques_specs) !!}
                         </p>
                     </li>
                     @if (in_array('Plugins sur mesure', $expected_functions) ||
@@ -2063,7 +2077,7 @@
                     <li>
                         <b>Arborescence du site :</b>
                         <p>
-                            {!! nl2br(($iatext_menu)) !!}
+                            {!! nl2br($iatext_menu) !!}
                         </p>
                     </li>
                     <li>
@@ -2076,11 +2090,11 @@
                             son site internet]
                         </p> --}}
                         <p>
-                            {!! nl2br(($iatext_constraints)) !!}
+                            {!! nl2br($iatext_constraints) !!}
                             {{-- {{ $iatext_constraints }} --}}
                         </p>
                         <p>
-                            {!! nl2br(($iatext_exemples_sites)) !!}
+                            {!! nl2br($iatext_exemples_sites) !!}
                             {{-- Prompt [écrire un paragraphe détaillé pour élaborer Les éléments suivants (valeur de champ
                             des
                             exemples de sites avec un commentaire) que le client voulait inclure sur le site internet
@@ -2117,7 +2131,7 @@
                         charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
                         paragraphes : (valeur de champs des mots clés)] --}}
 
-                        {!! nl2br(($iatext_target_keywords)) !!}
+                        {!! nl2br($iatext_target_keywords) !!}
                     </p>
                 @else
                     <p>
@@ -2609,20 +2623,25 @@
                     avantageusement votre site dans les résultats de recherche, attirant ainsi un trafic qualifié dès
                     les premiers jours de sa mise en ligne.
                 </p>
+                <div class="page-break">
+                    <p>
+                        Il est important de souligner que l'estimation budgétaire fournie peut varier en fonction des
+                        spécificités du projet, telles que la complexité du développement, les fonctionnalités
+                        additionnelles
+                        souhaitées et les ajustements éventuels découlant de l'évolution de vos besoins durant le
+                        processus de développement. Nous sommes déterminés à entretenir une communication
+                        transparente et continue avec vous pour adapter le projet en fonction de votre budget et de vos
+                        attentes. Notre objectif est de forger un partenariat solide, axé sur la réussite de votre
+                        projet
+                        web,
+                        tout en veillant à maximiser votre retour sur investissement et à atteindre vos ambitions
+                        commerciales avec efficacité.
+                    </p>
+                </div>
+                {{-- <div class="page-break"> --}}
                 <p>
-                    Il est important de souligner que l'estimation budgétaire fournie peut varier en fonction des
-                    spécificités du projet, telles que la complexité du développement, les fonctionnalités
-                    additionnelles
-                    souhaitées et les ajustements éventuels découlant de l'évolution de vos besoins durant le
-                    processus de développement. Nous sommes déterminés à entretenir une communication
-                    transparente et continue avec vous pour adapter le projet en fonction de votre budget et de vos
-                    attentes. Notre objectif est de forger un partenariat solide, axé sur la réussite de votre projet
-                    web,
-                    tout en veillant à maximiser votre retour sur investissement et à atteindre vos ambitions
-                    commerciales avec efficacité.
-                </p>
-                <p>
-                    Le tableau suivant représente un aperçu clair sur les détails de délais et les budgets estimés pour
+                    Le tableau suivant représente un aperçu clair sur les détails de délais et les budgets estimés
+                    pour
                     votre site internet :
                 </p>
                 <table border="2"
@@ -2732,7 +2751,8 @@
                         <tr>
                             <td style="padding: 2px 10px;">Remise exceptionnelle </td>
                             <td style="padding: 2px 10px; text-align: center;" colspan="3">
-                                {{ number_format($specification->facturation->exceptional_discount, 2, ',', '.') }} €
+                                {{ number_format($specification->facturation->exceptional_discount, 2, ',', '.') }}
+                                €
                             </td>
                         </tr>
 
@@ -2744,6 +2764,7 @@
                         </tr>
                     </thead>
                 </table>
+                {{-- </div> --}}
                 <p>
                     Afin d'assurer une transparence totale et de faciliter la compréhension de nos modalités de
                     collaboration, nous détaillons ci-après les conditions de paiement associées au développement de
@@ -2900,37 +2921,37 @@
 
     </div>
 
-    <div >
-      <div style="position: relative; width: 100%; height: 70%;">
-          <img src="{{ public_path('assets/img/pdf/logo.png') }}" alt="image"
-              style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%; max-height: 80%;">
+    <div>
+        <div style="position: relative; width: 100%; height: 70%;">
+            <img src="{{ public_path('assets/img/pdf/logo.png') }}" alt="image"
+                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%; max-height: 80%;">
 
-      </div>
-      <div style=" width: 100%; height: 30%;">
-          <div style="padding: 0 0 0 20px;">
-              <p style="color: #1c2649; font-weight: 700;font-size: 20px; text-align: center; ">
-                Du Lundi Au Vendredi:
+        </div>
+        <div style=" width: 100%; height: 30%;">
+            <div style="padding: 0 0 0 20px;">
+                <p style="color: #1c2649; font-weight: 700;font-size: 20px; text-align: center; ">
+                    Du Lundi Au Vendredi:
+                    <br>
+                    De 8h30 à 19h00
+                    <br>
+                    +33 (0)3 21 63 19 19
+                </p>
                 <br>
-                De 8h30 à 19h00
+                <p style="color: #1c2649; font-weight: 700;font-size: 20px; text-align: center; ">
+                    Arteparc, 9 Rue Des Bouleaux
+                    <br>
+                    59810 LESQUIN, France
+                </p>
                 <br>
-                +33 (0)3 21 63 19 19
-              </p>
-              <br>
-              <p style="color: #1c2649; font-weight: 700;font-size: 20px; text-align: center; ">
-                Arteparc, 9 Rue Des Bouleaux
-                <br>
-                59810 LESQUIN, France
-              </p>
-              <br>
-              <p style="color: #1c2649; font-weight: 700;font-size: 20px; text-align: center; ">
-                service@havetdigital.fr
-              </p>
-          </div>
+                <p style="color: #1c2649; font-weight: 700;font-size: 20px; text-align: center; ">
+                    service@havetdigital.fr
+                </p>
+            </div>
 
-      </div>
+        </div>
 
 
-  </div>
+    </div>
 
 
 </body>
