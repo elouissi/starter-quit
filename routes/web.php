@@ -83,6 +83,10 @@ Route::middleware([
   // 5
   Route::post('specifications/step5', [SpecificationsController::class, 'storestep5'])->name('specifications.storestep5');
   Route::get('specifications/step5/{id}', [SpecificationsController::class, 'showstep5'])->name('specifications.showstep5');
+  // 5
+  Route::post('specifications/step6', [SpecificationsController::class, 'storestep6'])->name('specifications.storestep5');
+  // Route::get('specifications/step5/{id}', [SpecificationsController::class, 'showstep5'])->name('specifications.showstep5');
+  Route::get('specifications/showUpload/{id}', [SpecificationsController::class, 'showUpload'])->name('specifications.showUpload');
   // ressources
   Route::resource('specifications', SpecificationsController::class);
   Route::get('/dashboard', function () {

@@ -23,7 +23,7 @@ return new class extends Migration
       $table->text('prompt_iatext_target_keywords')->nullable();
       $table->longText('expected_functions')->nullable();
       $table->text('expected_objectives')->nullable();
-      $table->text('expected_client_objectives')->nullable();
+      $table->text('iatext_expected_client_objectives')->nullable();
       $table->text('prompt_expected_client_objectives')->nullable();
       $table->text('menu')->nullable();
       $table->text('prompt_iatext_menu')->nullable();

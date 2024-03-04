@@ -118,6 +118,28 @@
     </script>
     <script>
         $(document).ready(function() {
+            $('#next-step-1').click(function() {
+                // console.log('step 1 clicked');
+                // if ($('#descriptionEntrepriseAi').val() && (!$('#descriptionEntreprise').val())) {
+                //     $('#descriptionEntrepriseAi-generate').click();
+                // }
+                // // setTimeout(() => {
+                // if ($('#activitePrincipaleAi').val() && (!$('#activitePrincipale').val())) {
+                //     $('#activitePrincipaleAi-generate').click();
+                // }
+                // // }, 10000);
+                // // setTimeout(() => {
+                // if ($('#servicesProduitsAi').val() && (!$('#servicesProduits').val())) {
+                //     $('#servicesProduitsAi-generate').click();
+                // }
+                // // }, 20000);
+                // // setTimeout(() => {
+                // if ($('#target_audienceAi').val() && (!$('#target_audience').val())) {
+                //     $('#target_audienceAi-generate').click();
+                // }
+                // }, 30000);
+            });
+
             generateByAi(`descriptionEntreprise`, 1);
             generateByAi(`activitePrincipale`, 1);
             generateByAi(`servicesProduits`, 1);
@@ -235,158 +257,121 @@
                 }
             });
 
-            $('#nomEntreprise, #website').on('blur', function() {
+            $('#next-step-1').on('click', function() {
                 if (1) {
                     localStorage.removeItem('askToChatGpt');
-
+                    console.log('eeeeee', $('#website').val());
                     let nomEntreprise = $('#website').val() ? $('#website').val() : $('#nomEntreprise')
                         .val();
                     console.log(nomEntreprise);
-                    if (!$('#descriptionEntrepriseAi').val()) {
+
+                    if (nomEntreprise) {
                         $('#descriptionEntrepriseAi').val(
                             `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
                         ).prop('title',
                             `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
                         ).trigger('input');
-                    }
 
-                    if (!$('#activitePrincipaleAi').val()) {
                         $('#activitePrincipaleAi').val(
                             `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur l’activité de ce client: ${nomEntreprise}`
                         ).prop('title',
                             `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur l’activité de ce client: ${nomEntreprise}`
                         ).trigger('input');
-                        // `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
-                    }
 
-                    if (!$('#servicesProduitsAi').val()) {
                         $('#servicesProduitsAi').val(
                             `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur les services ou les produits vendu de ce client: ${nomEntreprise}`
                         ).prop('title',
                             `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur les services ou les produits vendu de ce client: ${nomEntreprise}`
-                            // `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
                         ).trigger('input');
-                    }
 
-                    if (!$('#target_audienceAi').val()) {
                         $('#target_audienceAi').val(
                             `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur le public cible de ce client : ${nomEntreprise}`
                         ).prop('title',
                             `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur le public cible de ce client : ${nomEntreprise}`
-                            // `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi un paragraphe sur description de ce client: ${nomEntreprise}`
                         ).trigger('input');
+                    } else {
+                        $('#descriptionEntrepriseAi').val(``).prop('title', ``).trigger('input');
+                        $('#activitePrincipaleAi').val(``).prop('title', ``).trigger('input');
+                        $('#servicesProduitsAi').val(``).prop('title', ``).trigger('input');
+                        $('#target_audienceAi').val(``).prop('title', ``).trigger('input');
+                    }
+
+                    if ($('#descriptionEntrepriseAi').val() && (!$('#descriptionEntreprise').val())) {
+                        $('#descriptionEntrepriseAi-generate').click();
+                    }
+                    // setTimeout(() => {
+                    if ($('#activitePrincipaleAi').val() && (!$('#activitePrincipale').val())) {
+                        $('#activitePrincipaleAi-generate').click();
+                    }
+                    // }, 10000);
+                    // setTimeout(() => {
+                    if ($('#servicesProduitsAi').val() && (!$('#servicesProduits').val())) {
+                        $('#servicesProduitsAi-generate').click();
+                    }
+                    // }, 20000);
+                    // setTimeout(() => {
+                    if ($('#target_audienceAi').val() && (!$('#target_audience').val())) {
+                        $('#target_audienceAi-generate').click();
                     }
                 }
             });
 
-            $('#has_website_non').click(function() {
-                // TODO
-                $('#target_audienceAi-generate').click();
-            });
+            // $('#has_website_non').click(function() {
+            //     // TODO
+            //     // $('#target_audienceAi-generate').click();
+            // });
 
-            $('#website').on('blur', function() {
-                // TODO
-                $('#target_audienceAi-generate').click();
-            });
+            // $('#website').on('blur', function() {
+            //     // TODO
+            //     // $('#target_audienceAi-generate').click();
+            // });
 
-            $('#objectifsAttendus').on('blur', function() {
+            $('#next-step-2').on('click', function() {
                 let objectifsAttendus = $('#objectifsAttendus').val();
                 console.log(objectifsAttendus);
                 if (objectifsAttendus) {
-
                     $('#expectedObjectivesAi').val(
                         `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, les objectifs : (${objectifsAttendus}), réécrire moi un paragraphe sur les objectifs attendu de ce client`
                     ).prop('title',
-                        `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
+                        `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, les objectifs : (${objectifsAttendus}), réécrire moi un paragraphe sur les objectifs attendu de ce client`
                     ).trigger('input');
+                } else {
+                    $('#expectedObjectivesAi').val('').prop('title', '').trigger('input');
+                }
+
+                if ($('#expectedObjectivesAi').val() && !$('#expectedObjectives').val()) {
+                    // TODO
+                    $('#expectedObjectivesAi-generate').click();
                 }
                 // TODO
-                $('#expectedObjectivesAi-generate').click();
             });
 
-            $('#concurrents').on('blur', function() {
-                // TODO
-                let concurrents = $('#concurrents').val().split('\n').join(',');
-                console.log(concurrents);
-
-                console.log(
-                    `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
-                );
-                $('#iatext_competitorsAi').val(
-                    `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
-                ).prop('title',
-                    `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
-                ).trigger('input');
-
-                // TODO
-                $('#iatext_competitorsAi-generate').click();
-            });
-
-            $('#target_keywords').on('blur', function() {
-                // TODO
+            $('#next-step-2').on('click', function() {
                 let target_keywords = $('#target_keywords').val().split('\n').join(',');
                 console.log(target_keywords);
 
-                console.log(
-                    `dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
-charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
-paragraphes : (${target_keywords})`
-                );
-                $('#iatext_target_keywordsAi').val(
-                    `dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
-charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
-paragraphes : (${target_keywords})`
-                ).prop('title',
-                    `dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
-charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
-paragraphes : (${target_keywords})`
-                ).trigger('input');
+                if (target_keywords) {
+                    $('#iatext_target_keywordsAi').val(
+                        `dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
+  charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
+  paragraphes : (${target_keywords})`
+                    ).prop('title',
+                        `dans la section de Stratégies de Référencement en Mots-clés cibles sur le cahier de
+  charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
+  paragraphes : (${target_keywords})`
+                    ).trigger('input');
+                } else {
+                    $('#iatext_target_keywordsAi').val('').prop('title', '').trigger('input');
+                }
 
-                // TODO
-                $('#iatext_target_keywordsAi-generate').click();
+                if ($('#iatext_target_keywordsAi').val() && !$('#iatext_target_keywords').val()) {
+
+                    // TODO
+                    $('#iatext_target_keywordsAi-generate').click();
+                }
             });
 
-            $('#exemples-sites').on('blur', function() {
-                // TODO
-                let exemples_sites = $('#exemples-sites').val().split('\n').join(',');
-                console.log(exemples_sites);
-
-                console.log(
-                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
-site internet sur le cahier de charge de son site internet`
-                );
-                $('#iatext_exemples_sitesAi').val(
-                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
-site internet sur le cahier de charge de son site internet`
-                ).prop('title',
-                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
-site internet sur le cahier de charge de son site internet`
-                ).trigger('input');
-
-                // TODO
-                $('#iatext_exemples_sitesAi-generate').click();
-            });
-
-            $('#techniques_specs').on('blur', function() {
-                // TODO
-                let techniques_specs = $('#techniques_specs').val();
-                console.log(techniques_specs);
-
-                console.log(
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
-                );
-                $('#iatext_techniques_specsAi').val(
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
-                ).prop('title',
-                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
-                ).trigger('input');
-
-                // TODO
-                $('#iatext_techniques_specsAi-generate').click();
-            });
-
-            $('#menu').on('blur', function() {
-                // TODO
+            $('#next-step-2').on('click', function() {
                 let menu = $('#menu').val();
                 var project_type = $('input[name="project_type"]').val();
                 var servicesProduits = $('#servicesProduits').val();
@@ -404,13 +389,83 @@ site internet sur le cahier de charge de son site internet`
                         `à partir de cette liste de menu : [${menu}], rédiger et designer moi une sitemap (arborescence) pour un site Internet [${project_type}] de [${servicesProduits}]`
                     ).trigger('input');
 
+
+                    if ($('#iatext_menuAi').val() && !$('#iatext_menu').val()) {
+
+                        // TODO
+                        $('#iatext_menuAi-generate').click();
+                    }
+
                     // TODO
-                    $('#iatext_menuAi-generate').click();
                 }
             });
 
-            $('#contraintes').on('blur', function() {
-                // TODO
+
+            $('#next-step-2').on('click', function() {
+                let techniques_specs = $('#techniques_specs').val();
+                console.log(techniques_specs);
+
+                console.log(
+                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
+                );
+                $('#iatext_techniques_specsAi').val(
+                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
+                ).prop('title',
+                    `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${techniques_specs}) que le client souhaite avoir sur son site`
+                ).trigger('input');
+
+                if ($('#iatext_techniques_specsAi').val() && !$('#iatext_techniques_specs').val()) {
+                    // TODO
+                    $('#iatext_techniques_specsAi-generate').click();
+                }
+            });
+
+            $('#next-step-3').on('click', function() {
+                let concurrents = $('#concurrents').val().split('\n').join(',');
+                console.log(concurrents);
+
+                if (concurrents) {
+                    $('#iatext_competitorsAi').val(
+                        `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
+                    ).prop('title',
+                        `voici les concurrents (${concurrents}), étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, écrire moi deux paragraphe sur l’analyse des principaux concurrents et identification des points forts à intégrer sur le site internet que le client souhaite`
+                    ).trigger('input');
+                } else {
+                    $('#iatext_competitorsAi').val('').prop('title', '').trigger('input');
+                }
+
+                if ($('#iatext_competitorsAi').val() && !$('#iatext_competitors').val()) {
+
+                    // TODO
+                    $('#iatext_competitorsAi-generate').click();
+                }
+            });
+
+
+
+            $('#next-step-4').on('click', function() {
+                let exemples_sites = $('#exemples-sites').val().split('\n').join(',');
+                console.log(exemples_sites);
+
+                console.log(
+                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
+site internet sur le cahier de charge de son site internet`
+                );
+                $('#iatext_exemples_sitesAi').val(
+                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
+site internet sur le cahier de charge de son site internet`
+                ).prop('title',
+                    `écrire un paragraphe détaillé pour élaborer Les éléments suivants (${exemples_sites}) que le client voulait inclure sur le
+site internet sur le cahier de charge de son site internet`
+                ).trigger('input');
+
+                if ($('#iatext_exemples_sitesAi').val() && !$('#iatext_exemples_sites').val()) {
+                    // TODO
+                    $('#iatext_exemples_sitesAi-generate').click();
+                }
+            });
+
+            $('#next-step-3').on('click', function() {
                 let contraintes = $('#contraintes').val();
                 console.log(contraintes);
 
@@ -423,8 +478,11 @@ site internet sur le cahier de charge de son site internet`
                     `étant qu’expert en rédaction des cahiers des charges pour le développement d’un site internet, récrire moi en 3 paragraphes les spécifications techniques (${contraintes}) que le client souhaite avoir sur son site`
                 ).trigger('input');
 
-                // TODO
-                $('#iatext_constraintsAi-generate').click();
+                if ($('#iatext_constraintsAi').val() && !$('#iatext_constraints').val()) {
+
+                    // TODO
+                    $('#iatext_constraintsAi-generate').click();
+                }
             });
         });
 
@@ -438,11 +496,11 @@ site internet sur le cahier de charge de son site internet`
             });
             $(`#${element}Ai-generate`).click(function() {
                 $(`#${element}`).text('');
-                $('.ai-generate-button').addClass('disabled');
-                $(`#next-step-${step}`).addClass('disabled');
-                $(`#next-step-${step} > span`).text(
-                    'Génération de texte avec IA, merci de patienter un petit moment');
-                $(`#icon-next-step-${step}`).removeClass().addClass('ti ti-loader rotate');
+                // $('.ai-generate-button').addClass('disabled');
+                // $(`#next-step-${step}`).addClass('disabled');
+                // $(`#next-step-${step} > span`).text(
+                //     'Génération de texte avec IA, merci de patienter un petit moment');
+                // $(`#icon-next-step-${step}`).removeClass().addClass('ti ti-loader rotate');
                 $(`#${element}Ai-generate`).html(
                     `<i class="ti ti-loader rotate"></i> &nbsp; Chargement ...`);
                 $(`#${element}Ai-generate`).prop("disabled", true);
@@ -461,9 +519,10 @@ site internet sur le cahier de charge de son site internet`
                         $(`#${element}`).text(response);
                         window.localStorage.setItem('askToChatGpt', element);
                         $(`#next-step-${step}`).removeClass('disabled');
-                        $(`#next-step-${step} > span`).text(step == 5 ? 'Confirmer' : 'Suivant');
+                        // $(`#next-step-${step} > span`).text(step == 5 ? 'Confirmer' : 'Suivant');
                         $(`#icon-next-step-${step}`).removeClass().addClass('ti ti-arrow-right');
-                        $('.ai-generate-button').removeClass('disabled');
+                        // $('.ai-generate-button').removeClass('disabled');
+                        console.log('success');
 
                     },
                     error: function(xhr, status, error) {
@@ -541,7 +600,7 @@ site internet sur le cahier de charge de son site internet`
             elementFournisOuCreer('wireframe', 'wireframe', 'Maquette / Wireframe');
             elementFournisOuCreer('typography', 'typography', `Typographies (police d'ecriture)`);
             elementFournisOuCreer('description-product-services', 'description_product_services',
-                "Description services produits");
+                "Desc services/ produits");
 
 
         });
@@ -641,6 +700,14 @@ site internet sur le cahier de charge de son site internet`
                             </span>
                         </button>
                     </div>
+                    <div class="step" data-target="#step-6-validation">
+                        <button type="button" class="step-trigger">
+                            <span class="bs-stepper-circle">6</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Confirmation </span>
+                            </span>
+                        </button>
+                    </div>
                 </div>
                 <div class="bs-stepper-content">
                     <div id="wizard-validation-form">
@@ -686,17 +753,23 @@ site internet sur le cahier de charge de son site internet`
                                                     class="form-control"
                                                     placeholder="Personne à contacter (nom et prénom)" />
                                             </div>
-                                            <div class="col-10 mb-3">
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
                                                 <label class="form-label" for="telephone">Téléphone</label>
                                                 <input type="tel" name="phone" id="telephone" class="form-control"
                                                     placeholder="Numéro de téléphone" />
                                             </div>
-                                            <div class="col-10 mb-3">
+                                            <div class="col-12 mb-3">
                                                 <label class="form-label" for="email">Email</label>
                                                 <input type="email" name="email" id="email" class="form-control"
                                                     placeholder="Adresse email" />
                                             </div>
-                                            <div class="col-10 mb-3">
+                                            <div class="col-12 mb-3">
                                                 <label class="form-label" for="cible">
                                                     Cible
 
@@ -704,70 +777,69 @@ site internet sur le cahier de charge de son site internet`
                                                 <input type="text" name="target" id="cible" class="form-control"
                                                     placeholder="Cible">
                                             </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="row">
-                                            <div class="col-12 mb-3">
-                                                <label class="form-label" for="descriptionEntreprise">Description de
-                                                    l'entreprise</label>
+                                            <div class="col-12 mb-3 d-none">
+                                                <label class="form-label" for="descriptionEntreprise">
+                                                    Description de l'entreprise (ai content)
+                                                </label>
                                                 <div class="input-group mb-1">
-                                                    <input type="text" class="form-control" name="prompt_description"
-                                                        placeholder="Créer votre prompt" id="descriptionEntrepriseAi">
+                                                    <input type="text" class="form-control"
+                                                        name="prompt_iatext_description" placeholder="Créer votre prompt"
+                                                        readonly id="descriptionEntrepriseAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="descriptionEntrepriseAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="description" id="descriptionEntreprise" class="form-control" rows="3"
+                                                <textarea name="iatext_description" id="descriptionEntreprise" class="form-control" rows="3" readonly
                                                     placeholder="Description de l'entreprise"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3">
-                                                <label class="form-label" for="activitePrincipale">Activité principale de
-                                                    l'entreprise</label>
+                                            <div class="col-12 mb-3  d-none">
+                                                <label class="form-label" for="activitePrincipale">
+                                                    Activité principale de l'entreprise (ai content)
+                                                </label>
                                                 <div class="input-group mb-1">
-                                                    <input type="text" class="form-control"
-                                                        name="prompt_main_activities" placeholder="Créer votre prompt"
-                                                        id="activitePrincipaleAi">
+                                                    <input type="text" class="form-control" readonly
+                                                        name="prompt_iatext_main_activities"
+                                                        placeholder="Créer votre prompt" id="activitePrincipaleAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="activitePrincipaleAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="main_activities" id="activitePrincipale" class="form-control" rows="3"
+                                                <textarea name="iatext_main_activities" id="activitePrincipale" class="form-control" rows="3" readonly
                                                     placeholder="Activité principale de l'entreprise"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3">
-                                                <label class="form-label" for="servicesProduits">Services ou produits
-                                                    vendus</label>
+                                            <div class="col-12 mb-3  d-none">
+                                                <label class="form-label" for="servicesProduits">
+                                                    Services ou produits vendus (ai content)
+                                                </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
-                                                        name="prompt_services_products" placeholder="Créer votre prompt"
-                                                        id="servicesProduitsAi">
+                                                        name="prompt_iatext_services_products" readonly
+                                                        placeholder="Créer votre prompt" id="servicesProduitsAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="servicesProduitsAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="services_products" id="servicesProduits" class="form-control" rows="3"
+                                                <textarea name="iatext_services_products" id="servicesProduits" class="form-control" rows="3" readonly
                                                     placeholder="Services ou produits vendus"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3 d-none">
+                                            <div class="col-12 mb-3  d-none">
                                                 <label class="form-label" for="target_audience">
                                                     Public Cible (ai content)
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
-                                                        name="prompt_target_audience" placeholder="Créer votre prompt"
-                                                        id="target_audienceAi">
+                                                        name="prompt_iatext_target_audience" readonly
+                                                        placeholder="Créer votre prompt" id="target_audienceAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="target_audienceAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="target_audience" id="target_audience" class="form-control" rows="3"
-                                                    placeholder="Activité principale de l'entreprise"></textarea>
+                                                <textarea name="iatext_target_audience" id="target_audience" class="form-control" rows="3"
+                                                    placeholder="Activité principale de l'entreprise" readonly></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -883,20 +955,20 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" name="target_keywords" rows="3" id="target_keywords"
                                                     placeholder="Saisissez vos mots-clés cibles pour le site"></textarea>
                                             </div>
-                                            <div class="col-10 mb-3 d-none">
+                                            <div class="col-10 mb-3  d-none">
                                                 <label class="form-label" for="iatext_target_keywordsAi">
                                                     Mots-clés cibles (ai content)
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
-                                                        name="prompt_iatext_target_keywords"
+                                                        name="prompt_iatext_target_keywords" readonly
                                                         placeholder="Créer votre prompt" id="iatext_target_keywordsAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="iatext_target_keywordsAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="iatext_target_keywords" id="iatext_target_keywords" class="form-control" rows="3"></textarea>
+                                                <textarea name="iatext_target_keywords" id="iatext_target_keywords" class="form-control" rows="3" readonly></textarea>
                                             </div>
                                             <div class="col-10 mb-3">
                                                 <label class="form-label" for="objectifsAttendus">
@@ -905,21 +977,21 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea name="expected_objectives" id="objectifsAttendus" class="form-control"
                                                     placeholder="Entrez les objectifs attendus" rows="3"></textarea>
                                             </div>
-                                            <div class="col-10 mb-3 d-none">
+                                            <div class="col-10 mb-3  d-none">
                                                 <label class="form-label" for="expectedObjectives">
                                                     Objectifs attendus du client (ai content)
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
-                                                        name="prompt_expected_client_objectives"
+                                                        name="prompt_iatext_expected_client_objectives" readonly
                                                         placeholder="Créer votre prompt" id="expectedObjectivesAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="expectedObjectivesAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="expected_client_objectives" id="expectedObjectives" class="form-control" rows="3"
-                                                    placeholder="Activité principale de l'entreprise"></textarea>
+                                                <textarea name="iatext_expected_client_objectives" id="expectedObjectives" class="form-control" rows="3"
+                                                    readonly placeholder="Activité principale de l'entreprise"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -952,19 +1024,19 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" id="menu" name="menu" rows="3"
                                                     placeholder="Indiquez votre préférence des menus à ajouter sur le site"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3 d-none">
+                                            <div class="col-12 mb-3  d-none">
                                                 <label class="form-label" for="iatext_menuAi">
                                                     Menu (ai content)
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control" name="prompt_iatext_menu"
-                                                        placeholder="Créer votre prompt" id="iatext_menuAi">
+                                                        readonly placeholder="Créer votre prompt" id="iatext_menuAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="iatext_menuAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="iatext_menu" id="iatext_menu" class="form-control" rows="3"></textarea>
+                                                <textarea name="iatext_menu" id="iatext_menu" class="form-control" rows="3" readonly></textarea>
                                             </div>
                                             <div class="col-12 mb-3">
                                                 <label class="form-label" for="techniques_specs">Spécifications Techniques
@@ -972,20 +1044,20 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" id="techniques_specs" name="techniques_specs" rows="3"
                                                     placeholder="Entrez les spécifications techniques"></textarea>
                                             </div>
-                                            <div class="col-12 mb-3 d-none">
+                                            <div class="col-12 mb-3  d-none">
                                                 <label class="form-label" for="iatext_techniques_specsAi">Spécifications
                                                     Techniques (ai content)
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
-                                                        name="prompt_iatext_techniques_specs"
+                                                        name="prompt_iatext_techniques_specs" readonly
                                                         placeholder="Créer votre prompt" id="iatext_techniques_specsAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="iatext_techniques_specsAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="iatext_techniques_specs" id="iatext_techniques_specs" class="form-control" rows="3"
+                                                <textarea name="iatext_techniques_specs" id="iatext_techniques_specs" class="form-control" rows="3" readonly
                                                     placeholder="Activité principale de l'entreprise"></textarea>
                                             </div>
                                         </div>
@@ -1024,20 +1096,20 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" id="concurrents" name="competitors" rows="3"
                                                     placeholder="Saisissez les sites internet de vos principaux concurrents"></textarea>
                                             </div>
-                                            <div class="col-10 mb-3 d-none">
+                                            <div class="col-10 mb-3  d-none">
                                                 <label class="form-label" for="iatext_competitors">
                                                     Concurrence (ai content)
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
                                                         name="prompt_iatext_competitors" placeholder="Créer votre prompt"
-                                                        id="iatext_competitorsAi">
+                                                        readonly id="iatext_competitorsAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="iatext_competitorsAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="iatext_competitors" id="iatext_competitors" class="form-control" rows="3"
+                                                <textarea name="iatext_competitors" id="iatext_competitors" class="form-control" rows="3" readonly
                                                     placeholder="Activité principale de l'entreprise"></textarea>
                                             </div>
                                             <div class="col-sm-6 col-md-10">
@@ -1100,20 +1172,20 @@ site internet sur le cahier de charge de son site internet`
                                                         placeholder="Veuillez fournir des exemples de sites internet que vous appréciez et décrire les éléments que vous aimez."></textarea>
                                                 </div>
                                             </div>
-                                            <div class="col-12 mb-3 d-none">
+                                            <div class="col-12 mb-3  d-none">
                                                 <label class="form-label" for="iatext_constraintsAi">
                                                     Contraintes (ai content)
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
                                                         name="prompt_iatext_constraints" placeholder="Créer votre prompt"
-                                                        id="iatext_constraintsAi">
+                                                        readonly id="iatext_constraintsAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="iatext_constraintsAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                     </button>
                                                 </div>
-                                                <textarea name="iatext_constraints" id="iatext_constraints" class="form-control" rows="3"
+                                                <textarea name="iatext_constraints" id="iatext_constraints" class="form-control" rows="3" readonly
                                                     placeholder="Activité principale de l'entreprise"></textarea>
                                             </div>
                                             <div class="col-12 mb-3">
@@ -1310,7 +1382,7 @@ site internet sur le cahier de charge de son site internet`
                                                                         [
                                                                             'el' => 'description-product-services',
                                                                             'el-name' => 'description_product_services',
-                                                                            'name' => 'Description services produit',
+                                                                            'name' => 'Desc services/ produits',
                                                                         ],
                                                                     ];
                                                                 @endphp
@@ -1481,7 +1553,7 @@ site internet sur le cahier de charge de son site internet`
                                                             placeholder="Indiquez les préférences de typographie pour votre site"></textarea>
                                                     </div>
                                                 </div> --}}
-                                                <div class="col-12 ">
+                                                <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="exemples-sites" class="form-label">
                                                             Exemples de sites avec commentaire :
@@ -1503,20 +1575,20 @@ site internet sur le cahier de charge de son site internet`
                                                         </small>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 mb-3 d-none">
+                                                <div class="col-12 mb-3  d-none">
                                                     <label class="form-label" for="iatext_exemples_sitesAi">
                                                         Les éléments sur Mesure (ai content)
                                                     </label>
                                                     <div class="input-group mb-1">
                                                         <input type="text" class="form-control"
-                                                            name="prompt_iatext_exemples_sites"
+                                                            name="prompt_iatext_exemples_sites" readonly
                                                             placeholder="Créer votre prompt" id="iatext_exemples_sitesAi">
                                                         <button class="btn btn-outline-primary ai-generate-button"
                                                             type="button" id="iatext_exemples_sitesAi-generate" disabled>
                                                             <i class="ti ti-file-text-ai"></i> &nbsp; Générer
                                                         </button>
                                                     </div>
-                                                    <textarea name="iatext_exemples_sites" id="iatext_exemples_sites" class="form-control" rows="3"></textarea>
+                                                    <textarea name="iatext_exemples_sites" id="iatext_exemples_sites" class="form-control" rows="3" readonly></textarea>
                                                 </div>
                                                 {{-- <div class="col-sm-6 col-md-10 mb-3">
                                                 </div>
@@ -1981,12 +2053,38 @@ site internet sur le cahier de charge de son site internet`
                                                 class="ti ti-arrow-left me-sm-1 me-0"></i>
                                             <span class="align-middle d-sm-inline-block d-none">Précédent</span>
                                         </button>
-                                        <button type="button" class="btn btn-success btn-next btn-submit"
+                                        <button type="button" class="btn btn-primary btn-next btn-submit"
                                             id="next-step-5">
+                                            <span>
+                                                Suivant
+                                            </span>
+                                            <i class="ti ti-arrow-right" id="icon-next-step-5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- 6 -->
+                        <div id="step-6-validation" class="content">
+                            <div class="content-header mb-3">
+                                <h6 class="mb-0">Confirmation</h6>
+                            </div>
+                            <form id="step-6-validation-form">
+                                <div class="row g-3 validation-field">
+
+                                    <h4 id="confirmation">Loading .....</h4>
+
+                                    <div class="col-12 d-flex justify-content-between">
+                                        <button type="button" class="btn btn-label-secondary btn-prev"> <i
+                                                class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                            <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-next btn-submit"
+                                            id="next-step-6">
                                             <span>
                                                 Confirmer
                                             </span>
-                                            <i class="ti ti-check" id="icon-next-step-5"></i>
+                                            <i class="ti ti-check" id="icon-next-step-6"></i>
                                         </button>
                                     </div>
                                 </div>

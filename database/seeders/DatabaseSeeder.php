@@ -133,6 +133,9 @@ class DatabaseSeeder extends Seeder
       ], [
         'name' => 'Khadija',
         'email' => 'arjane.khadija97@gmail.com',
+      ], [
+        'name' => 'Gonzague',
+        'email' => 'gonzague@gmail.com',
       ]
     ];
 

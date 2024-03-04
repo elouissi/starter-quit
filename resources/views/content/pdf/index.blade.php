@@ -61,15 +61,15 @@
     $contact_person = $specification->contact_person;
     $phone = $specification->phone;
     $email = $specification->email;
-    $main_activities = $specification->main_activities;
-    $services_products = $specification->services_products;
-    $target_audience = $specification->target_audience;
+    $main_activities = $specification->iatext_main_activities;
+    $services_products = $specification->iatext_services_products;
+    $target_audience = $specification->iatext_target_audience;
 
     // objectif_site
     $project_type = $specification->objectif_site->project_type;
     $project_need = $specification->objectif_site->project_need;
     $target_keywords = $specification->objectif_site->target_keywords;
-    $expected_client_objectives = $specification->objectif_site->expected_client_objectives;
+    $expected_client_objectives = $specification->objectif_site->iatext_expected_client_objectives;
     $iatext_techniques_specs = $specification->objectif_site->iatext_techniques_specs;
     $iatext_target_keywords = $specification->objectif_site->iatext_target_keywords;
     $menu = $specification->objectif_site->menu;
@@ -555,8 +555,7 @@
         </ol>
     </div>
 
-    <div class="page-break">
-    </div>
+
 
     <div class="page-break">
         <h1 class="primary-color" style="text-align: center">Méthodologie </h1>
@@ -979,14 +978,14 @@
                 <h3 class="primary-color">Présentation de l’activité </h3>
                 <p>
                     {{-- {{ $main_activities }} --}}
-                    {!! nl2br(e($main_activities)) !!}
+                    {!! nl2br(($main_activities)) !!}
                 </p>
             </li>
             <li>
                 <h3 class="primary-color">Service / produit Vendu</h3>
                 <p>
                     {{-- {{ $services_products }} --}}
-                    {!! nl2br(e($services_products)) !!}
+                    {!! nl2br(($services_products)) !!}
                 </p>
             </li>
         </ol>
@@ -1142,7 +1141,7 @@
                 <h3 class="primary-color">Objectifs du projet </h3>
                 <p>
                     {{-- {{ $expected_client_objectives }} --}}
-                    {!! nl2br(e($expected_client_objectives)) !!}
+                    {!! nl2br(($expected_client_objectives)) !!}
                 </p>
             </li>
             <li>
@@ -1153,14 +1152,14 @@
                 </p> --}}
                 <p>
                     {{-- {{ $target_audience }} --}}
-                    {!! nl2br(e($target_audience)) !!}
+                    {!! nl2br(($target_audience)) !!}
                 </p>
             </li>
             <li>
                 <h3 class="primary-color">Concurrence </h3>
                 <p>
                     {{-- {{ $iatext_competitors }} --}}
-                    {!! nl2br(e($iatext_competitors)) !!}
+                    {!! nl2br(($iatext_competitors)) !!}
                 </p>
             </li>
         </ol>
@@ -1779,7 +1778,7 @@
                             le client souhaite avoir sur son site]
                         </p> --}}
                         <p>
-                            {!! nl2br(e($iatext_techniques_specs)) !!}
+                            {!! nl2br(($iatext_techniques_specs)) !!}
                         </p>
                     </li>
                     @if (in_array('Plugins sur mesure', $expected_functions) ||
@@ -2064,7 +2063,7 @@
                     <li>
                         <b>Arborescence du site :</b>
                         <p>
-                            {!! nl2br(e($iatext_menu)) !!}
+                            {!! nl2br(($iatext_menu)) !!}
                         </p>
                     </li>
                     <li>
@@ -2077,11 +2076,11 @@
                             son site internet]
                         </p> --}}
                         <p>
-                            {!! nl2br(e($iatext_constraints)) !!}
+                            {!! nl2br(($iatext_constraints)) !!}
                             {{-- {{ $iatext_constraints }} --}}
                         </p>
                         <p>
-                            {!! nl2br(e($iatext_exemples_sites)) !!}
+                            {!! nl2br(($iatext_exemples_sites)) !!}
                             {{-- Prompt [écrire un paragraphe détaillé pour élaborer Les éléments suivants (valeur de champ
                             des
                             exemples de sites avec un commentaire) que le client voulait inclure sur le site internet
@@ -2118,7 +2117,7 @@
                         charge de son site internet à envoyer au client merci d'élaborer cette phrase dans deux
                         paragraphes : (valeur de champs des mots clés)] --}}
 
-                        {!! nl2br(e($iatext_target_keywords)) !!}
+                        {!! nl2br(($iatext_target_keywords)) !!}
                     </p>
                 @else
                     <p>

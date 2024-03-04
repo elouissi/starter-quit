@@ -39,6 +39,9 @@ class SpecificationsController extends Controller
                 <a class="btn btn-icon btn-primary text-white" target="_blank" href="specifications/' . $item->id . '" data-id="' . $item->id . '">
                     <i class="ti ti-eye"></i>
                 </a>
+                <a class="btn btn-icon btn-primary text-white" target="_blank" href="specifications/showUpload/' . $item->id . '" data-id="' . $item->id . '">
+                    <i class="ti ti-download"></i>
+                </a>
                
                 ';
         } else {
@@ -48,7 +51,8 @@ class SpecificationsController extends Controller
         }
       })
       ->rawColumns(['actions'])
-      ->make(true);
+      ->make(true)
+      ;
   }
 
   /**
@@ -85,6 +89,29 @@ class SpecificationsController extends Controller
 
       // Download the PDF
       // return $pdf->download('pdf.pdf');
+    }
+    // } catch (\Exception $e) {
+    // Log the error if needed
+    // Log::error($e->getMessage());
+
+    // Redirect back to the previous page
+    // return Redirect::back()->with('error', 'Failed to load specification.');
+    // }
+  }
+
+  public function showUpload(string $id)
+  {
+    // try {
+    $specification = Specification::with('objectif_site', 'existing_analysis', 'design_content', 'deadline_and_budget', 'facturation')->findOrFail($id);
+
+    if ($specification) {
+      $pdf = PDF::loadView('content.pdf.index', compact('specification'));
+
+      // Stream the PDF
+      // return $pdf->stream('pdf.pdf');
+
+      // Download the PDF
+      return $pdf->download('pdf' . uniqid() . '.pdf');
     }
     // } catch (\Exception $e) {
     // Log the error if needed
@@ -134,13 +161,13 @@ class SpecificationsController extends Controller
         'phone' => 'required|string|max:255',
         'email' => 'required|string|email|max:255',
         'prompt_description' => 'nullable|string',
-        'description' => 'nullable|string',
+        // 'iatext_description' => 'nullable|string',
         'prompt_main_activities' => 'nullable|string',
-        'main_activities' => 'nullable|string',
+        // 'iatext_main_activities' => 'nullable|string',
         'prompt_services_products' => 'nullable|string',
-        'services_products' => 'nullable|string',
+        // 'iatext_services_products' => 'nullable|string',
         'prompt_target_audience' => 'nullable|string',
-        'target_audience' => 'nullable|string',
+        // 'iatext_target_audience' => 'nullable|string',
         'target' => 'nullable|string',
       ], [
         'required' => 'Le champ :attribute est requis.',
@@ -162,13 +189,13 @@ class SpecificationsController extends Controller
       $specification->phone = $request->phone;
       $specification->email = $request->email;
       $specification->prompt_description = $request->prompt_description;
-      $specification->description = $request->description;
+      // $specification->iatext_description = $request->iatext_description;
       $specification->prompt_main_activities = $request->prompt_main_activities;
-      $specification->main_activities = $request->main_activities;
+      // $specification->iatext_main_activities = $request->iatext_main_activities;
       $specification->prompt_services_products = $request->prompt_services_products;
-      $specification->services_products = $request->services_products;
+      // $specification->iatext_services_products = $request->iatext_services_products;
       $specification->prompt_target_audience = $request->prompt_target_audience;
-      $specification->target_audience = $request->target_audience;
+      // $specification->iatext_target_audience = $request->iatext_target_audience;
       $specification->target = $request->target;
 
       $specification->save();
@@ -204,13 +231,13 @@ class SpecificationsController extends Controller
         'phone' => 'required|string|max:255',
         'email' => 'required|string|email|max:255',
         'prompt_description' => 'nullable|string',
-        'description' => 'nullable|string',
+        // 'iatext_description' => 'nullable|string',
         'prompt_main_activities' => 'nullable|string',
-        'main_activities' => 'nullable|string',
+        // 'iatext_main_activities' => 'nullable|string',
         'prompt_services_products' => 'nullable|string',
-        'services_products' => 'nullable|string',
+        // 'iatext_services_products' => 'nullable|string',
         'prompt_target_audience' => 'nullable|string',
-        'target_audience' => 'nullable|string',
+        // 'iatext_target_audience' => 'nullable|string',
         'target' => 'nullable|string',
       ], [
         'required' => 'Le champ :attribute est requis.',
@@ -239,13 +266,13 @@ class SpecificationsController extends Controller
       $specification->phone = $request->phone;
       $specification->email = $request->email;
       $specification->prompt_description = $request->prompt_description;
-      $specification->description = $request->description;
+      // $specification->iatext_description = $request->iatext_description;
       $specification->prompt_main_activities = $request->prompt_main_activities;
-      $specification->main_activities = $request->main_activities;
+      // $specification->iatext_main_activities = $request->iatext_main_activities;
       $specification->prompt_services_products = $request->prompt_services_products;
-      $specification->services_products = $request->services_products;
+      // $specification->iatext_services_products = $request->iatext_services_products;
       $specification->prompt_target_audience = $request->prompt_target_audience;
-      $specification->target_audience = $request->target_audience;
+      // $specification->iatext_target_audience = $request->iatext_target_audience;
       $specification->target = $request->target;
 
       // Save the updated record
@@ -271,18 +298,18 @@ class SpecificationsController extends Controller
         'payment_options' => 'nullable|array',
         'languages' => 'nullable|array',
         'target_keywords' => 'nullable|string',
-        'iatext_target_keywords' => 'nullable|string',
         'prompt_iatext_target_keywords' => 'nullable|string',
+        // 'iatext_target_keywords' => 'nullable|string',
         'expected_functions' => 'nullable|array',
         'expected_objectives' => 'nullable|string',
         'prompt_expected_client_objectives' => 'nullable|string',
-        'expected_client_objectives' => 'nullable|string',
+        // 'iatext_expected_client_objectives' => 'nullable|string',
         'techniques_specs' => 'nullable|string',
         'prompt_iatext_techniques_specs' => 'nullable|string',
-        'iatext_techniques_specs' => 'nullable|string',
+        // 'iatext_techniques_specs' => 'nullable|string',
         'menu' => 'nullable|string',
         'prompt_iatext_menu' => 'nullable|string',
-        'iatext_menu' => 'nullable|string',
+        // 'iatext_menu' => 'nullable|string',
       ], [
         'required' => 'Le champ :attribute est requis.',
         'string' => 'Le champ :attribute doit être une chaîne de caractères.',
@@ -305,18 +332,18 @@ class SpecificationsController extends Controller
       $objectifSite->payment_options = $request->payment_options;
       $objectifSite->languages = $request->languages;
       $objectifSite->target_keywords = $request->target_keywords;
-      $objectifSite->iatext_target_keywords = $request->iatext_target_keywords;
       $objectifSite->prompt_iatext_target_keywords = $request->prompt_iatext_target_keywords;
+      // $objectifSite->iatext_target_keywords = $request->iatext_target_keywords;
       $objectifSite->expected_functions = $request->expected_functions;
       $objectifSite->expected_objectives = $request->expected_objectives;
       $objectifSite->prompt_expected_client_objectives = $request->prompt_expected_client_objectives;
-      $objectifSite->expected_client_objectives = $request->expected_client_objectives;
+      // $objectifSite->iatext_expected_client_objectives = $request->iatext_expected_client_objectives;
       $objectifSite->menu = $request->menu;
       $objectifSite->prompt_iatext_menu = $request->prompt_iatext_menu;
-      $objectifSite->iatext_menu = $request->iatext_menu;
+      // $objectifSite->iatext_menu = $request->iatext_menu;
       $objectifSite->techniques_specs = $request->techniques_specs;
       $objectifSite->prompt_iatext_techniques_specs = $request->prompt_iatext_techniques_specs;
-      $objectifSite->iatext_techniques_specs = $request->iatext_techniques_specs;
+      // $objectifSite->iatext_techniques_specs = $request->iatext_techniques_specs;
 
       $objectifSite->save();
 
@@ -358,18 +385,18 @@ class SpecificationsController extends Controller
         'payment_options' => 'nullable|array',
         'languages' => 'nullable|array',
         'target_keywords' => 'nullable|string',
-        'iatext_target_keywords' => 'nullable|string',
+        // 'iatext_target_keywords' => 'nullable|string',
         'prompt_iatext_target_keywords' => 'nullable|string',
         'expected_functions' => 'nullable|array',
         'expected_objectives' => 'nullable|string',
         'prompt_expected_client_objectives' => 'nullable|string',
-        'expected_client_objectives' => 'nullable|string',
+        // 'iatext_expected_client_objectives' => 'nullable|string',
         'techniques_specs' => 'nullable|string',
         'prompt_iatext_techniques_specs' => 'nullable|string',
-        'iatext_techniques_specs' => 'nullable|string',
+        // 'iatext_techniques_specs' => 'nullable|string',
         'menu' => 'nullable|string',
         'prompt_iatext_menu' => 'nullable|string',
-        'iatext_menu' => 'nullable|string',
+        // 'iatext_menu' => 'nullable|string',
       ], [
         'required' => 'Le champ :attribute est requis.',
         'string' => 'Le champ :attribute doit être une chaîne de caractères.',
@@ -401,18 +428,18 @@ class SpecificationsController extends Controller
       $objectifSite->payment_options = $request->payment_options;
       $objectifSite->languages = $request->languages;
       $objectifSite->target_keywords = $request->target_keywords;
-      $objectifSite->iatext_target_keywords = $request->iatext_target_keywords;
+      // $objectifSite->iatext_target_keywords = $request->iatext_target_keywords;
       $objectifSite->prompt_iatext_target_keywords = $request->prompt_iatext_target_keywords;
       $objectifSite->expected_functions = $request->expected_functions;
       $objectifSite->expected_objectives = $request->expected_objectives;
       $objectifSite->prompt_expected_client_objectives = $request->prompt_expected_client_objectives;
-      $objectifSite->expected_client_objectives = $request->expected_client_objectives;
+      // $objectifSite->iatext_expected_client_objectives = $request->iatext_expected_client_objectives;
       $objectifSite->menu = $request->menu;
       $objectifSite->prompt_iatext_menu = $request->prompt_iatext_menu;
-      $objectifSite->iatext_menu = $request->iatext_menu;
+      // $objectifSite->iatext_menu = $request->iatext_menu;
       $objectifSite->techniques_specs = $request->techniques_specs;
       $objectifSite->prompt_iatext_techniques_specs = $request->prompt_iatext_techniques_specs;
-      $objectifSite->iatext_techniques_specs = $request->iatext_techniques_specs;
+      // $objectifSite->iatext_techniques_specs = $request->iatext_techniques_specs;
 
       $objectifSite->save();
 
@@ -433,12 +460,12 @@ class SpecificationsController extends Controller
         'competitors' => 'required|string',
         'sample_sites' => 'required|string',
         'prompt_iatext_competitors' => 'nullable|string',
-        'iatext_competitors' => 'nullable|string',
+        // 'iatext_competitors' => 'nullable|string',
         'sample_sites_files' => ['nullable', 'array'],
         'sample_sites_files.*' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,bmp,svg,webp,pdf,doc,docx'],
         'constraints' => 'nullable|string',
         'prompt_iatext_constraints' => 'nullable|string',
-        'iatext_constraints' => 'nullable|string',
+        // 'iatext_constraints' => 'nullable|string',
         'constraints_files' => ['nullable', 'array'],
         'constraints_files.*' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,bmp,svg,webp,pdf,doc,docx'],
         'domain' => 'required|string',
@@ -481,12 +508,12 @@ class SpecificationsController extends Controller
       $record->specification_id = $specification_id;
       $record->competitors = $request->competitors;
       $record->prompt_iatext_competitors = $request->prompt_iatext_competitors;
-      $record->iatext_competitors = $request->iatext_competitors;
+      // $record->iatext_competitors = $request->iatext_competitors;
       $record->sample_sites = $request->sample_sites;
       $record->sample_sites_files = $files_sample_sites_files ? $files_sample_sites_files : null;
       $record->constraints = $request->constraints;
       $record->prompt_iatext_constraints = $request->prompt_iatext_constraints;
-      $record->iatext_constraints = $request->iatext_constraints;
+      // $record->iatext_constraints = $request->iatext_constraints;
       $record->constraints_files = $files_constraints_files ? $files_constraints_files : null;
       $record->domain = $request->domain;
       $record->domain_name = $request->domain_name;
@@ -545,7 +572,7 @@ class SpecificationsController extends Controller
         'exemples_sites_files' => ['nullable', 'array'],
         'exemples_sites_files.*' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,bmp,svg,webp,pdf,doc,docx'],
         'prompt_iatext_exemples_sites' => 'nullable|string',
-        'iatext_exemples_sites' => 'nullable|string',
+        // 'iatext_exemples_sites' => 'nullable|string',
       ], [
         'required' => 'Le champ :attribute est requis.',
         'numeric' => 'Le champ :attribute doit être numérique.',
@@ -602,7 +629,7 @@ class SpecificationsController extends Controller
       $record->exemples_sites = $validatedData['exemples_sites'];
       $record->exemples_sites_files = $successFiles_exemples_sites_files ? ($successFiles_exemples_sites_files) : null;
       $record->prompt_iatext_exemples_sites = $validatedData['prompt_iatext_exemples_sites'];
-      $record->iatext_exemples_sites = $validatedData['iatext_exemples_sites'];
+      // $record->iatext_exemples_sites = $validatedData['iatext_exemples_sites'];
 
       $record->save();
 
@@ -826,6 +853,90 @@ class SpecificationsController extends Controller
 
       $recordId = $record->id;
       return response()->json(['success' => true, 'message' => 'Record created successfully', 'record_id' => $recordId], 201);
+    } else {
+      return response()->json(['message' => 'Only AJAX requests are allowed'], 400);
+    }
+  }
+
+  public function storestep6(Request $request)
+  {
+    // return $request;
+    if ($request->ajax()) {
+      $validatedData = $request->validate([
+        'iatext_description' => 'nullable|string',
+        'iatext_main_activities' => 'nullable|string',
+        'iatext_services_products' => 'nullable|string',
+        'iatext_target_audience' => 'nullable|string',
+        'iatext_target_keywords' => 'nullable|string',
+        'iatext_expected_client_objectives' => 'nullable|string',
+        'iatext_menu' => 'nullable|string',
+        'iatext_techniques_specs' => 'nullable|string',
+        'iatext_competitors' => 'nullable|string',
+        'iatext_constraints' => 'nullable|string',
+        'iatext_exemples_sites' => 'nullable|string',
+
+      ], [
+        'required' => 'Le champ :attribute est requis.',
+        'numeric' => 'Le champ :attribute doit être numérique.',
+        'string' => 'Le champ :attribute doit être une chaîne de caractères.',
+      ]);
+
+      ///
+
+
+      $specification =  Specification::find($request->specification_id);
+      $specification->iatext_description = $validatedData['iatext_description'];
+      $specification->iatext_main_activities = $validatedData['iatext_main_activities'];
+      $specification->iatext_services_products = $validatedData['iatext_services_products'];
+      $specification->iatext_target_audience = $validatedData['iatext_target_audience'];
+      $specification->save();
+
+      $objectifSite = ObjectifSite::where('specification_id', $request->specification_id)->first();
+      $objectifSite->iatext_target_keywords = $validatedData['iatext_target_keywords'];
+      $objectifSite->iatext_expected_client_objectives = $validatedData['iatext_expected_client_objectives'];
+      $objectifSite->iatext_menu = $validatedData['iatext_menu'];
+      $objectifSite->iatext_techniques_specs = $validatedData['iatext_techniques_specs'];
+      $objectifSite->save();
+      
+      $existingAnalysis =  ExistingAnalysis::where('specification_id', $request->specification_id)->first();
+      $existingAnalysis->iatext_competitors = $validatedData['iatext_competitors'];
+      $existingAnalysis->iatext_constraints = $validatedData['iatext_constraints'];
+      $existingAnalysis->save();
+      
+      $designContent =  DesignContent::where('specification_id', $request->specification_id)->first();
+      $designContent->iatext_exemples_sites = $validatedData['iatext_exemples_sites'];
+      $designContent->save();
+
+
+      // $record = new DeadlineAndBudget();
+      // $record->specification_id = $validatedData['specification_id'];
+      // $record->communication = $validatedData['communication'];
+      // $record->gestion_projet = $validatedData['gestion_projet'];
+      // $record->deadline = $validatedData['deadline'];
+      // $record->budget_from = $validatedData['budget_from'];
+      // $record->budget_to = $validatedData['budget_to'];
+      // $record->save();
+
+      // ///
+
+      // $facture = new Facturation();
+      // $facture->specification_id = $validatedData['specification_id'];
+      // $facture->number_of_days_installation_environment = $validatedData['number_of_days_installation_environment'];
+      // $facture->unit_amount_installation_environment = $validatedData['unit_amount_installation_environment'];
+      // $facture->total_installation_environment = $validatedData['total_installation_environment'];
+
+      // $facture->save();
+
+      ///
+
+      // $specification = Specification::find($request->specification_id);
+      // if ($specification) {
+      //   $specification->step = 5;
+      //   $specification->save();
+      // }
+
+      // $recordId = $record->id;
+      return response()->json(['success' => true, 'message' => 'Record created successfully'], 201);
     } else {
       return response()->json(['message' => 'Only AJAX requests are allowed'], 400);
     }
