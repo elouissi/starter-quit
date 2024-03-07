@@ -60,8 +60,12 @@
                 ajax: '{!! route('specification.datatable') !!}',
                 "processing": true,
                 "serverSide": true,
+                order: [
+                    [0, 'desc']
+                ],
                 columns: [{
                         data: 'id',
+                        visible: false 
                     },
                     {
                         data: 'entreprise_name'

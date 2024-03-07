@@ -501,17 +501,12 @@ site internet sur le cahier de charge de son site internet`
                 }
             });
             $(`#${element}Ai-generate`).click(function() {
-                // $('.ai-generate-button').addClass('disabled');
-                // $(`#next-step-${step}`).addClass('disabled');
-                // $(`#next-step-${step} > span`).text(
-                //     'Génération de texte avec IA, merci de patienter un petit moment');
-                // $(`#icon-next-step-${step}`).removeClass().addClass('ti ti-loader rotate');
                 $(`#${element}Ai-generate`).html(
                     `<i class="ti ti-loader rotate"></i> &nbsp; Chargement ...`);
                 $(`#${element}Ai-generate`).prop("disabled", true);
                 $(`#${element}`).text('');
-                $(`#${element}`).text('loading');
                 var promptText = $(`#${element}Ai`).val();
+                $(`#${element}`).text('loading');
                 $.ajax({
                     url: '{{ route('askToChatGpt') }}',
                     type: 'GET',
@@ -525,11 +520,8 @@ site internet sur le cahier de charge de son site internet`
                         $(`#${element}`).text(response);
                         window.localStorage.setItem('askToChatGpt', element);
                         $(`#next-step-${step}`).removeClass('disabled');
-                        // $(`#next-step-${step} > span`).text(step == 5 ? 'Confirmer' : 'Suivant');
                         $(`#icon-next-step-${step}`).removeClass().addClass('ti ti-arrow-right');
-                        // $('.ai-generate-button').removeClass('disabled');
                         console.log('success');
-
                     },
                     error: function(xhr, status, error) {
                         setTimeout(() => {
@@ -569,31 +561,31 @@ site internet sur le cahier de charge de son site internet`
             let remise_exceptionnelle = $('#remise-exceptionnelle').val() ? parseFloat($(`#remise-exceptionnelle`).val()) :
                 0;;
 
-            $('#total-total').val(total - remise_exceptionnelle)
+            $('#total-total').val((total - remise_exceptionnelle).toFixed(2))
         }
 
         function calculMaintenance() {
-            let pourcentageMaintenance = $('#pourcentage-operation-maintenance').val() ? parseInt($(
+            let pourcentageMaintenance = $('#pourcentage-operation-maintenance').val() ? parseFloat($(
                 `#pourcentage-operation-maintenance`).val()) : 0;
-            let total = $(`#total-total`).val() ? parseInt($(`#total-total`).val()) : 0;
+            let total = $(`#total-total`).val() ? parseFloat($(`#total-total`).val()) : 0;
             let percentageAmount = (pourcentageMaintenance / 100) * total;
-            $('#pourcentage-value-maintenance').val(percentageAmount)
+            $('#pourcentage-value-maintenance').val((percentageAmount).toFixed(2));
         }
 
         function calculReste() {
             for (let i = 1; i < 11; i++) {
-                let total = $(`#total-total`).val() ? parseInt($(`#total-total`).val()) : 0;
+                let total = $(`#total-total`).val() ? parseFloat($(`#total-total`).val()) : 0;
                 let percentageNumber = $(`#pourcentage-operation-${i}`).val();
                 var percentageAmount = (percentageNumber / 100) * total;
-                $(`#pourcentage-value-${i}`).val(percentageAmount);
+                $(`#pourcentage-value-${i}`).val((percentageAmount).toFixed(2));
                 let reste = 0;
                 let totalAvance = 0;
                 for (let i = 1; i < 11; i++) {
                     let avanceValue = $(`#pourcentage-value-${i}`).val() ?
-                        parseInt($(`#pourcentage-value-${i}`).val()) : 0;
+                        parseFloat($(`#pourcentage-value-${i}`).val()) : 0;
                     totalAvance += avanceValue;
                 }
-                $('#reste').val(total - totalAvance);
+                $('#reste').val((total - totalAvance).toFixed(2));
             }
         }
     </script>
@@ -730,7 +722,8 @@ site internet sur le cahier de charge de son site internet`
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-10 mb-3">
-                                                <label class="form-label" for="nomEntreprise">Nom de l'entreprise <span class="text-danger">*</span> </label>
+                                                <label class="form-label" for="nomEntreprise">Nom de l'entreprise <span
+                                                        class="text-danger">*</span> </label>
                                                 <input type="text" name="entreprise_name" id="nomEntreprise"
                                                     class="form-control" placeholder="Nom de l'entreprise" />
                                             </div>
@@ -766,12 +759,14 @@ site internet sur le cahier de charge de son site internet`
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-12 mb-3">
-                                                <label class="form-label" for="telephone">Téléphone <span class="text-danger">*</span></label>
+                                                <label class="form-label" for="telephone">Téléphone <span
+                                                        class="text-danger">*</span></label>
                                                 <input type="tel" name="phone" id="telephone" class="form-control"
                                                     placeholder="Numéro de téléphone" />
                                             </div>
                                             <div class="col-12 mb-3">
-                                                <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
+                                                <label class="form-label" for="email">Email <span
+                                                        class="text-danger">*</span></label>
                                                 <input type="email" name="email" id="email" class="form-control"
                                                     placeholder="Adresse email" />
                                             </div>
@@ -788,9 +783,9 @@ site internet sur le cahier de charge de son site internet`
                                                     Description de l'entreprise (ai content)
                                                 </label>
                                                 <div class="input-group mb-1">
-                                                    <input type="text" class="form-control"
-                                                        name="prompt_iatext_description" placeholder="Créer votre prompt"
-                                                        readonly id="descriptionEntrepriseAi">
+                                                    <input type="text" class="form-control" name="prompt_description"
+                                                        placeholder="Créer votre prompt" readonly
+                                                        id="descriptionEntrepriseAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="descriptionEntrepriseAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
@@ -805,8 +800,8 @@ site internet sur le cahier de charge de son site internet`
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control" readonly
-                                                        name="prompt_iatext_main_activities"
-                                                        placeholder="Créer votre prompt" id="activitePrincipaleAi">
+                                                        name="prompt_main_activities" placeholder="Créer votre prompt"
+                                                        id="activitePrincipaleAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="activitePrincipaleAi-generate" disabled>
                                                         <i class="ti ti-file-text-ai"></i> &nbsp; Générer
@@ -821,7 +816,7 @@ site internet sur le cahier de charge de son site internet`
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
-                                                        name="prompt_iatext_services_products" readonly
+                                                        name="prompt_services_products" readonly
                                                         placeholder="Créer votre prompt" id="servicesProduitsAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="servicesProduitsAi-generate" disabled>
@@ -837,7 +832,7 @@ site internet sur le cahier de charge de son site internet`
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
-                                                        name="prompt_iatext_target_audience" readonly
+                                                        name="prompt_target_audience" readonly
                                                         placeholder="Créer votre prompt" id="target_audienceAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="target_audienceAi-generate" disabled>
@@ -876,9 +871,13 @@ site internet sur le cahier de charge de son site internet`
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-10 mb-3">
-                                                <label class="form-label" for="besoinProjet">Besoin de projet : <span class="text-danger">*</span></label>
+                                                <label class="form-label" for="besoinProjet">Besoin de projet : <span
+                                                        class="text-danger">*</span></label>
                                                 @php
-                                                    $project_needs = [['name' => 'Refonte de site web', 'alias' => 'refonte'], ['name' => 'Création de site web', 'alias' => 'creation']];
+                                                    $project_needs = [
+                                                        ['name' => 'Refonte de site web', 'alias' => 'refonte'],
+                                                        ['name' => 'Création de site web', 'alias' => 'creation'],
+                                                    ];
                                                 @endphp
                                                 <div class="row">
                                                     @foreach ($project_needs as $item)
@@ -897,9 +896,15 @@ site internet sur le cahier de charge de son site internet`
                                                 </div>
                                             </div>
                                             <div class="col-10 mb-3">
-                                                <label class="form-label">Type de projet : <span class="text-danger">*</span></label>
+                                                <label class="form-label">Type de projet : <span
+                                                        class="text-danger">*</span></label>
                                                 @php
-                                                    $project_needs = [['name' => 'Site Vitrine', 'alias' => 'siteVitrine'], ['name' => 'E-commerce', 'alias' => 'eCommerce'], ['name' => 'Blog', 'alias' => 'blog'], ['name' => "Site d'affiliation", 'alias' => 'siteAffiliation']];
+                                                    $project_needs = [
+                                                        ['name' => 'Site Vitrine', 'alias' => 'siteVitrine'],
+                                                        ['name' => 'E-commerce', 'alias' => 'eCommerce'],
+                                                        ['name' => 'Blog', 'alias' => 'blog'],
+                                                        ['name' => "Site d'affiliation", 'alias' => 'siteAffiliation'],
+                                                    ];
                                                 @endphp
                                                 <div class="row">
                                                     @foreach ($project_needs as $item)
@@ -919,7 +924,13 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-12 mb-3 d-none" id="options-paiement-container">
                                                 <label class="form-label">Options de paiement :</label>
                                                 @php
-                                                    $payment_options = [['name' => 'Stripe', 'alias' => 'stripe'], ['name' => 'Paypal', 'alias' => 'payment'], ['name' => 'COD (Paiement à la livraison)', 'alias' => 'cod'], ['name' => 'Demande de devis', 'alias' => 'demande_devis'], ['name' => 'Aucun', 'alias' => 'aucun']];
+                                                    $payment_options = [
+                                                        ['name' => 'Stripe', 'alias' => 'stripe'],
+                                                        ['name' => 'Paypal', 'alias' => 'payment'],
+                                                        ['name' => 'COD (Paiement à la livraison)', 'alias' => 'cod'],
+                                                        ['name' => 'Demande de devis', 'alias' => 'demande_devis'],
+                                                        ['name' => 'Aucun', 'alias' => 'aucun'],
+                                                    ];
                                                 @endphp
                                                 <div class="row">
                                                     @foreach ($payment_options as $item)
@@ -935,9 +946,14 @@ site internet sur le cahier de charge de son site internet`
                                                     @endforeach
                                                 </div>
                                             </div>
-                                            <div class="col-12 mb-3"> <label class="form-label">Langue : <span class="text-danger">*</span></label>
+                                            <div class="col-12 mb-3"> <label class="form-label">Langue : <span
+                                                        class="text-danger">*</span></label>
                                                 @php
-                                                    $languages = [['name' => 'Français', 'alias' => 'fr'], ['name' => 'Anglais', 'alias' => 'en'], ['name' => 'Italien', 'alias' => 'it']];
+                                                    $languages = [
+                                                        ['name' => 'Français', 'alias' => 'fr'],
+                                                        ['name' => 'Anglais', 'alias' => 'en'],
+                                                        ['name' => 'Italien', 'alias' => 'it'],
+                                                    ];
                                                 @endphp
                                                 <div class="row">
                                                     @foreach ($languages as $item)
@@ -989,7 +1005,7 @@ site internet sur le cahier de charge de son site internet`
                                                 </label>
                                                 <div class="input-group mb-1">
                                                     <input type="text" class="form-control"
-                                                        name="prompt_iatext_expected_client_objectives" readonly
+                                                        name="prompt_expected_client_objectives" readonly
                                                         placeholder="Créer votre prompt" id="expectedObjectivesAi">
                                                     <button class="btn btn-outline-primary ai-generate-button"
                                                         type="button" id="expectedObjectivesAi-generate" disabled>
@@ -1025,7 +1041,8 @@ site internet sur le cahier de charge de son site internet`
 
                                             <div class="col-12 mb-3">
                                                 <label class="form-label" for="menu">
-                                                    Menu (Avez vous une préférence des menus à ajouter sur le site) : <span class="text-danger">*</span>
+                                                    Menu (Avez vous une préférence des menus à ajouter sur le site) : <span
+                                                        class="text-danger">*</span>
                                                 </label>
                                                 <textarea class="form-control" id="menu" name="menu" rows="3"
                                                     placeholder="Indiquez votre préférence des menus à ajouter sur le site"></textarea>
@@ -1097,7 +1114,8 @@ site internet sur le cahier de charge de son site internet`
                                         <div class="row">
                                             <div class="col-10 mb-3">
                                                 <label class="form-label" for="concurrents">
-                                                    Site internet de vos principaux concurrents : <span class="text-danger">*</span>
+                                                    Site internet de vos principaux concurrents : <span
+                                                        class="text-danger">*</span>
                                                 </label>
                                                 <textarea class="form-control" id="concurrents" name="competitors" rows="3"
                                                     placeholder="Saisissez les sites internet de vos principaux concurrents"></textarea>
@@ -1121,7 +1139,8 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-sm-6 col-md-10">
                                                 <div class="form-group">
                                                     <label for="exemples-sites" class="form-label">
-                                                        Exemples de sites avec commentaire : <span class="text-danger">*</span>
+                                                        Exemples de sites avec commentaire : <span
+                                                            class="text-danger">*</span>
                                                     </label>
                                                     <textarea id="exemples-sites" class="form-control" name="sample_sites" rows="3"
                                                         placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.)."></textarea>
@@ -1133,33 +1152,13 @@ site internet sur le cahier de charge de son site internet`
                                                         Télécharger des images :
                                                     </label>
                                                     <input type="file" class="form-control" id="telecharger-images-1"
-                                                        name="sample_sites_files[]"
-                                                        accept=".jpg, .jpeg, .png, .gif, .bmp, .svg, .webp, .pdf, .doc, .docx"
-                                                        multiple>
+                                                        name="sample_sites_files[]" accept="image/*" multiple>
                                                     <small id="images-help" class="form-text text-muted">
                                                         Vous pouvez télécharger des images pour illustrer vos commentaires
                                                         sur les sites.
                                                     </small>
                                                     <div class="row my-3" id="sample_sites_files_container">
-                                                        @for ($i = 0; $i < 4; $i++)
-                                                            {{-- <div class="col-3">
-                                                                <div class="row">
-                                                                    <div class="col-12 mb-1 rounded"
-                                                                        style="width: 100px; padding-top: 100px; background-size: cover; background-posidition: center; background-image: url({{asset('assets/img/avatars/1.png')}})">
-                                                                    </div>
-                                                                    <div class="col-auto">
-                                                                        <a type="button" title="Voir" href="{{asset('assets/img/avatars/1.png')}}" target="_blank"
-                                                                            class="btn btn-icon btn-sm btn-label-info"><i
-                                                                                class="tf-icons ti ti-eye"></i></a>
-                                                                    </div>
-                                                                    <div class="col-auto">
-                                                                        <button type="button" title="Supprimer"
-                                                                            class="btn btn-icon btn-sm btn-label-danger"><i
-                                                                                class=" ti ti-trash"></i></button>
-                                                                    </div>
-                                                                </div>
-                                                            </div> --}}
-                                                        @endfor
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -1200,19 +1199,19 @@ site internet sur le cahier de charge de son site internet`
                                                         Télécharger des images:
                                                     </label>
                                                     <input type="file" class="form-control" id="telecharger-images-2"
-                                                        name="constraints_files[]"
-                                                        accept=".jpg, .jpeg, .png, .gif, .bmp, .svg, .webp, .pdf, .doc, .docx"
-                                                        multiple>
+                                                        name="constraints_files[]" accept="image/*" multiple>
                                                     <small id="images-help" class="form-text text-muted">
                                                         Vous pouvez télécharger des images pour illustrer vos commentaires
                                                         sur les sites.
                                                     </small>
+                                                    <div class="row my-3" id="constraints_files_container"></div>
                                                 </div>
                                             </div>
                                             <div class="col-12 mb-3">
                                                 <div class="col-sm-6  col-md-12">
                                                     <div class="form-group">
-                                                        <label class="form-label">Avez-vous un nom de domaine ? <span class="text-danger">*</span></label>
+                                                        <label class="form-label">Avez-vous un nom de domaine ? <span
+                                                                class="text-danger">*</span></label>
                                                         <div class="radio-group">
                                                             <div class="row">
                                                                 <div class="col-auto">
@@ -1274,7 +1273,8 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-12 mb-3">
                                                 <div class="col-sm-6 col-md-12">
                                                     <div class="form-group">
-                                                        <label class="form-label">Hébergement : <span class="text-danger">*</span></label>
+                                                        <label class="form-label">Hébergement : <span
+                                                                class="text-danger">*</span></label>
                                                         <div class="radio-group">
                                                             <div class="row">
                                                                 <div class="col-auto">
@@ -1383,7 +1383,8 @@ site internet sur le cahier de charge de son site internet`
                                                                         [
                                                                             'el' => 'typography',
                                                                             'el-name' => 'typography',
-                                                                            'name' => "Typographies (police d'ecriture)",
+                                                                            'name' =>
+                                                                                "Typographies (police d'ecriture)",
                                                                         ],
                                                                         [
                                                                             'el' => 'description-product-services',
@@ -1483,7 +1484,14 @@ site internet sur le cahier de charge de son site internet`
                                                         <label class="form-label">Style graphique attendu :</label>
                                                         <div class="checkbox-group">
                                                             @php
-                                                                $graphic_styles = [['name' => 'Flat design', 'alias' => 'flatDesign'], ['name' => 'Futuriste', 'alias' => 'futuriste'], ['name' => 'Interactif', 'alias' => 'interactif'], ['name' => 'Moderne', 'alias' => 'moderne'], ['name' => 'Retro', 'alias' => 'retro'], ['name' => 'Autres', 'alias' => 'autres']];
+                                                                $graphic_styles = [
+                                                                    ['name' => 'Flat design', 'alias' => 'flatDesign'],
+                                                                    ['name' => 'Futuriste', 'alias' => 'futuriste'],
+                                                                    ['name' => 'Interactif', 'alias' => 'interactif'],
+                                                                    ['name' => 'Moderne', 'alias' => 'moderne'],
+                                                                    ['name' => 'Retro', 'alias' => 'retro'],
+                                                                    ['name' => 'Autres', 'alias' => 'autres'],
+                                                                ];
                                                             @endphp
                                                             <div class="row">
                                                                 @foreach ($graphic_styles as $item)
@@ -1515,7 +1523,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <div class="col-sm-6 col-md-10 mb-3">
                                                     <label class="form-label" for="nombrePropositions">Nombre de
                                                         propositions
-                                                        attendues :  <span class="text-danger">*</span></label>
+                                                        attendues : <span class="text-danger">*</span></label>
                                                     <select class="select2" id="nombrePropositions"
                                                         name="nombrePropositions">
                                                         <option label=" "></option>
@@ -1569,16 +1577,17 @@ site internet sur le cahier de charge de son site internet`
                                                     </div>
 
                                                     <div class="form-group mb-3">
-                                                        <label for="telecharger-images-3" class="form-label">Télécharger des
+                                                        <label for="telecharger-images-3" class="form-label">Télécharger
+                                                            des
                                                             images :</label>
                                                         <input type="file" class="form-control"
                                                             id="telecharger-images-3" name="exemples_sites_files[]"
-                                                            accept=".jpg, .jpeg, .png, .gif, .bmp, .svg, .webp, .pdf, .doc, .docx"
-                                                            multiple>
+                                                            accept="image/*" multiple>
                                                         <small id="images-help" class="form-text text-muted">
                                                             Vous pouvez télécharger des images pour illustrer vos
                                                             commentaires sur les sites.
                                                         </small>
+                                                        <div class="row my-3" id="exemples_sites_files_container"></div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 mb-3 d-none ai-content">
@@ -1671,7 +1680,8 @@ site internet sur le cahier de charge de son site internet`
                                         <div class="col-6">
                                             <div class="row">
                                                 <div class="col-10 mb-3">
-                                                    <label class="form-label">Gestion de projet : <span class="text-danger">*</span></label>
+                                                    <label class="form-label">Gestion de projet : <span
+                                                            class="text-danger">*</span></label>
                                                     <div class="row">
                                                         <div class="col-auto">
                                                             <div class="form-check">
@@ -1701,7 +1711,14 @@ site internet sur le cahier de charge de son site internet`
                                                     <label>Communication : <span class="text-danger">*</span></label>
                                                     <br>
                                                     @php
-                                                        $communications = [['name' => 'Téléphone', 'alias' => 'telephone'], ['name' => 'E-mail', 'alias' => 'email'], ['name' => 'Visio-conférences', 'alias' => 'visio_conference']];
+                                                        $communications = [
+                                                            ['name' => 'Téléphone', 'alias' => 'telephone'],
+                                                            ['name' => 'E-mail', 'alias' => 'email'],
+                                                            [
+                                                                'name' => 'Visio-conférences',
+                                                                'alias' => 'visio_conference',
+                                                            ],
+                                                        ];
                                                     @endphp
                                                     <div class="row">
                                                         @foreach ($communications as $item)
@@ -1727,7 +1744,8 @@ site internet sur le cahier de charge de son site internet`
 
                                                 <div class="col-md-12 mb-3">
                                                     <div class="form-group">
-                                                        <label class="form-label">Délais : <span class="text-danger">*</span></label>
+                                                        <label class="form-label">Délais : <span
+                                                                class="text-danger">*</span></label>
                                                         <input type="text" class="form-control" id="delais"
                                                             name="deadline" placeholder="Délais">
                                                     </div>
@@ -1819,7 +1837,8 @@ site internet sur le cahier de charge de son site internet`
                                                                         'name' => 'text_image_integration',
                                                                     ],
                                                                     [
-                                                                        'title' => "Intégration d'autres pages (contact, catégories ...etc.)",
+                                                                        'title' =>
+                                                                            "Intégration d'autres pages (contact, catégories ...etc.)",
                                                                         'alias' => 'integration-autres-pages',
                                                                         'name' => 'other_pages_integration',
                                                                     ],
@@ -1938,7 +1957,7 @@ site internet sur le cahier de charge de son site internet`
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-2 mt-auto">
+                                                                <div class="col-3 mt-auto">
                                                                     <div class="form-group">
                                                                         <label class="form-label"
                                                                             id="label-pourcentage-value-{{ $index }}"
@@ -2033,7 +2052,8 @@ site internet sur le cahier de charge de son site internet`
 
                                                                             <div class="input-group input-group-merge">
                                                                                 <span class="input-group-text">€</span>
-                                                                                <input type="number" class="form-control"
+                                                                                <input type="number"
+                                                                                    class="form-control"
                                                                                     id="pourcentage-value-maintenance"
                                                                                     name="maintenance_amount"
                                                                                     placeholder="00" value="20"
@@ -2114,18 +2134,18 @@ site internet sur le cahier de charge de son site internet`
                                 </div>
 
                                 {{-- <div class="col-12 d-flex justify-content-between">
-                                        <button type="button" class="btn btn-label-secondary btn-prev"> <i
-                                                class="ti ti-arrow-left me-sm-1 me-0"></i>
-                                            <span class="align-middle d-sm-inline-block d-none">Précédent</span>
-                                        </button>
-                                        <button type="button" class="btn btn-success btn-next btn-submit"
-                                            id="next-step-6">
-                                            <span>
-                                                Confirmer
-                                            </span>
-                                            <i class="ti ti-check" id="icon-next-step-6"></i>
-                                        </button>
-                                    </div> --}}
+                                    <button type="button" class="btn btn-label-secondary btn-prev"> <i
+                                            class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                    </button>
+                                    <button type="button" class="btn btn-success btn-next btn-submit"
+                                        id="next-step-6">
+                                        <span>
+                                            Confirmer
+                                        </span>
+                                        <i class="ti ti-check" id="icon-next-step-6"></i>
+                                    </button>
+                                </div> --}}
                             </div>
                             {{-- </form> --}}
                         </div>

@@ -63,4 +63,19 @@ class User extends Authenticatable
   protected $appends = [
     'profile_photo_url',
   ];
+
+  public function notifications()
+  {
+    return $this->hasMany(Notification::class);
+  }
+
+  public function unreadNotifications()
+  {
+    return $this->hasMany(Notification::class)->where('read', false);
+  }
+
+  public function readNotifications()
+  {
+    return $this->hasMany(Notification::class)->where('read', true);
+  }
 }

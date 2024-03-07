@@ -12,6 +12,7 @@ use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ExpectedFunctionController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PromptController;
 use App\Http\Controllers\PromptTypeController;
 use App\Http\Controllers\SpecificationsController;
@@ -65,6 +66,9 @@ Route::middleware([
   Route::get('users/datatable', [UserController::class, 'indexDataTable'])->name('users-datatable');
   Route::resource('users', UserController::class);
   // specifications
+  Route::get('/example', function () {
+    return view('content.specifications.mail', ['name' => 'John']);
+  });
   Route::get('specifications/datatable', [SpecificationsController::class, 'indexDataTable'])->name('specification.datatable');
   // 1
   Route::post('specifications/step1', [SpecificationsController::class, 'storestep1'])->name('specifications.storestep1');
@@ -77,12 +81,16 @@ Route::middleware([
   // 3
   Route::post('specifications/step3', [SpecificationsController::class, 'storestep3'])->name('specifications.storestep3');
   Route::get('specifications/step3/{id}', [SpecificationsController::class, 'showstep3'])->name('specifications.showstep3');
+  Route::post('specifications/step3/{id}', [SpecificationsController::class, 'updatestep3'])->name('specifications.updatestep3');
+  Route::post('deletefile/{id}', [SpecificationsController::class, 'deletefile'])->name('specifications.deletefile');
   // 4
   Route::post('specifications/step4', [SpecificationsController::class, 'storestep4'])->name('specifications.storestep4');
   Route::get('specifications/step4/{id}', [SpecificationsController::class, 'showstep4'])->name('specifications.showstep4');
+  Route::post('specifications/step4/{id}', [SpecificationsController::class, 'updatestep4'])->name('specifications.updatestep4');
   // 5
   Route::post('specifications/step5', [SpecificationsController::class, 'storestep5'])->name('specifications.storestep5');
   Route::get('specifications/step5/{id}', [SpecificationsController::class, 'showstep5'])->name('specifications.showstep5');
+  Route::post('specifications/step5/{id}', [SpecificationsController::class, 'updatestep5'])->name('specifications.updatestep5');
   // 5
   Route::post('specifications/step6', [SpecificationsController::class, 'storestep6'])->name('specifications.storestep5');
   // Route::get('specifications/step5/{id}', [SpecificationsController::class, 'showstep5'])->name('specifications.showstep5');
@@ -92,4 +100,9 @@ Route::middleware([
   Route::get('/dashboard', function () {
     return view('dashboard');
   })->name('dashboard');
+
+  // notification
+  Route::get('/notifications', [NotificationController::class, 'index']);
+  Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead']);
+  Route::post('/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('markAllAsRead');
 });
