@@ -1,6 +1,6 @@
 @php
     $crudType = 'M';
-    $crudTitle = 'cahier de charge';
+    $crudTitle = 'cahier des charges';
 @endphp
 
 @extends('layouts/layoutMaster')
@@ -65,7 +65,7 @@
                 ],
                 columns: [{
                         data: 'id',
-                        visible: false 
+                        visible: false
                     },
                     {
                         data: 'entreprise_name'
@@ -93,6 +93,7 @@
 @endsection
 
 @section('content')
+<h4 class="py-3 mb-4"><span class="text-muted fw-light">Cahier des charges/</span> Liste de cahier des charges</h4>
 
     <!-- Users List Table -->
     <div class="card">

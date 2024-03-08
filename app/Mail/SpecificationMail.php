@@ -27,20 +27,20 @@ class SpecificationMail extends Mailable
 
   public function build()
   {
-      // Check if pdf_file exists and is not null
-      if ($this->specification->pdf_file) {
-          return $this->view('content.specifications.mail')
-              ->attach($this->specification->pdf_link, [
-                  'as' => 'filename.pdf',
-                  'mime' => 'application/pdf',
-              ])
-              ->subject('Votre Cahier des Charges est Prêt sur mycdc.fr');
-      } else {
-          // Handle the case where pdf_file is null or does not exist
-          // For example, log an error or proceed without attaching the file
-          return $this->view('content.specifications.mail')
-              ->subject('Votre Cahier des Charges est Prêt sur mycdc.fr');
-      }
+    // Check if pdf_file exists and is not null
+    if ($this->specification->pdf_link) {
+      return $this->view('content.specifications.mail')
+        ->attach($this->specification->pdf_link, [
+          'as' => $this->specification->entreprise_name . '_' . date('Y-m-d h-i-s') . '.pdf',
+          'mime' => 'application/pdf',
+        ])
+        ->subject('Votre Cahier des Charges est Prêt sur mycdc.fr');
+    } else {
+      // Handle the case where pdf_file is null or does not exist
+      // For example, log an error or proceed without attaching the file
+      return $this->view('content.specifications.mail')
+        ->subject('Votre Cahier des Charges est Prêt sur mycdc.fr');
+    }
   }
 }
   // /**

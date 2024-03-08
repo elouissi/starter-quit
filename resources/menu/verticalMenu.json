@@ -7,18 +7,18 @@
       "slug": "pages-home"
     },
     {
-      "name": "Cahier de charge",
+      "name": "Cahier des charges",
       "slug": "specifications",
       "icon": "menu-icon tf-icons ti ti-book-2",
       "submenu": [
         {
           "url": "specifications",
-          "name": "Liste de cahier de charge",
+          "name": "Liste de cahier des charges",
           "slug": "specifications.index"
         },
         {
           "url": "specifications/create",
-          "name": "Créer un cahier de charge",
+          "name": "Créer un cahier des charges",
           "slug": "specifications.create"
         }
       ]

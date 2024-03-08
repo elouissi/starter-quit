@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Créer un cahier de charge')
+@section('title', 'Créer un cahier des charges')
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
@@ -637,7 +637,7 @@ site internet sur le cahier de charge de son site internet`
 
 @section('content')
     <h4 class="py-3 mb-4">
-        <span class="text-muted fw-light">Cahier de charge/</span> Créer un cahier de charge
+        <span class="text-muted fw-light">Cahier des charges/</span> Créer un cahier des charges
     </h4>
     <!-- Default -->
     <div class="row">
@@ -1152,7 +1152,9 @@ site internet sur le cahier de charge de son site internet`
                                                         Télécharger des images :
                                                     </label>
                                                     <input type="file" class="form-control" id="telecharger-images-1"
-                                                        name="sample_sites_files[]" accept="image/*" multiple>
+                                                        name="sample_sites_files[]"
+                                                        accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx"
+                                                        multiple>
                                                     <small id="images-help" class="form-text text-muted">
                                                         Vous pouvez télécharger des images pour illustrer vos commentaires
                                                         sur les sites.
@@ -1199,7 +1201,9 @@ site internet sur le cahier de charge de son site internet`
                                                         Télécharger des images:
                                                     </label>
                                                     <input type="file" class="form-control" id="telecharger-images-2"
-                                                        name="constraints_files[]" accept="image/*" multiple>
+                                                        name="constraints_files[]"
+                                                        accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx"
+                                                        multiple>
                                                     <small id="images-help" class="form-text text-muted">
                                                         Vous pouvez télécharger des images pour illustrer vos commentaires
                                                         sur les sites.
@@ -1439,7 +1443,7 @@ site internet sur le cahier de charge de son site internet`
                                                                                     class="form-control-sm d-none"
                                                                                     id="{{ $item['el'] }}-file"
                                                                                     name="{{ $item['el-name'] }}_file"
-                                                                                    accept=".jpg, .jpeg, .png, .gif, .bmp, .svg, .webp, .pdf, .doc, .docx">
+                                                                                    accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx">
                                                                             @endif
 
                                                                         </td>
@@ -1582,7 +1586,8 @@ site internet sur le cahier de charge de son site internet`
                                                             images :</label>
                                                         <input type="file" class="form-control"
                                                             id="telecharger-images-3" name="exemples_sites_files[]"
-                                                            accept="image/*" multiple>
+                                                            accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx"
+                                                            multiple>
                                                         <small id="images-help" class="form-text text-muted">
                                                             Vous pouvez télécharger des images pour illustrer vos
                                                             commentaires sur les sites.
@@ -2115,7 +2120,7 @@ site internet sur le cahier de charge de son site internet`
                                     <p class="text-center">
                                         <span class="ti ti-checks text-primary fs-1"></span>
                                     </p>
-                                    <h5 class="text-primary text-center mt-5 mb-2">Votre cahier de charges est prêt</h5>
+                                    <h5 class="text-primary text-center mt-5 mb-2">Votre cahier des charges est prêt</h5>
                                 </div>
 
                                 <div class="col-12 d-flex justify-content-center my-5 d-none" id="spec-button">

@@ -53,16 +53,16 @@ class SpecificationsController extends Controller
                 <a class="btn btn-sm btn-icon btn-primary text-white" title="Télécharger" target="_blank" href="specifications/upload/' . $item->id . '" data-id="' . $item->id . '">
                     <i class="ti ti-download"></i>
                 </a>
+                <a class="btn btn-sm btn-icon btn-primary text-white" title="Modifier" target="_blank" href="specifications/' . $item->id . '/edit">
+                    <i class="ti ti-pencil"></i>
+                </a>
                 </div>
                 ';
-          // <a class="btn btn-sm btn-icon btn-primary text-white" title="Modifier" target="_blank" href="specifications/' . $item->id . '/edit">
-          //     <i class="ti ti-pencil"></i>
-          // </a>
         }
-        return '';
+        // return '';
         return '
             <div class="gap-1 row">
-              <a class="btn btn-sm btn-icon btn-primary text-white" title="Compléter" target="_blank" href="specifications/' . $item->id . '/edit">
+              <a class="btn btn-sm btn-icon btn-primary text-white" title="Compléter" href="specifications/' . $item->id . '/edit">
                   <i class="ti ti-arrow-right"></i>
               </a>
             </div>
@@ -102,7 +102,7 @@ class SpecificationsController extends Controller
       $pdf = PDF::loadView('content.pdf.index', compact('specification'));
 
       // Stream the PDF
-      return $pdf->stream('pdf.pdf');
+      return $pdf->stream($specification->entreprise_name . '_' . date('Y-m-d h-i-s') . '.pdf');
       return view('content.pdf.index', compact('specification'));
 
       // Download the PDF
@@ -129,7 +129,7 @@ class SpecificationsController extends Controller
       // return $pdf->stream('pdf.pdf');
 
       // Download the PDF
-      return $pdf->download('pdf' . uniqid() . '.pdf');
+      return $pdf->download($specification->entreprise_name . '_' . date('Y-m-d h-i-s') . '.pdf');
     }
     // } catch (\Exception $e) {
     // Log the error if needed
@@ -1435,10 +1435,10 @@ class SpecificationsController extends Controller
 
       //
       $userId = auth()->user()->id;
-      $message  = 'Nouveau cahier de charges';
+      $message  = 'Nouveau cahier des charges';
       $pdfLink = $specification->pdf_link;
       $specificationId = $specification->id;
-      
+
       // Call the sendNotification method
       $notification->sendNotification($userId, $message, $pdfLink, $specificationId);
 

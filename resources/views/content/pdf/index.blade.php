@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Cahier de charge</title>
+    <title>Cahier des charges</title>
     <style>
         body {
             font-family: Arial, sans-serif;

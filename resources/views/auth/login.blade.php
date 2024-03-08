@@ -76,30 +76,35 @@
                                         <span class="fw-medium">{{ $message }}</span>
                                     </span>
                                 @enderror
+                                @if (session('suspend_error'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <span class="fw-medium">{{ session('suspend_error') }}</span>
+                                    </span>
+                                @enderror
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember-me" name="remember"
+                                    {{ old('remember') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="remember-me">
+                                    Se souvenir de moi
+                                </label>
                             </div>
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="remember-me" name="remember"
-                                        {{ old('remember') ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="remember-me">
-                                        Se souvenir de moi
-                                    </label>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary d-grid w-100" type="submit">Se connecter</button>
-                        </form>
+                        </div>
+                        <button class="btn btn-primary d-grid w-100" type="submit">Se connecter</button>
+                    </form>
 
-                        <p class="text-center">
-                            @if (Route::has('register'))
-                                <span>Nouveau sur notre plateforme ?</span>
-                                <a href="{{ route('register') }}">
-                                    <span>Créez un compte</span>
-                                </a>
-                            @endif
-                        </p>
+                    <p class="text-center">
+                        @if (Route::has('register'))
+                            <span>Nouveau sur notre plateforme ?</span>
+                            <a href="{{ route('register') }}">
+                                <span>Créez un compte</span>
+                            </a>
+                        @endif
+                    </p>
 
 
-                        {{-- <div class="divider my-4">
+                    {{-- <div class="divider my-4">
                             <div class="divider-text">or</div>
                         </div>
 
@@ -116,9 +121,9 @@
                                 <i class="tf-icons fa-brands fa-twitter fs-5"></i>
                             </a>
                         </div> --}}
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 @endsection

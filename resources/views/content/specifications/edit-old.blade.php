@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Créer un cahier de charge')
+@section('title', 'Créer un cahier des charges')
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />

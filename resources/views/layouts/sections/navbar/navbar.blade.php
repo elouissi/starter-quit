@@ -97,70 +97,68 @@
         </li>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            function getNotifications() {
+            function getNotificationsCount(data) {
+                let readCount = 0;
+                data.forEach(element => {
+                    if (element.read === 0) {
+                        readCount++;
+                    }
+                });
+                if (readCount)
+                    $('#notif-count').text(readCount).removeClass('d-none');
+                else
+                    $('#notif-count').addClass('d-none');
+            }
+
+            function getNotifications(data) {
+                if (data.length > 0) {
+                    $('#notif-list').html('');
+                    data.forEach(element => {
+                        const createdAt = new Date(element.created_at);
+                        const options = {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric'
+                        };
+                        const formattedDate = createdAt.toLocaleDateString('fr-FR',
+                            options);
+                        $('#notif-list').append(`
+                                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                    <a href='{{ url('/specifications') }}'>
+                                      <div class="d-flex">
+                                          <div class="flex-grow-1">
+                                              <h6 class="mb-1">Nouveau cahier des charges</h6>
+                                              <p class="mb-0 py-1 small text-dark">Votre cahier des charges est bien élaboré. Cliquez ici pour y accéder.</p>
+                                              <small class="text-muted">${formattedDate}</small>
+                                          </div>
+                                          <div class="flex-shrink-0 dropdown-notifications-actions">
+                                              ${!element.read ? `<a href="javascript:void(0)" class="dropdown-notifications-read"> <span class="badge badge-dot"></span> </a>` : ''}
+                                          </div>
+                                      </div>
+                                    </a>
+                                  </li>
+                            `);
+                    });
+                }
+            }
+            $(document).ready(function() {
+
                 $.ajax({
                     url: '/notifications',
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
-                        console.log(response);
-                        let readCount = 0;
-
-                        response.forEach(element => {
-                            if (element.read === 0) {
-                                readCount++;
-                            }
-                        });
-                        if (readCount)
-                            $('#notif-count').text(readCount).removeClass('d-none');
-
-                        if (response.length > 0) {
-                            $('#notif-list').html('');
-                            response.forEach(element => {
-                                const createdAt = new Date(element.created_at);
-
-                                // Formater la date selon les préférences locales
-                                const options = {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric'
-                                };
-                                const formattedDate = createdAt.toLocaleDateString('fr-FR',
-                                    options);
-                                $('#notif-list').append(`
-                                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                                      <div class="d-flex">
-                                          <div class="flex-grow-1">
-                                              <h6 class="mb-1">Nouveau cahier de charges</h6>
-                                              <p class="mb-0 py-1 small">Vous avez créé un nouveau cahier des charges. Cliquez pour y accéder.</p>
-                                              <small class="text-muted">${formattedDate}</small>
-                                          </div>
-                                          <div class="flex-shrink-0 dropdown-notifications-actions">
-                                              ${!element.read ?
-                                                `<a href="javascript:void(0)" class="dropdown-notifications-read">
-                                                  <span class="badge badge-dot"></span>
-                                                </a>`
-                                                : ''}
-                                          </div>
-                                      </div>
-                                  </li>
-                            `);
-                            });
-                        } else {
-                            $('#notif-count').addClass('d-none');
-                        }
-
+                        getNotificationsCount(response);
+                        getNotifications(response);
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching notifications:', error);
                     }
                 });
-            }
-            $(document).ready(function() {
 
-                getNotifications();
+                // getNotifications();
                 $('#notif-show').click(function() {
                     console.log('ererrer');
 
@@ -180,7 +178,19 @@
                         success: function(response) {
                             // Gérer la réponse réussie
                             console.log("Toutes les notifications ont été marquées comme lues.");
-                            getNotifications();
+                            $.ajax({
+                                url: '/notifications',
+                                type: 'GET',
+                                dataType: 'json',
+                                success: function(response) {
+                                    getNotificationsCount(response);
+                                    // getNotifications(response);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error fetching notifications:',
+                                        error);
+                                }
+                            });
                         },
                         error: function(xhr, status, error) {
                             // Gérer les erreurs

@@ -49,6 +49,8 @@ Route::middleware([
 ])->group(function () {
   Route::get('/', [HomePage::class, 'index'])->name('pages-home');
 
+  // users
+
   // chatgpt
   Route::get('/chat', [ChatGPTController::class, 'askToChatGpt'])->name('askToChatGpt');
   Route::post('/chat', [ChatController::class, 'chat'])->name('askToChatgpt4');
@@ -64,6 +66,8 @@ Route::middleware([
   Route::get('/user/list', [UserList::class, 'index'])->name('user-list');
   Route::get('/config/list', [UserList::class, 'index'])->name('config-list');
   Route::get('users/datatable', [UserController::class, 'indexDataTable'])->name('users-datatable');
+  Route::post('/users/{user}/suspend', [UserController::class, 'suspend'])->name('users.suspend');
+  Route::post('/users/{user}/unsuspend', [UserController::class, 'unsuspend'])->name('users.unsuspend');
   Route::resource('users', UserController::class);
   // specifications
   Route::get('/example', function () {

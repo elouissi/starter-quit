@@ -2,6 +2,52 @@
 
 <head>
     <style>
+        * {
+            font-size: 16px;
+        }
+
+        .card {
+            width: 500px;
+            /* Largeur de la carte */
+            margin: 20px auto;
+            /* Marge autour de la carte pour la centrer horizontalement */
+            border: 1px solid #ccc;
+            /* Bordure grise */
+            border-radius: 8px;
+            /* Coins arrondis */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Ombre */
+        }
+
+        .card-body {
+            padding: 20px;
+            /* Espacement interne */
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            /* Couleur de fond bleue pour le bouton primaire */
+            border-color: #007bff;
+            /* Couleur de la bordure */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            /* Couleur de fond bleue plus foncée au survol */
+            border-color: #0056b3;
+            /* Couleur de la bordure */
+            text-decoration: none;
+            /* Supprimer le soulignement au survol */
+        }
+
+        .btn-primary:active {
+            background-color: #0056b3;
+            /* Couleur de fond bleue plus foncée au clic */
+            border-color: #0056b3;
+            /* Couleur de la bordure */
+        }
+
+        /* //// */
         .btn {
             display: inline-block;
             font-weight: 400;
@@ -48,25 +94,33 @@
     </style>
 </head>
 
-<body>
-    <p>{{ auth()->user()->name }}</p>
-    <p>
-        Nous sommes ravis de vous informer que votre cahier des charges est désormais élaboré et disponible sur notre
-        plateforme. Vous pouvez le consulter dès à présent et le télécharger pour une revue détaillée.
-    </p>
-    <div style="display: flex; justify-content: center; align-items: center;">
-        <a href="{{ url('/specifications') }}" class="btn btn-primary" style="color: white; margin: auto;">Accéder au document</a>
+<body style="background: #f1f1f1;">
+    <div class="card" style="background: white;">
+        <div class="card-body">
+            <p>{{ auth()->user()->name }}</p>
+            <p>
+                Nous sommes ravis de vous informer que votre cahier des charges est désormais élaboré et disponible sur
+                notre
+                plateforme. Vous pouvez le consulter dès à présent et le télécharger pour une revue détaillée.
+            </p>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <a href="{{ url('/specifications') }}" class="btn btn-primary" style="color: white; margin: auto;">Accéder
+                    au document</a>
+            </div>
+            <p>
+                Une copie du cahier des charges a également été jointe à ce mail pour votre commodité.
+            </p>
+            <p>
+                Nous vous remercions pour votre confiance en MyCDC.fr et nous réjouissons de contribuer à la réussite de
+                votre
+                projet.
+            </p>
+            <p style="font-weight: bold;">
+                L'équipe MyCDC.fr
+            </p>
+        </div>
     </div>
-    <p>
-        Une copie du cahier des charges a également été jointe à ce mail pour votre commodité.
-    </p>
-    <p>
-        Nous vous remercions pour votre confiance en MyCDC.fr et nous réjouissons de contribuer à la réussite de votre
-        projet.
-    </p>
-    <p style="font-weight: bold;">
-        L'équipe MyCDC.fr
-    </p>
+
 </body>
 
 </html>

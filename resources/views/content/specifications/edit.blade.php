@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Créer un cahier de charge')
+@section('title', 'Créer un cahier des charges')
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
@@ -637,7 +637,7 @@ site internet sur le cahier de charge de son site internet`
 
 @section('content')
     <h4 class="py-3 mb-4">
-        <span class="text-muted fw-light">Cahier de charge/</span> Créer un cahier de charge
+        <span class="text-muted fw-light">Cahier des charges/</span> Créer un cahiers de charges
     </h4>
     <!-- Default -->
     <div class="row">
@@ -718,7 +718,7 @@ site internet sur le cahier de charge de son site internet`
                                 <div class="row g-3 validation-field">
                                     @csrf
                                     <input type="number" name="specification_id" id="specification_id" readonly
-                                        value="{{ $specification->id }}" class="d-none2">
+                                        value="{{ $specification->id }}" class="d-none">
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-10 mb-3">
@@ -782,7 +782,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <input type="text" name="target" id="cible" class="form-control"
                                                     placeholder="Cible" value="{{ $specification->target }}">
                                             </div>
-                                            <div class="col-12 mb-3 d-none3 ai-content">
+                                            <div class="col-12 mb-3 d-none ai-content">
                                                 <label class="form-label" for="descriptionEntreprise">
                                                     Description de l'entreprise (ai content)
                                                 </label>
@@ -799,7 +799,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea name="iatext_description" id="descriptionEntreprise" class="form-control" rows="3" readonly
                                                     placeholder="Description de l'entreprise">{{ $specification->iatext_description }}</textarea>
                                             </div>
-                                            <div class="col-12 mb-3  d-none3 ai-content">
+                                            <div class="col-12 mb-3  d-none ai-content">
                                                 <label class="form-label" for="activitePrincipale">
                                                     Activité principale de l'entreprise (ai content)
                                                 </label>
@@ -816,7 +816,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea name="iatext_main_activities" id="activitePrincipale" class="form-control" rows="3" readonly
                                                     placeholder="Activité principale de l'entreprise">{{ $specification->iatext_main_activities }}</textarea>
                                             </div>
-                                            <div class="col-12 mb-3  d-none3 ai-content">
+                                            <div class="col-12 mb-3  d-none ai-content">
                                                 <label class="form-label" for="servicesProduits">
                                                     Services ou produits vendus (ai content)
                                                 </label>
@@ -833,7 +833,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea name="iatext_services_products" id="servicesProduits" class="form-control" rows="3" readonly
                                                     placeholder="Services ou produits vendus">{{ $specification->iatext_services_products }}</textarea>
                                             </div>
-                                            <div class="col-12 mb-3  d-none3 ai-content">
+                                            <div class="col-12 mb-3  d-none ai-content">
                                                 <label class="form-label" for="target_audience">
                                                     Public Cible (ai content)
                                                 </label>
@@ -876,7 +876,7 @@ site internet sur le cahier de charge de son site internet`
                                     @csrf
                                     <input type="number" name="objectif_site_id" id="objectif_site_id" readonly
                                         value="{{ isset($specification->objectif_site->id) ? $specification->objectif_site->id : '' }}"
-                                        class="d-none2">
+                                        class="d-none">
                                     <div class="col-sm-6">
                                         <div class="row">
                                             <div class="col-10 mb-3">
@@ -991,7 +991,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" name="target_keywords" rows="3" id="target_keywords"
                                                     placeholder="Saisissez vos mots-clés cibles pour le site">{{ isset($specification->objectif_site->target_keywords) ? $specification->objectif_site->target_keywords : '' }}</textarea>
                                             </div>
-                                            <div class="col-10 mb-3  d-none3 ai-content">
+                                            <div class="col-10 mb-3  d-none ai-content">
                                                 <label class="form-label" for="iatext_target_keywordsAi">
                                                     Mots-clés cibles (ai content)
                                                 </label>
@@ -1014,7 +1014,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea name="expected_objectives" id="objectifsAttendus" class="form-control"
                                                     placeholder="Entrez les objectifs attendus" rows="3">{{ isset($specification->objectif_site->expected_objectives) ? $specification->objectif_site->expected_objectives : '' }}</textarea>
                                             </div>
-                                            <div class="col-10 mb-3  d-none3 ai-content">
+                                            <div class="col-10 mb-3  d-none ai-content">
                                                 <label class="form-label" for="expectedObjectives">
                                                     Objectifs attendus du client (ai content)
                                                 </label>
@@ -1064,7 +1064,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" id="menu" name="menu" rows="3"
                                                     placeholder="Indiquez votre préférence des menus à ajouter sur le site">{{ isset($specification->objectif_site->menu) ? $specification->objectif_site->menu : '' }}</textarea>
                                             </div>
-                                            <div class="col-12 mb-3 d-none3 ai-content">
+                                            <div class="col-12 mb-3 d-none ai-content">
                                                 <label class="form-label" for="iatext_menuAi">
                                                     Menu (ai content)
                                                 </label>
@@ -1085,7 +1085,7 @@ site internet sur le cahier de charge de son site internet`
                                                 <textarea class="form-control" id="techniques_specs" name="techniques_specs" rows="3"
                                                     placeholder="Entrez les spécifications techniques">{{ isset($specification->objectif_site->techniques_specs) ? $specification->objectif_site->techniques_specs : '' }}</textarea>
                                             </div>
-                                            <div class="col-12 mb-3 d-none3 ai-content">
+                                            <div class="col-12 mb-3 d-none ai-content">
                                                 <label class="form-label" for="iatext_techniques_specsAi">Spécifications
                                                     Techniques (ai content)
                                                 </label>
@@ -1128,7 +1128,7 @@ site internet sur le cahier de charge de son site internet`
                               <div class="row g-3 validation-field">
                                   @csrf
                                   <input type="number" name="analyse_existants_id" id="analyse_existants_id" readonly
-                                      class="d-none2"
+                                      class="d-none"
                                       value="{{ isset($specification->existing_analysis->id) ? $specification->existing_analysis->id : '' }}">
                                   <div class="col-6">
                                       <div class="row">
@@ -1140,7 +1140,7 @@ site internet sur le cahier de charge de son site internet`
                                               <textarea class="form-control" id="concurrents" name="competitors" rows="3"
                                                   placeholder="Saisissez les sites internet de vos principaux concurrents">{{ isset($specification->existing_analysis->competitors) ? $specification->existing_analysis->competitors : '' }}</textarea>
                                           </div>
-                                          <div class="col-10 mb-3 d-none3 ai-content">
+                                          <div class="col-10 mb-3 d-none ai-content">
                                               <label class="form-label" for="iatext_competitors">
                                                   Concurrence (ai content)
                                               </label>
@@ -1173,7 +1173,7 @@ site internet sur le cahier de charge de son site internet`
                                                       Télécharger des images :
                                                   </label>
                                                   <input type="file" class="form-control" id="telecharger-images-1"
-                                                      name="sample_sites_files[]" accept="image/*" multiple>
+                                                      name="sample_sites_files[]" accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx" multiple>
                                                   <small id="images-help" class="form-text text-muted">
                                                       Vous pouvez télécharger des images pour illustrer vos commentaires
                                                       sur les sites.
@@ -1239,7 +1239,7 @@ site internet sur le cahier de charge de son site internet`
                                                       placeholder="Veuillez fournir des exemples de sites internet que vous appréciez et décrire les éléments que vous aimez.">{{ isset($specification->existing_analysis->constraints) ? $specification->existing_analysis->constraints : '' }}</textarea>
                                               </div>
                                           </div>
-                                          <div class="col-12 mb-3 d-none3 ai-content">
+                                          <div class="col-12 mb-3 d-none ai-content">
                                               <label class="form-label" for="iatext_constraintsAi">
                                                   Contraintes (ai content)
                                               </label>
@@ -1262,7 +1262,7 @@ site internet sur le cahier de charge de son site internet`
                                                       Télécharger des images:
                                                   </label>
                                                   <input type="file" class="form-control" id="telecharger-images-2"
-                                                      name="constraints_files[]" accept="image/*" multiple>
+                                                      name="constraints_files[]" accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx" multiple>
                                                   <small id="images-help" class="form-text text-muted">
                                                       Vous pouvez télécharger des images pour illustrer vos commentaires
                                                       sur les sites.
@@ -1457,8 +1457,8 @@ site internet sur le cahier de charge de son site internet`
                             <form id="step-4-validation-form">
                               <div class="row g-3 validation-field">
                                   @csrf
-                                  <input type="number" name="content_id" id="content_id" readonly class="d-none2"
-                                      data-id="{{ isset($specification->design_content->id) ? $specification->design_content->id : '' }}"
+                                  <input type="number" name="content_id" id="content_id" readonly class="d-none"
+                                      value="{{ isset($specification->design_content->id) ? $specification->design_content->id : '' }}"
                                       <div class="row">
                                   <div class="col-6">
                                       <div class="row">
@@ -1561,7 +1561,7 @@ site internet sur le cahier de charge de son site internet`
                                                                               class="form-control-sm d-none"
                                                                               id="{{ $item['el'] }}-file"
                                                                               name="{{ $item['el-name'] }}_file"
-                                                                              accept=".jpg, .jpeg, .png, .gif, .bmp, .svg, .webp, .pdf, .doc, .docx">
+                                                                              accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx">
                                                                       @endif
 
                                                                   </td>
@@ -1714,7 +1714,7 @@ site internet sur le cahier de charge de son site internet`
                                                       des
                                                       images :</label>
                                                   <input type="file" class="form-control" id="telecharger-images-3"
-                                                      name="exemples_sites_files[]" accept="image/*" multiple>
+                                                      name="exemples_sites_files[]" accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx" multiple>
                                                   <small id="images-help" class="form-text text-muted">
                                                       Vous pouvez télécharger des images pour illustrer vos
                                                       commentaires sur les sites.
@@ -1763,7 +1763,7 @@ site internet sur le cahier de charge de son site internet`
                                                   </div>
                                               </div>
                                           </div>
-                                          <div class="col-12 mb-3 d-none3 ai-content">
+                                          <div class="col-12 mb-3 d-none ai-content">
                                               <label class="form-label" for="iatext_exemples_sitesAi">
                                                   Les éléments sur Mesure (ai content)
                                               </label>
@@ -1848,7 +1848,7 @@ site internet sur le cahier de charge de son site internet`
                             <form id="step-5-validation-form">
                               <div class="row g-3 validation-field">
                                   @csrf
-                                  <input type="number" name="deadline_id" id="deadline_id" readonly class="d-none2"
+                                  <input type="number" name="deadline_id" id="deadline_id" readonly class="d-none"
                                       value="{{ isset($specification->deadline_and_budget->id) ? $specification->deadline_and_budget->id : '' }}">
                                   <div class="row">
                                       <div class="col-6">
@@ -1968,7 +1968,7 @@ site internet sur le cahier de charge de son site internet`
                                   <div class="col-12">
                                       <div class="row">
                                           <input type="number" name="facturation_id" id="facturation_id" readonly
-                                              class="d-none2"
+                                              class="d-none"
                                               value="{{ isset($specification->facturation->id) ? $specification->facturation->id : '' }}">
                                           <div class="col-12">
                                               <div class="table-responsive text-nowrap">
@@ -2306,7 +2306,7 @@ site internet sur le cahier de charge de son site internet`
                                     <p class="text-center">
                                         <span class="ti ti-checks text-primary fs-1"></span>
                                     </p>
-                                    <h5 class="text-primary text-center mt-5 mb-2">Votre cahier de charges est prêt</h5>
+                                    <h5 class="text-primary text-center mt-5 mb-2">Votre cahier des charges est prêt</h5>
                                 </div>
 
                                 <div class="col-12 d-flex justify-content-center my-5 d-none" id="spec-button">

@@ -24,134 +24,210 @@
 
 @section('page-script')
     <script>
-        $('#table-users').dataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json',
-                // search: "Filtrer par: ",
-                // searchPlaceholder: "Nom compte, Nom contact, Chargé ...",
-            },
-            ajax: '{!! route('users-datatable') !!}',
-            "processing": true,
-            "serverSide": true,
-            columns: [{
-                    data: 'id'
+        $(document).ready(function() {
+            var table = $('#table-users').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json',
+                    // search: "Filtrer par: ",
+                    // searchPlaceholder: "Nom compte, Nom contact, Chargé ...",
                 },
-                {
-                    data: 'name'
-                },
-                {
-                    data: 'email'
-                }
-            ],
+                ajax: '{!! route('users-datatable') !!}',
+                "processing": true,
+                "serverSide": true,
+                columns: [{
+                        data: 'id',
+                        visible: false
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'email'
+                    },
+                    {
+                        data: 'status_icon'
+                    },
+                    {
+                        "data": null,
+                        "render": function(data, type, row) {
+                            console.log(data);
+                            if (data.status) {
+                                return `
+                <button class="suspend-btn btn btn-sm btn-danger waves-effect waves-light" data-user-id="${data.id}" style="width: 120px;">Suspend</button>
+                `;
+                            }
+                            if (!data.status) {
+                                return `
+                <button class="unsuspend-btn btn btn-sm btn-success waves-effect waves-light" data-user-id="${data.id}" style="width: 120px;">Unsuspend</button>
+                `;
+                            }
+                        }
+                    },
+
+                ],
+            });
+
+            $('#table-users tbody').on('click', '.suspend-btn', function() {
+                console.log('eeee');
+                var userId = $(this).data('user-id');
+                $.ajax({
+                    url: '/users/' + userId + '/suspend',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                    },
+                    success: function(response) {
+                        // Update table data if needed
+                        table.ajax.reload();
+                        console.log(response);
+                        console.log('eee');
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors if needed
+                    }
+                });
+            });
+            $('#table-users tbody').on('click', '.unsuspend-btn', function() {
+                console.log('eeee');
+                var userId = $(this).data('user-id');
+                $.ajax({
+                    url: '/users/' + userId + '/unsuspend',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                    },
+                    success: function(response) {
+                        // Update table data if needed
+                        table.ajax.reload();
+                        console.log(response);
+                        console.log('eee');
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors if needed
+                    }
+                });
+            });
         });
+
+        // $(document).ready(function() {
+        //     var table = $('#table-users').dataTable({
+        //         language: {
+        //             url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json',
+        //             // search: "Filtrer par: ",
+        //             // searchPlaceholder: "Nom compte, Nom contact, Chargé ...",
+        //         },
+        //         ajax: '{!! route('users-datatable') !!}',
+        //         "processing": true,
+        //         "serverSide": true,
+        //         columns: [{
+        //                 data: 'id',
+        //                 visible: false
+        //             },
+        //             {
+        //                 data: 'name'
+        //             },
+        //             {
+        //                 data: 'email'
+        //             },
+        //             {
+        //                 data: 'status_icon'
+        //             },
+        //             {
+        //                 "data": null,
+        //                 "render": function(data, type, row) {
+        //                     console.log(data);
+        //                     if (data.status) {
+        //                         return `
+    //                 <button class="suspend-btn btn btn-sm btn-danger waves-effect waves-light" data-user-id="${data.id}" style="width: 120px;">Suspend</button>
+    //                 `;
+        //                     }
+        //                     if (!data.status) {
+        //                         return `
+    //                 <button class="unsuspend-btn btn btn-sm btn-success waves-effect waves-light" data-user-id="${data.id}" style="width: 120px;">Unsuspend</button>
+    //                 `;
+        //                     }
+        //                 }
+        //             },
+
+        //         ],
+        //     });
+
+        //     $('#table-users tbody').on('click', '.suspend-btn', function() {
+        //         console.log('eeee');
+        //         var userId = $(this).data('user-id');
+        //         $.ajax({
+        //             url: '/users/' + userId + '/suspend',
+        //             method: 'POST',
+        //             data: {
+        //                 _token: '{{ csrf_token() }}',
+        //             },
+        //             success: function(response) {
+        //                 // Update table data if needed
+        //                 table.ajax.reload();
+        //                 console.log(response);
+        //                 console.log('eee');
+        //             },
+        //             error: function(xhr, status, error) {
+        //                 // Handle errors if needed
+        //             }
+        //         });
+        //     });
+        //     $('#table-users tbody').on('click', '.unsuspend-btn', function() {
+        //         console.log('eeee');
+        //         var userId = $(this).data('user-id');
+        //         $.ajax({
+        //             url: '/users/' + userId + '/unsuspend',
+        //             method: 'POST',
+        //             data: {
+        //                 _token: '{{ csrf_token() }}',
+        //             },
+        //             success: function(response) {
+        //                 // Update table data if needed
+        //                 table.ajax.reload();
+        //                 console.log(response);
+        //                 console.log('eee');
+        //             },
+        //             error: function(xhr, status, error) {
+        //                 // Handle errors if needed
+        //             }
+        //         });
+        //     });
+        // });
     </script>
 @endsection
 
 @section('content')
 
-    <div class="row g-4 mb-4 d-none">
-        <div class="col-sm-6 col-xl-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <div class="content-left">
-                            <span>Session</span>
-                            <div class="d-flex align-items-center my-2">
-                                <h3 class="mb-0 me-2">21,459</h3>
-                                <p class="text-success mb-0">(+29%)</p>
-                            </div>
-                            <p class="mb-0">Total Users</p>
-                        </div>
-                        <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-primary">
-                                <i class="ti ti-user ti-sm"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <div class="content-left">
-                            <span>Paid Users</span>
-                            <div class="d-flex align-items-center my-2">
-                                <h3 class="mb-0 me-2">4,567</h3>
-                                <p class="text-success mb-0">(+18%)</p>
-                            </div>
-                            <p class="mb-0">Last week analytics </p>
-                        </div>
-                        <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-danger">
-                                <i class="ti ti-user-plus ti-sm"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <div class="content-left">
-                            <span>Active Users</span>
-                            <div class="d-flex align-items-center my-2">
-                                <h3 class="mb-0 me-2">19,860</h3>
-                                <p class="text-danger mb-0">(-14%)</p>
-                            </div>
-                            <p class="mb-0">Last week analytics</p>
-                        </div>
-                        <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-success">
-                                <i class="ti ti-user-check ti-sm"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <div class="content-left">
-                            <span>Pending Users</span>
-                            <div class="d-flex align-items-center my-2">
-                                <h3 class="mb-0 me-2">237</h3>
-                                <p class="text-success mb-0">(+42%)</p>
-                            </div>
-                            <p class="mb-0">Last week analytics</p>
-                        </div>
-                        <div class="avatar">
-                            <span class="avatar-initial rounded bg-label-warning">
-                                <i class="ti ti-user-exclamation ti-sm"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- Users List Table -->
     <div class="card">
-        <div class="card-header border-bottom">
-            <h5 class="card-title mb-3">Search Filter</h5>
+        {{-- <div class="card-header border-bottom">
+            <h5 class="card-title mb-3">Liste des utilisateurs</h5>
             <div class="d-flex justify-content-between align-items-center row pb-2 gap-3 gap-md-0">
                 <div class="col-md-4 user_role"></div>
                 <div class="col-md-4 user_plan"></div>
                 <div class="col-md-4 user_status"></div>
             </div>
-        </div>
+        </div> --}}
         <div class="card-datatable table-responsive">
+          <div class="card-header flex-column flex-md-row">
+            <div class="dt-action-buttons text-start pt-3 pt-md-0">
+                <div class="dt-buttons btn-group flex-wrap">
+                    <a class="btn btn-primary" href="/users/create">
+                        <i class="ti ti-plus me-sm-1"></i>
+                        <span class="d-none d-sm-inline-block">Créer un utilisateur</span>
+                    </a>
+
+                </div>
+            </div>
+        </div>
             <table class="datatables-users table" id="table-users">
                 <thead class="border-top">
                     <tr>
                         <th>ID</th>
                         <th>Nom d'utilisateur</th>
                         <th>Email</th>
+                        <th>Status</th>
+                        <th>Action</th>
                         {{-- <th>Plan</th>
                         <th>Billing</th>
                         <th>Status</th>
@@ -160,6 +236,7 @@
                 </thead>
             </table>
         </div>
+        <script></script>
         <!-- Offcanvas to add new user -->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
             <div class="offcanvas-header">
