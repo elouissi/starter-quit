@@ -15,15 +15,22 @@ class NotificationController extends Controller
 
     // Si le nombre de notifications non lues est inférieur à 5
     if ($unreadCount < 5) {
-        // Compléter jusqu'à 5 avec les dernières notifications lues
-        $readNotifications = auth()->user()->readNotifications()
-            ->orderBy('created_at', 'desc')
-            ->limit(5 - $unreadCount)
-            ->get();
+      // Compléter jusqu'à 5 avec les dernières notifications lues
+      $readNotifications = auth()->user()->readNotifications()
+        ->orderBy('created_at', 'desc')
+        ->limit(5 - $unreadCount)
+        ->get();
 
-        // Ajouter ces notifications lues à la liste de notifications non lues
-        $unreadNotifications = $unreadNotifications->merge($readNotifications);
+      // Ajouter ces notifications lues à la liste de notifications non lues
+      $unreadNotifications = $unreadNotifications->merge($readNotifications);
     }
+
+    $unreadNotifications->load('specification');
+
+    // Add entreprise_name attribute to each notification
+    $unreadNotifications->each(function ($notification) {
+      $notification->entreprise_name = $notification->specification->entreprise_name;
+    });
 
     return response()->json($unreadNotifications);
   }

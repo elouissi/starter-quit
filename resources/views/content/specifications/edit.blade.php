@@ -275,21 +275,25 @@
                         $('#target_audienceAi').val(``).prop('title', ``).trigger('input');
                     }
 
-                    if ($('#descriptionEntrepriseAi').val() && (!$('#descriptionEntreprise').val())) {
+                    if ($('#descriptionEntrepriseAi').val() && ((!$('#descriptionEntreprise').val()) ||
+                            ($('#descriptionEntreprise').val() == "error"))) {
                         $('#descriptionEntrepriseAi-generate').click();
                     }
                     // setTimeout(() => {
-                    if ($('#activitePrincipaleAi').val() && (!$('#activitePrincipale').val())) {
+                    if ($('#activitePrincipaleAi').val() && (!$('#activitePrincipale').val() ||
+                            ($('#activitePrincipale').val() == "error"))) {
                         $('#activitePrincipaleAi-generate').click();
                     }
                     // }, 10000);
                     // setTimeout(() => {
-                    if ($('#servicesProduitsAi').val() && (!$('#servicesProduits').val())) {
+                    if ($('#servicesProduitsAi').val() && (!$('#servicesProduits').val()) ||
+                        ($('#servicesProduits').val() == "error")) {
                         $('#servicesProduitsAi-generate').click();
                     }
                     // }, 20000);
                     // setTimeout(() => {
-                    if ($('#target_audienceAi').val() && (!$('#target_audience').val())) {
+                    if ($('#target_audienceAi').val() && (!$('#target_audience').val()) ||
+                        ($('#target_audience').val() == "error")) {
                         $('#target_audienceAi-generate').click();
                     }
                 }
@@ -318,7 +322,8 @@
                     $('#expectedObjectivesAi').val('').prop('title', '').trigger('input');
                 }
 
-                if ($('#expectedObjectivesAi').val() && !$('#expectedObjectives').val()) {
+                if ($('#expectedObjectivesAi').val() && (!$('#expectedObjectives').val() ||
+                        ($('#expectedObjectives').val() == "error"))) {
                     // TODO
                     $('#expectedObjectives').text('');
                     $('#expectedObjectivesAi-generate').click();
@@ -344,7 +349,8 @@
                     $('#iatext_target_keywordsAi').val('').prop('title', '').trigger('input');
                 }
 
-                if ($('#iatext_target_keywordsAi').val() && !$('#iatext_target_keywords').val()) {
+                if ($('#iatext_target_keywordsAi').val() && (!$('#iatext_target_keywords').val() ||
+                        ($('#iatext_target_keywords').val() == "error"))) {
 
                     // TODO
                     $('#iatext_target_keywords').text('');
@@ -371,7 +377,8 @@
                     ).trigger('input');
 
 
-                    if ($('#iatext_menuAi').val() && !$('#iatext_menu').val()) {
+                    if ($('#iatext_menuAi').val() && (!$('#iatext_menu').val() ||
+                            ($('#iatext_menu').val() == "error"))) {
 
                         // TODO
                         $('#iatext_menu').text('');
@@ -398,7 +405,8 @@
                     ).trigger('input');
                 }
 
-                if ($('#iatext_techniques_specsAi').val() && !$('#iatext_techniques_specs').val()) {
+                if ($('#iatext_techniques_specsAi').val() && (!$('#iatext_techniques_specs').val() ||
+                        ($('#iatext_techniques_specs').val() == "error"))) {
                     // TODO
                     $('#iatext_techniques_specs').text('');
                     $('#iatext_techniques_specsAi-generate').click();
@@ -419,7 +427,8 @@
                     $('#iatext_competitorsAi').val('').prop('title', '').trigger('input');
                 }
 
-                if ($('#iatext_competitorsAi').val() && !$('#iatext_competitors').val()) {
+                if ($('#iatext_competitorsAi').val() && (!$('#iatext_competitors').val() ||
+                        ($('#iatext_competitors').val() == "error"))) {
 
                     // TODO
                     $('#iatext_competitors').text('');
@@ -454,7 +463,8 @@ site internet sur le cahier de charge de son site internet`
                 }
 
 
-                if ($('#iatext_exemples_sitesAi').val() && !$('#iatext_exemples_sites').val()) {
+                if ($('#iatext_exemples_sitesAi').val() && (!$('#iatext_exemples_sites').val() ||
+                        ($('#iatext_exemples_sites').val() == "error"))) {
                     // TODO
                     $('#iatext_exemples_sites').text('');
                     $('#iatext_exemples_sitesAi-generate').click();
@@ -483,7 +493,8 @@ site internet sur le cahier de charge de son site internet`
                 }
 
 
-                if ($('#iatext_constraintsAi').val() && !$('#iatext_constraints').val()) {
+                if ($('#iatext_constraintsAi').val() && (!$('#iatext_constraints').val() ||
+                        ($('#iatext_constraints').val() == "error"))) {
 
                     // TODO
                     $('#iatext_constraints').text('');
@@ -500,6 +511,10 @@ site internet sur le cahier de charge de son site internet`
                     $(`#${element}Ai-generate`).prop("disabled", true);
                 }
             });
+            if (!$(`#${element}Ai-generate`).data('errorCount')) {
+                $(`#${element}Ai-generate`).data('errorCount', 0);
+            }
+
             $(`#${element}Ai-generate`).click(function() {
                 $(`#${element}Ai-generate`).html(
                     `<i class="ti ti-loader rotate"></i> &nbsp; Chargement ...`);
@@ -524,13 +539,25 @@ site internet sur le cahier de charge de son site internet`
                         console.log('success');
                     },
                     error: function(xhr, status, error) {
-                        setTimeout(() => {
-                            $(`#${element}Ai-generate`).html(
-                                ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
-                            $(`#${element}Ai-generate`).prop("disabled", false);
-                            $(`#${element}Ai-generate`).click();
-                        }, 10000);
-                        console.error("Error:", error);
+                        let errorCount = $(`#${element}Ai-generate`).data('errorCount');
+                        if (errorCount < 5) { // Check if error count is less than 5
+                            errorCount++; // Increment error count
+                            $(`#${element}Ai-generate`).data('errorCount', errorCount);
+                            setTimeout(() => {
+                                $(`#${element}Ai-generate`).html(
+                                    `<i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
+                                $(`#${element}Ai-generate`).prop("disabled", false);
+                                $(`#${element}Ai-generate`).click();
+                            }, 10000);
+                        } else {
+                            $(`#${element}`).text("error");
+                            console.error("Error occurred 5 times. Stopping further error handling.");
+                        }
+                        console.error({
+                            xhr,
+                            status,
+                            error
+                        });
                     }
                 });
             });
@@ -637,7 +664,7 @@ site internet sur le cahier de charge de son site internet`
 
 @section('content')
     <h4 class="py-3 mb-4">
-        <span class="text-muted fw-light">Cahier des charges/</span> Créer un cahiers de charges
+        <span class="text-muted fw-light">Cahier des charges/</span> Modifier un cahiers de charges
     </h4>
     <!-- Default -->
     <div class="row">
@@ -1125,239 +1152,242 @@ site internet sur le cahier de charge de son site internet`
                                 <h6 class="mb-0">Analyse de l'existant</h6>
                             </div>
                             <form id="step-3-validation-form">
-                              <div class="row g-3 validation-field">
-                                  @csrf
-                                  <input type="number" name="analyse_existants_id" id="analyse_existants_id" readonly
-                                      class="d-none"
-                                      value="{{ isset($specification->existing_analysis->id) ? $specification->existing_analysis->id : '' }}">
-                                  <div class="col-6">
-                                      <div class="row">
-                                          <div class="col-10 mb-3">
-                                              <label class="form-label" for="concurrents">
-                                                  Site internet de vos principaux concurrents : <span
-                                                      class="text-danger">*</span>
-                                              </label>
-                                              <textarea class="form-control" id="concurrents" name="competitors" rows="3"
-                                                  placeholder="Saisissez les sites internet de vos principaux concurrents">{{ isset($specification->existing_analysis->competitors) ? $specification->existing_analysis->competitors : '' }}</textarea>
-                                          </div>
-                                          <div class="col-10 mb-3 d-none ai-content">
-                                              <label class="form-label" for="iatext_competitors">
-                                                  Concurrence (ai content)
-                                              </label>
-                                              <div class="input-group mb-1">
-                                                  <input type="text" class="form-control"
-                                                      name="prompt_iatext_competitors" placeholder="Créer votre prompt"
-                                                      readonly id="iatext_competitorsAi"
-                                                      value="{{ isset($specification->existing_analysis->prompt_iatext_competitors) ? $specification->existing_analysis->prompt_iatext_competitors : '' }}">
-                                                  <button class="btn btn-outline-primary ai-generate-button"
-                                                      type="button" id="iatext_competitorsAi-generate" disabled>
-                                                      <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                  </button>
-                                              </div>
-                                              <textarea name="iatext_competitors" id="iatext_competitors" class="form-control" rows="3" readonly
-                                                  placeholder="Activité principale de l'entreprise">{{ isset($specification->existing_analysis->iatext_competitors) ? $specification->existing_analysis->iatext_competitors : '' }}</textarea>
-                                          </div>
-                                          <div class="col-sm-6 col-md-10">
-                                              <div class="form-group">
-                                                  <label for="exemples-sites" class="form-label">
-                                                      Exemples de sites avec commentaire : <span
-                                                          class="text-danger">*</span>
-                                                  </label>
-                                                  <textarea id="exemples-sites" class="form-control" name="sample_sites" rows="3"
-                                                      placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.).">{{ isset($specification->existing_analysis->sample_sites) ? $specification->existing_analysis->sample_sites : '' }}</textarea>
-                                              </div>
-                                          </div>
-                                          <div class="col-sm-6 col-md-10">
-                                              <div class="form-group">
-                                                  <label for="telecharger-images-1" class="form-label">
-                                                      Télécharger des images :
-                                                  </label>
-                                                  <input type="file" class="form-control" id="telecharger-images-1"
-                                                      name="sample_sites_files[]" accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx" multiple>
-                                                  <small id="images-help" class="form-text text-muted">
-                                                      Vous pouvez télécharger des images pour illustrer vos commentaires
-                                                      sur les sites.
-                                                  </small>
-                                                  <div class="row my-3" id="sample_sites_files_container">
-                                                      @if (isset($specification->existing_analysis->sample_sites_files) &&
-                                                              $specification->existing_analysis->sample_sites_files)
-                                                          @foreach ($specification->existing_analysis->sample_sites_files as $element)
-                                                              @php
-                                                                  $extension = strtolower(
-                                                                      pathinfo($element, PATHINFO_EXTENSION),
-                                                                  );
-                                                                  $image = ($extension == 'pdf'
-                                                                          ? 'assets/img/pdf/pdf.png'
-                                                                          : $extension == 'doc' ||
-                                                                              $extension == 'docx')
-                                                                      ? 'assets/img/pdf/doc.png'
-                                                                      : $element;
-                                                              @endphp
+                                <div class="row g-3 validation-field">
+                                    @csrf
+                                    <input type="number" name="analyse_existants_id" id="analyse_existants_id" readonly
+                                        class="d-none"
+                                        value="{{ isset($specification->existing_analysis->id) ? $specification->existing_analysis->id : '' }}">
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-10 mb-3">
+                                                <label class="form-label" for="concurrents">
+                                                    Site internet de vos principaux concurrents : <span
+                                                        class="text-danger">*</span>
+                                                </label>
+                                                <textarea class="form-control" id="concurrents" name="competitors" rows="3"
+                                                    placeholder="Saisissez les sites internet de vos principaux concurrents">{{ isset($specification->existing_analysis->competitors) ? $specification->existing_analysis->competitors : '' }}</textarea>
+                                            </div>
+                                            <div class="col-10 mb-3 d-none ai-content">
+                                                <label class="form-label" for="iatext_competitors">
+                                                    Concurrence (ai content)
+                                                </label>
+                                                <div class="input-group mb-1">
+                                                    <input type="text" class="form-control"
+                                                        name="prompt_iatext_competitors" placeholder="Créer votre prompt"
+                                                        readonly id="iatext_competitorsAi"
+                                                        value="{{ isset($specification->existing_analysis->prompt_iatext_competitors) ? $specification->existing_analysis->prompt_iatext_competitors : '' }}">
+                                                    <button class="btn btn-outline-primary ai-generate-button"
+                                                        type="button" id="iatext_competitorsAi-generate" disabled>
+                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
+                                                    </button>
+                                                </div>
+                                                <textarea name="iatext_competitors" id="iatext_competitors" class="form-control" rows="3" readonly
+                                                    placeholder="Activité principale de l'entreprise">{{ isset($specification->existing_analysis->iatext_competitors) ? $specification->existing_analysis->iatext_competitors : '' }}</textarea>
+                                            </div>
+                                            <div class="col-sm-6 col-md-10">
+                                                <div class="form-group">
+                                                    <label for="exemples-sites" class="form-label">
+                                                        Exemples de sites avec commentaire : <span
+                                                            class="text-danger">*</span>
+                                                    </label>
+                                                    <textarea id="exemples-sites" class="form-control" name="sample_sites" rows="3"
+                                                        placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.).">{{ isset($specification->existing_analysis->sample_sites) ? $specification->existing_analysis->sample_sites : '' }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-10">
+                                                <div class="form-group">
+                                                    <label for="telecharger-images-1" class="form-label">
+                                                        Télécharger des images :
+                                                    </label>
+                                                    <input type="file" class="form-control" id="telecharger-images-1"
+                                                        name="sample_sites_files[]"
+                                                        accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx"
+                                                        multiple>
+                                                    <small id="images-help" class="form-text text-muted">
+                                                        Vous pouvez télécharger des images pour illustrer vos commentaires
+                                                        sur les sites.
+                                                    </small>
+                                                    <div class="row my-3" id="sample_sites_files_container">
+                                                        @if (isset($specification->existing_analysis->sample_sites_files) &&
+                                                                $specification->existing_analysis->sample_sites_files)
+                                                            @foreach ($specification->existing_analysis->sample_sites_files as $element)
+                                                                @php
+                                                                    $extension = strtolower(
+                                                                        pathinfo($element, PATHINFO_EXTENSION),
+                                                                    );
+                                                                    $image = ($extension == 'pdf'
+                                                                            ? 'assets/img/pdf/pdf.png'
+                                                                            : $extension == 'doc' ||
+                                                                                $extension == 'docx')
+                                                                        ? 'assets/img/pdf/doc.png'
+                                                                        : $element;
+                                                                @endphp
 
-                                                              <div class="col-auto">
-                                                                  <div
-                                                                      class="d-flex flex-column justify-content-center mb-2">
-                                                                      <div class="rounded border"
-                                                                          style="width: 100px; padding-top: 100px; background-size: cover;
+                                                                <div class="col-auto">
+                                                                    <div
+                                                                        class="d-flex flex-column justify-content-center mb-2">
+                                                                        <div class="rounded border"
+                                                                            style="width: 100px; padding-top: 100px; background-size: cover;
                                                                     background-position: center; background-image: url(/{{ $image }})">
-                                                                      </div>
-                                                                      <div>
-                                                                          <div class="btn-group btn-group-sm"
-                                                                              role="group" aria-label="First group">
-                                                                              <a title="Voir"
-                                                                                  href="/{{ $element }}"
-                                                                                  target="_blank" type="button"
-                                                                                  class="btn btn-outline-info"><i
-                                                                                      class="ti ti-eye"></i></a>
-                                                                              <button type="button" title="Supprimer"
-                                                                                  data-id="{{ isset($specification->existing_analysis->id) ? $specification->existing_analysis->id : '' }}"
-                                                                                  data-href="{{ $element }}"
-                                                                                  data-type="sample_sites_files"
-                                                                                  class="btn btn-outline-danger deletefile"><i
-                                                                                      class="ti ti-trash"></i></button>
-                                                                          </div>
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                          @endforeach
-                                                      @endif
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-group btn-group-sm"
+                                                                                role="group" aria-label="First group">
+                                                                                <a title="Voir"
+                                                                                    href="/{{ $element }}"
+                                                                                    target="_blank" type="button"
+                                                                                    class="btn btn-outline-info"><i
+                                                                                        class="ti ti-eye"></i></a>
+                                                                                <button type="button" title="Supprimer"
+                                                                                    data-id="{{ isset($specification->existing_analysis->id) ? $specification->existing_analysis->id : '' }}"
+                                                                                    data-href="{{ $element }}"
+                                                                                    data-type="sample_sites_files"
+                                                                                    class="btn btn-outline-danger deletefile"><i
+                                                                                        class="ti ti-trash"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                  <div class="col-6">
-                                      <div class="row">
-                                          <div class="col-12">
-                                              <div class="form-group">
-                                                  <label class="form-label" for="contraintes">
-                                                      Contraintes (donner des exemples de sites internet, dont vous
-                                                      appréciez un élément) :
-                                                  </label>
-                                                  <textarea class="form-control" id="contraintes" name="constraints" rows="3"
-                                                      placeholder="Veuillez fournir des exemples de sites internet que vous appréciez et décrire les éléments que vous aimez.">{{ isset($specification->existing_analysis->constraints) ? $specification->existing_analysis->constraints : '' }}</textarea>
-                                              </div>
-                                          </div>
-                                          <div class="col-12 mb-3 d-none ai-content">
-                                              <label class="form-label" for="iatext_constraintsAi">
-                                                  Contraintes (ai content)
-                                              </label>
-                                              <div class="input-group mb-1">
-                                                  <input type="text" class="form-control"
-                                                      name="prompt_iatext_constraints" placeholder="Créer votre prompt"
-                                                      readonly id="iatext_constraintsAi"
-                                                      value="{{ isset($specification->existing_analysis->prompt_iatext_constraints) ? $specification->existing_analysis->prompt_iatext_constraints : '' }}">
-                                                  <button class="btn btn-outline-primary ai-generate-button"
-                                                      type="button" id="iatext_constraintsAi-generate" disabled>
-                                                      <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                  </button>
-                                              </div>
-                                              <textarea name="iatext_constraints" id="iatext_constraints" class="form-control" rows="3" readonly
-                                                  placeholder="Activité principale de l'entreprise">{{ isset($specification->existing_analysis->iatext_constraints) ? $specification->existing_analysis->iatext_constraints : '' }}</textarea>
-                                          </div>
-                                          <div class="col-12 mb-3">
-                                              <div class="form-group">
-                                                  <label for="telecharger-images-2" class="form-label">
-                                                      Télécharger des images:
-                                                  </label>
-                                                  <input type="file" class="form-control" id="telecharger-images-2"
-                                                      name="constraints_files[]" accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx" multiple>
-                                                  <small id="images-help" class="form-text text-muted">
-                                                      Vous pouvez télécharger des images pour illustrer vos commentaires
-                                                      sur les sites.
-                                                  </small>
-                                                  <div class="row my-3" id="constraints_files_container">
-                                                      @if (isset($specification->existing_analysis->sample_sites_files) &&
-                                                              $specification->existing_analysis->sample_sites_files)
-                                                          @foreach ($specification->existing_analysis->constraints_files as $element)
-                                                              @php
-                                                                  $extension = strtolower(
-                                                                      pathinfo($element, PATHINFO_EXTENSION),
-                                                                  );
-                                                                  $image = ($extension == 'pdf'
-                                                                          ? 'assets/img/pdf/pdf.png'
-                                                                          : $extension == 'doc' ||
-                                                                              $extension == 'docx')
-                                                                      ? 'assets/img/pdf/doc.png'
-                                                                      : $element;
-                                                              @endphp
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="contraintes">
+                                                        Contraintes (donner des exemples de sites internet, dont vous
+                                                        appréciez un élément) :
+                                                    </label>
+                                                    <textarea class="form-control" id="contraintes" name="constraints" rows="3"
+                                                        placeholder="Veuillez fournir des exemples de sites internet que vous appréciez et décrire les éléments que vous aimez.">{{ isset($specification->existing_analysis->constraints) ? $specification->existing_analysis->constraints : '' }}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-3 d-none ai-content">
+                                                <label class="form-label" for="iatext_constraintsAi">
+                                                    Contraintes (ai content)
+                                                </label>
+                                                <div class="input-group mb-1">
+                                                    <input type="text" class="form-control"
+                                                        name="prompt_iatext_constraints" placeholder="Créer votre prompt"
+                                                        readonly id="iatext_constraintsAi"
+                                                        value="{{ isset($specification->existing_analysis->prompt_iatext_constraints) ? $specification->existing_analysis->prompt_iatext_constraints : '' }}">
+                                                    <button class="btn btn-outline-primary ai-generate-button"
+                                                        type="button" id="iatext_constraintsAi-generate" disabled>
+                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
+                                                    </button>
+                                                </div>
+                                                <textarea name="iatext_constraints" id="iatext_constraints" class="form-control" rows="3" readonly
+                                                    placeholder="Activité principale de l'entreprise">{{ isset($specification->existing_analysis->iatext_constraints) ? $specification->existing_analysis->iatext_constraints : '' }}</textarea>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="telecharger-images-2" class="form-label">
+                                                        Télécharger des images:
+                                                    </label>
+                                                    <input type="file" class="form-control" id="telecharger-images-2"
+                                                        name="constraints_files[]"
+                                                        accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx"
+                                                        multiple>
+                                                    <small id="images-help" class="form-text text-muted">
+                                                        Vous pouvez télécharger des images pour illustrer vos commentaires
+                                                        sur les sites.
+                                                    </small>
+                                                    <div class="row my-3" id="constraints_files_container">
+                                                        @if (isset($specification->existing_analysis->constraints_files) && $specification->existing_analysis->constraints_files)
+                                                            @foreach ($specification->existing_analysis->constraints_files as $element)
+                                                                @php
+                                                                    $extension = strtolower(
+                                                                        pathinfo($element, PATHINFO_EXTENSION),
+                                                                    );
+                                                                    $image = ($extension == 'pdf'
+                                                                            ? 'assets/img/pdf/pdf.png'
+                                                                            : $extension == 'doc' ||
+                                                                                $extension == 'docx')
+                                                                        ? 'assets/img/pdf/doc.png'
+                                                                        : $element;
+                                                                @endphp
 
-                                                              <div class="col-auto">
-                                                                  <div
-                                                                      class="d-flex flex-column justify-content-center mb-2">
-                                                                      <div class="rounded border"
-                                                                          style="width: 100px; padding-top: 100px; background-size: cover;
+                                                                <div class="col-auto">
+                                                                    <div
+                                                                        class="d-flex flex-column justify-content-center mb-2">
+                                                                        <div class="rounded border"
+                                                                            style="width: 100px; padding-top: 100px; background-size: cover;
                                                               background-position: center; background-image: url(/{{ $image }})">
-                                                                      </div>
-                                                                      <div>
-                                                                          <div class="btn-group btn-group-sm"
-                                                                              role="group" aria-label="First group">
-                                                                              <a title="Voir"
-                                                                                  href="/{{ $element }}"
-                                                                                  target="_blank" type="button"
-                                                                                  class="btn btn-outline-info"><i
-                                                                                      class="ti ti-eye"></i></a>
-                                                                              <button type="button" title="Supprimer"
-                                                                                  data-id="{{ isset($specification->existing_analysis->id) ? $specification->existing_analysis->id : '' }}"
-                                                                                  data-href="{{ $element }}"
-                                                                                  data-type="sample_sites_files"
-                                                                                  class="btn btn-outline-danger deletefile"><i
-                                                                                      class="ti ti-trash"></i></button>
-                                                                          </div>
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                          @endforeach
-                                                      @endif
-                                                  </div>
-                                              </div>
-                                          </div>
-                                          <div class="col-12 mb-3">
-                                              <div class="col-sm-6  col-md-12">
-                                                  <div class="form-group">
-                                                      <label class="form-label">Avez-vous un nom de domaine ? <span
-                                                              class="text-danger">*</span></label>
-                                                      <div class="radio-group">
-                                                          <div class="row">
-                                                              <div class="col-auto">
-                                                                  <div class="form-check pe-3">
-                                                                      <input class="form-check-input" type="radio"
-                                                                          id="domaineOui" name="domain" value="Oui"
-                                                                          {{ isset($specification->existing_analysis->domain) && $specification->existing_analysis->domain == 'Oui' ? 'checked' : '' }}
-                                                                          onchange="toggleNomDomaine()">
-                                                                      <label class="form-check-label"
-                                                                          for="domaineOui">Oui</label>
-                                                                  </div>
-                                                              </div>
-                                                              <div class="col-auto">
-                                                                  <div class="form-check">
-                                                                      <input class="form-check-input" type="radio"
-                                                                          id="domaineNon" name="domain" value="Non"
-                                                                          {{ isset($specification->existing_analysis->domain) && $specification->existing_analysis->domain == 'Non' ? 'checked' : '' }}
-                                                                          onchange="toggleNomDomaine()">
-                                                                      <label class="form-check-label"
-                                                                          for="domaineNon">Non</label>
-                                                                  </div>
-                                                              </div>
-                                                          </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-group btn-group-sm"
+                                                                                role="group" aria-label="First group">
+                                                                                <a title="Voir"
+                                                                                    href="/{{ $element }}"
+                                                                                    target="_blank" type="button"
+                                                                                    class="btn btn-outline-info"><i
+                                                                                        class="ti ti-eye"></i></a>
+                                                                                <button type="button" title="Supprimer"
+                                                                                    data-id="{{ isset($specification->existing_analysis->id) ? $specification->existing_analysis->id : '' }}"
+                                                                                    data-href="{{ $element }}"
+                                                                                    data-type="sample_sites_files"
+                                                                                    class="btn btn-outline-danger deletefile"><i
+                                                                                        class="ti ti-trash"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <div class="col-sm-6  col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Avez-vous un nom de domaine ? <span
+                                                                class="text-danger">*</span></label>
+                                                        <div class="radio-group">
+                                                            <div class="row">
+                                                                <div class="col-auto">
+                                                                    <div class="form-check pe-3">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            id="domaineOui" name="domain" value="Oui"
+                                                                            {{ isset($specification->existing_analysis->domain) && $specification->existing_analysis->domain == 'Oui' ? 'checked' : '' }}
+                                                                            onchange="toggleNomDomaine()">
+                                                                        <label class="form-check-label"
+                                                                            for="domaineOui">Oui</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            id="domaineNon" name="domain" value="Non"
+                                                                            {{ isset($specification->existing_analysis->domain) && $specification->existing_analysis->domain == 'Non' ? 'checked' : '' }}
+                                                                            onchange="toggleNomDomaine()">
+                                                                        <label class="form-check-label"
+                                                                            for="domaineNon">Non</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
 
-                                                      </div>
-                                                  </div>
-                                                  <div class="form-group" id="nomDomaineGroup"
-                                                      style="{{ isset($specification->existing_analysis->domain) && $specification->existing_analysis->domain == 'Non' ? 'display: none' : '' }}">
-                                                      <input type="text" class="form-control" id="nomDomaine"
-                                                          name="domain_name"
-                                                          value=" {{ isset($specification->existing_analysis->domain_name) ? $specification->existing_analysis->domain_name : '' }}"
-                                                          placeholder="Nom de domaine (si disponible)">
-                                                      <small id="msg_validation_nomDomaine"
-                                                          class="invalid-feedback d-none"> Le nom de domaine est requis
-                                                      </small>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                          {{-- <div class="col-12 mb-3">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" id="nomDomaineGroup"
+                                                        style="{{ isset($specification->existing_analysis->domain) && $specification->existing_analysis->domain == 'Non' ? 'display: none' : '' }}">
+                                                        <input type="text" class="form-control" id="nomDomaine"
+                                                            name="domain_name"
+                                                            value=" {{ isset($specification->existing_analysis->domain_name) ? $specification->existing_analysis->domain_name : '' }}"
+                                                            placeholder="Nom de domaine (si disponible)">
+                                                        <small id="msg_validation_nomDomaine"
+                                                            class="invalid-feedback d-none"> Le nom de domaine est requis
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- <div class="col-12 mb-3">
                                               <div class="col-sm-6  col-md-12">
                                                   <label class="form-label">Logo :</label>
                                                   <div class="form-check">
@@ -1380,51 +1410,51 @@ site internet sur le cahier de charge de son site internet`
                                                   </div>
                                               </div>
                                           </div> --}}
-                                          <div class="col-12 mb-3">
-                                              <div class="col-sm-6 col-md-12">
-                                                  <div class="form-group">
-                                                      <label class="form-label">Hébergement : <span
-                                                              class="text-danger">*</span></label>
-                                                      <div class="radio-group">
-                                                          <div class="row">
-                                                              <div class="col-auto">
-                                                                  <div class="form-check pe-3">
-                                                                      <input class="form-check-input" type="radio"
-                                                                          id="hebergementOui" name="hosting"
-                                                                          value="Oui" onchange="toggleHebergement()"
-                                                                          {{ isset($specification->existing_analysis->hosting) && $specification->existing_analysis->hosting == 'Oui' ? 'checked' : '' }}>
-                                                                      <label class="form-check-label"
-                                                                          for="hebergementOui">Oui</label>
-                                                                  </div>
-                                                              </div>
-                                                              <div class="col-auto">
-                                                                  <div class="form-check">
-                                                                      <input class="form-check-input" type="radio"
-                                                                          id="hebergementNon" name="hosting"
-                                                                          value="Non" onchange="toggleHebergement()"
-                                                                          {{ isset($specification->existing_analysis->hosting) && $specification->existing_analysis->hosting == 'Non' ? 'checked' : '' }}>
-                                                                      <label class="form-check-label"
-                                                                          for="hebergementNon">Non</label>
-                                                                  </div>
-                                                              </div>
-                                                          </div>
+                                            <div class="col-12 mb-3">
+                                                <div class="col-sm-6 col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Hébergement : <span
+                                                                class="text-danger">*</span></label>
+                                                        <div class="radio-group">
+                                                            <div class="row">
+                                                                <div class="col-auto">
+                                                                    <div class="form-check pe-3">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            id="hebergementOui" name="hosting"
+                                                                            value="Oui" onchange="toggleHebergement()"
+                                                                            {{ isset($specification->existing_analysis->hosting) && $specification->existing_analysis->hosting == 'Oui' ? 'checked' : '' }}>
+                                                                        <label class="form-check-label"
+                                                                            for="hebergementOui">Oui</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="radio"
+                                                                            id="hebergementNon" name="hosting"
+                                                                            value="Non" onchange="toggleHebergement()"
+                                                                            {{ isset($specification->existing_analysis->hosting) && $specification->existing_analysis->hosting == 'Non' ? 'checked' : '' }}>
+                                                                        <label class="form-check-label"
+                                                                            for="hebergementNon">Non</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
-                                                      </div>
-                                                  </div>
-                                                  <div class="form-group" id="nomHebergementGroup"
-                                                      style="{{ isset($specification->existing_analysis->hosting) && $specification->existing_analysis->hosting == 'Non' ? 'display: none' : '' }}">
-                                                      <input type="text" class="form-control" id="nomHebergement"
-                                                          name="hosting_name" placeholder="Hébergement (si disponible)"
-                                                          value=" {{ isset($specification->existing_analysis->hosting_name) ? $specification->existing_analysis->hosting_name : '' }}">
-                                                      <small id="msg_validation_nomHebergement"
-                                                          class="invalid-feedback d-none"> L'hébergement est requis
-                                                      </small>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  {{--
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" id="nomHebergementGroup"
+                                                        style="{{ isset($specification->existing_analysis->hosting) && $specification->existing_analysis->hosting == 'Non' ? 'display: none' : '' }}">
+                                                        <input type="text" class="form-control" id="nomHebergement"
+                                                            name="hosting_name" placeholder="Hébergement (si disponible)"
+                                                            value=" {{ isset($specification->existing_analysis->hosting_name) ? $specification->existing_analysis->hosting_name : '' }}">
+                                                        <small id="msg_validation_nomHebergement"
+                                                            class="invalid-feedback d-none"> L'hébergement est requis
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{--
                                 <!-- Zone de texte (non afficher au formulaire) pour langage de programmation -->
                                 <input type="" id="langage" name="langage" value="wappalizer">
 
@@ -1437,17 +1467,17 @@ site internet sur le cahier de charge de son site internet`
                                 <!-- Zone de texte (non afficher au formulaire) pour Nombre de pages -->
                                 <input type="" id="pages" name="pages" value="similarweb"> --}}
 
-                                  <div class="col-12 d-flex justify-content-between">
-                                      <button type="button" class="btn btn-label-secondary btn-prev">
-                                          <i class="ti ti-arrow-left me-sm-1 me-0"></i>
-                                          <span class="align-middle d-sm-inline-block d-none">Précédent</span>
-                                      </button>
-                                      <button type="button" class="btn btn-primary btn-next" id="next-step-3"> <span
-                                              class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i
-                                              class="ti ti-arrow-right" id="icon-next-step-3"></i></button>
-                                  </div>
-                              </div>
-                          </form>
+                                    <div class="col-12 d-flex justify-content-between">
+                                        <button type="button" class="btn btn-label-secondary btn-prev">
+                                            <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                            <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-next" id="next-step-3"> <span
+                                                class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i
+                                                class="ti ti-arrow-right" id="icon-next-step-3"></i></button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <!-- 4 -->
                         <div id="step-4-validation" class="content">
@@ -1455,132 +1485,132 @@ site internet sur le cahier de charge de son site internet`
                                 <h6 class="mb-0">Design et contenu</h6>
                             </div>
                             <form id="step-4-validation-form">
-                              <div class="row g-3 validation-field">
-                                  @csrf
-                                  <input type="number" name="content_id" id="content_id" readonly class="d-none"
-                                      value="{{ isset($specification->design_content->id) ? $specification->design_content->id : '' }}"
-                                      <div class="row">
-                                  <div class="col-6">
-                                      <div class="row">
-                                          <div class="col-12 mb-3">
-                                              <div class="border mt-2 rounded-2 table-responsive text-nowrap">
-                                                  <table class="table table-striped">
-                                                      <thead class="table-dark">
-                                                          <tr>
-                                                              <th>élément</th>
-                                                              <th>Fournis</th>
-                                                              <th>à créer</th>
-                                                          </tr>
-                                                      </thead>
-                                                      <tbody class="table-border-bottom-0">
-                                                          @php
-                                                              $elements = [
-                                                                  [
-                                                                      'el' => 'logo',
-                                                                      'el-name' => 'logo',
-                                                                      'name' => 'Logo',
-                                                                  ],
-                                                                  [
-                                                                      'el' => 'charte-graphique',
-                                                                      'el-name' => 'graphical_charter',
-                                                                      'name' => 'charte graphique',
-                                                                  ],
-                                                                  [
-                                                                      'el' => 'wireframe',
-                                                                      'el-name' => 'wireframe',
-                                                                      'name' => 'Maquette / Wireframe',
-                                                                  ],
-                                                                  [
-                                                                      'el' => 'typography',
-                                                                      'el-name' => 'typography',
-                                                                      'name' => "Typographies (police d'ecriture)",
-                                                                  ],
-                                                                  [
-                                                                      'el' => 'description-product-services',
-                                                                      'el-name' => 'description_product_services',
-                                                                      'name' => 'Desc services/ produits',
-                                                                  ],
-                                                              ];
-                                                          @endphp
-                                                          @foreach ($elements as $item)
-                                                              <tr style="min-height: 50px;">
-                                                                  <td title="{{ strtolower($item['name']) }}"
-                                                                      style="max-width: 150px;line-break: auto;min-height: 50px;"
-                                                                      class="small text-limited">
-                                                                      {{ $item['name'] }}
-                                                                  </td>
-                                                                  <td class="align-items-center d-flex"
-                                                                      style="min-height: 50px;">
-                                                                      <div class="form-check">
-                                                                          <input name="{{ $item['el-name'] }}"
-                                                                              class="form-check-input" type="radio"
-                                                                              value="oui"
-                                                                              id="{{ $item['el'] }}-fourni-oui"
-                                                                              {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'oui' ? 'checked' : '' }} />
-                                                                          @if (isset($specification->design_content->{$item['el-name'] . '_file'}) &&
-                                                                                  $item['el'] != 'typography' &&
-                                                                                  $specification->design_content->{$item['el-name'] . '_file'})
-                                                                              <a type="button" data-toggle="tooltip"
-                                                                                  data-placement="top" title="Voir"
-                                                                                  target="_blank"
-                                                                                  href="/{{ $specification->design_content->{$item['el-name'] . '_file'} }}"
-                                                                                  class="btn btn-icon text-primary btn-sm btn-label-primary waves-effect waves-light mx-1 me-4">
-                                                                                  <i class="ti ti-eye"></i>
-                                                                              </a>
-                                                                          @endif
-                                                                      </div>
-                                                                      @if ($item['el'] == 'typography')
-                                                                          <textarea type="text" title="Indiquez les préférences de typographie pour votre site"
-                                                                              placeholder="Indiquez les préférences de typographie pour votre site"
-                                                                              class="form-control  {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'oui' ? '' : 'd-none' }}"
-                                                                              id="{{ $item['el'] }}-file-upload" name="{{ $item['el-name'] }}_text">{{ isset($specification->design_content->typography_text) ? $specification->design_content->typography_text : '' }}</textarea>
-                                                                          {{-- <input type="text"
+                                <div class="row g-3 validation-field">
+                                    @csrf
+                                    <input type="number" name="content_id" id="content_id" readonly class="d-none"
+                                        value="{{ isset($specification->design_content->id) ? $specification->design_content->id : '' }}"
+                                        <div class="row">
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                <div class="border mt-2 rounded-2 table-responsive text-nowrap">
+                                                    <table class="table table-striped">
+                                                        <thead class="table-dark">
+                                                            <tr>
+                                                                <th>élément</th>
+                                                                <th>Fournis</th>
+                                                                <th>à créer</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-border-bottom-0">
+                                                            @php
+                                                                $elements = [
+                                                                    [
+                                                                        'el' => 'logo',
+                                                                        'el-name' => 'logo',
+                                                                        'name' => 'Logo',
+                                                                    ],
+                                                                    [
+                                                                        'el' => 'charte-graphique',
+                                                                        'el-name' => 'graphical_charter',
+                                                                        'name' => 'charte graphique',
+                                                                    ],
+                                                                    [
+                                                                        'el' => 'wireframe',
+                                                                        'el-name' => 'wireframe',
+                                                                        'name' => 'Maquette / Wireframe',
+                                                                    ],
+                                                                    [
+                                                                        'el' => 'typography',
+                                                                        'el-name' => 'typography',
+                                                                        'name' => "Typographies (police d'ecriture)",
+                                                                    ],
+                                                                    [
+                                                                        'el' => 'description-product-services',
+                                                                        'el-name' => 'description_product_services',
+                                                                        'name' => 'Desc services/ produits',
+                                                                    ],
+                                                                ];
+                                                            @endphp
+                                                            @foreach ($elements as $item)
+                                                                <tr style="min-height: 50px;">
+                                                                    <td title="{{ strtolower($item['name']) }}"
+                                                                        style="max-width: 150px;line-break: auto;min-height: 50px;"
+                                                                        class="small text-limited">
+                                                                        {{ $item['name'] }}
+                                                                    </td>
+                                                                    <td class="align-items-center d-flex"
+                                                                        style="min-height: 50px;">
+                                                                        <div class="form-check">
+                                                                            <input name="{{ $item['el-name'] }}"
+                                                                                class="form-check-input" type="radio"
+                                                                                value="oui"
+                                                                                id="{{ $item['el'] }}-fourni-oui"
+                                                                                {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'oui' ? 'checked' : '' }} />
+                                                                            @if (isset($specification->design_content->{$item['el-name'] . '_file'}) &&
+                                                                                    $item['el'] != 'typography' &&
+                                                                                    $specification->design_content->{$item['el-name'] . '_file'})
+                                                                                <a type="button" data-toggle="tooltip"
+                                                                                    data-placement="top" title="Voir"
+                                                                                    target="_blank"
+                                                                                    href="/{{ $specification->design_content->{$item['el-name'] . '_file'} }}"
+                                                                                    class="btn btn-icon text-primary btn-sm btn-label-primary waves-effect waves-light mx-1 me-4">
+                                                                                    <i class="ti ti-eye"></i>
+                                                                                </a>
+                                                                            @endif
+                                                                        </div>
+                                                                        @if ($item['el'] == 'typography')
+                                                                            <textarea type="text" title="Indiquez les préférences de typographie pour votre site"
+                                                                                placeholder="Indiquez les préférences de typographie pour votre site"
+                                                                                class="form-control  {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'oui' ? '' : 'd-none' }}"
+                                                                                id="{{ $item['el'] }}-file-upload" name="{{ $item['el-name'] }}_text">{{ isset($specification->design_content->typography_text) ? $specification->design_content->typography_text : '' }}</textarea>
+                                                                            {{-- <input type="text"
                                                                                   style="width: 120px; height: 30px;"
                                                                                   title="Indiquez les préférences de typographie pour votre site"
                                                                                   placeholder="Indiquez les préférences de typographie pour votre site"
                                                                                   class="form-control d-none"
                                                                                   id="{{ $item['el'] }}-file-upload"
                                                                                   name="{{ $item['el-name'] }}_text"> --}}
-                                                                      @else
-                                                                          <button type="button" data-toggle="tooltip"
-                                                                              data-placement="top"
-                                                                              title="Choisir {{ strtolower($item['name']) }}"
-                                                                              class="btn btn-icon btn-sm btn-label-primary waves-effect waves-light mx-1 {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'oui' ? '' : 'd-none' }}"
-                                                                              id="{{ $item['el'] }}-file-upload">
-                                                                              <i class="ti ti-upload"></i>
-                                                                          </button>
-                                                                          <span
-                                                                              id="{{ $item['el'] }}-file-upload-span"
-                                                                              class="p-0 text-limited small  {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'oui' ? '' : 'd-none' }}"
-                                                                              {{-- title="Choisir {{ strtolower($item['name']) }}" --}}
-                                                                              style="max-width: 100px;">
-                                                                              {{-- Choisir {{ strtolower($item['name']) }} --}}
-                                                                              Aucun fichier
-                                                                          </span>
-                                                                          <input type="file"
-                                                                              class="form-control-sm d-none"
-                                                                              id="{{ $item['el'] }}-file"
-                                                                              name="{{ $item['el-name'] }}_file"
-                                                                              accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx">
-                                                                      @endif
+                                                                        @else
+                                                                            <button type="button" data-toggle="tooltip"
+                                                                                data-placement="top"
+                                                                                title="Choisir {{ strtolower($item['name']) }}"
+                                                                                class="btn btn-icon btn-sm btn-label-primary waves-effect waves-light mx-1 {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'oui' ? '' : 'd-none' }}"
+                                                                                id="{{ $item['el'] }}-file-upload">
+                                                                                <i class="ti ti-upload"></i>
+                                                                            </button>
+                                                                            <span
+                                                                                id="{{ $item['el'] }}-file-upload-span"
+                                                                                class="p-0 text-limited small  {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'oui' ? '' : 'd-none' }}"
+                                                                                {{-- title="Choisir {{ strtolower($item['name']) }}" --}}
+                                                                                style="max-width: 100px;">
+                                                                                {{-- Choisir {{ strtolower($item['name']) }} --}}
+                                                                                Aucun fichier
+                                                                            </span>
+                                                                            <input type="file"
+                                                                                class="form-control-sm d-none"
+                                                                                id="{{ $item['el'] }}-file"
+                                                                                name="{{ $item['el-name'] }}_file"
+                                                                                accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx">
+                                                                        @endif
 
-                                                                  </td>
-                                                                  <td style="min-height: 50px;">
-                                                                      <div class="form-check">
-                                                                          <input name="{{ $item['el-name'] }}"
-                                                                              class="form-check-input" type="radio"
-                                                                              value="non"
-                                                                              {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'non' ? 'checked' : '' }}
-                                                                              id="{{ $item['el'] }}-fourni-non" />
-                                                                      </div>
-                                                                  </td>
-                                                              </tr>
-                                                          @endforeach
-                                                      </tbody>
-                                                  </table>
-                                              </div>
-                                          </div>
-                                          {{-- <div class="col-12 mb-3"> <label class="form-label">
+                                                                    </td>
+                                                                    <td style="min-height: 50px;">
+                                                                        <div class="form-check">
+                                                                            <input name="{{ $item['el-name'] }}"
+                                                                                class="form-check-input" type="radio"
+                                                                                value="non"
+                                                                                {{ isset($specification->design_content->{$item['el-name']}) && $specification->design_content->{$item['el-name']} == 'non' ? 'checked' : '' }}
+                                                                                id="{{ $item['el'] }}-fourni-non" />
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            {{-- <div class="col-12 mb-3"> <label class="form-label">
                                                       Contenu de votre site:
                                                   </label>
                                                   @php
@@ -1602,184 +1632,186 @@ site internet sur le cahier de charge de son site internet`
                                                       @endforeach
                                                   </div>
                                               </div> --}}
-                                          <div class="col-sm-6 col-md-10 mb-3">
-                                              <div class="form-group">
-                                                  <label class="form-label">Style graphique attendu :</label>
-                                                  <div class="checkbox-group">
-                                                      @php
-                                                          $graphic_styles = [
-                                                              ['name' => 'Flat design', 'alias' => 'flatDesign'],
-                                                              ['name' => 'Futuriste', 'alias' => 'futuriste'],
-                                                              ['name' => 'Interactif', 'alias' => 'interactif'],
-                                                              ['name' => 'Moderne', 'alias' => 'moderne'],
-                                                              ['name' => 'Retro', 'alias' => 'retro'],
-                                                              ['name' => 'Autres', 'alias' => 'autres'],
-                                                          ];
-                                                      @endphp
-                                                      <div class="row">
-                                                          @foreach ($graphic_styles as $item)
-                                                              <div class="col-auto">
-                                                                  <div class="form-check">
-                                                                      <input class="form-check-input" type="checkbox"
-                                                                          {{ isset($specification->design_content->style_graphiques) && !is_null($specification->design_content->style_graphiques) && in_array($item['name'], $specification->design_content->style_graphiques) ? 'checked' : '' }}
-                                                                          id="{{ $item['alias'] }}_StyleGraphique"
-                                                                          name="style_graphiques[]"
-                                                                          value="{{ $item['name'] }}"
-                                                                          @if ($item['name'] == 'Autres') onchange="toggleAutresStyle()" @endif>
-                                                                      <label class="form-check-label"
-                                                                          for="{{ $item['alias'] }}_StyleGraphique">
-                                                                          {{ $item['name'] }}
-                                                                      </label>
-                                                                  </div>
-                                                              </div>
-                                                          @endforeach
-                                                      </div>
+                                            <div class="col-sm-6 col-md-10 mb-3">
+                                                <div class="form-group">
+                                                    <label class="form-label">Style graphique attendu :</label>
+                                                    <div class="checkbox-group">
+                                                        @php
+                                                            $graphic_styles = [
+                                                                ['name' => 'Flat design', 'alias' => 'flatDesign'],
+                                                                ['name' => 'Futuriste', 'alias' => 'futuriste'],
+                                                                ['name' => 'Interactif', 'alias' => 'interactif'],
+                                                                ['name' => 'Moderne', 'alias' => 'moderne'],
+                                                                ['name' => 'Retro', 'alias' => 'retro'],
+                                                                ['name' => 'Autres', 'alias' => 'autres'],
+                                                            ];
+                                                        @endphp
+                                                        <div class="row">
+                                                            @foreach ($graphic_styles as $item)
+                                                                <div class="col-auto">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            {{ isset($specification->design_content->style_graphiques) && !is_null($specification->design_content->style_graphiques) && in_array($item['name'], $specification->design_content->style_graphiques) ? 'checked' : '' }}
+                                                                            id="{{ $item['alias'] }}_StyleGraphique"
+                                                                            name="style_graphiques[]"
+                                                                            value="{{ $item['name'] }}"
+                                                                            @if ($item['name'] == 'Autres') onchange="toggleAutresStyle()" @endif>
+                                                                        <label class="form-check-label"
+                                                                            for="{{ $item['alias'] }}_StyleGraphique">
+                                                                            {{ $item['name'] }}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
 
-                                                  </div>
-                                                  <div class="col-sm-12" id="zoneTexteAutresStyle"
-                                                      style="display: {{ isset($specification->design_content->style_graphiques) && !is_null($specification->design_content->style_graphiques) && in_array('Autres', $specification->design_content->style_graphiques) ? '' : 'none' }};">
-                                                      <textarea class="form-control" id="autresStyleTexte" name="style_graphique_autre"
-                                                          placeholder="Précisez les autres styles graphiques attendus"></textarea>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                          <div class="col-sm-6 col-md-10 mb-3">
-                                              <label class="form-label" for="nombrePropositions">Nombre de
-                                                  propositions
-                                                  attendues : <span class="text-danger">*</span></label>
-                                              <select class="select2" id="nombrePropositions"
-                                                  name="nombrePropositions">
-                                                  <option label=" "></option>
-                                                  <option value="1"
-                                                      {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions == 1 ? 'selected' : '' }}>
-                                                      1</option>
-                                                  <option value="2"
-                                                      {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions == 2 ? 'selected' : '' }}>
-                                                      2</option>
-                                                  <option value="3"
-                                                      {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions == 3 ? 'selected' : '' }}>
-                                                      3</option>
-                                                  <option value="autre"
-                                                      {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions > 3 ? 'selected' : '' }}>
-                                                      Autre</option>
-                                              </select>
-                                          </div>
-                                          <div id="autrePropositionInput"
-                                              style="display:  {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions > 3 ? '' : 'none' }} ;">
-                                              <div class="col-sm-6 col-md-10 mb-3">
-                                                  <label class="form-label" for="autreProposition">Autre proposition
-                                                      :</label>
-                                                  <input placeholder="Saisissez votre autre proposition ici..."
-                                                      class="form-control" id="autreProposition" type="number"
-                                                      name="number_of_propositions"
-                                                      value="{{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions }}" />
-                                                  <small id="msg_autreProposition" class="invalid-feedback d-none">
-                                                      Le nombre de propositions est
-                                                      requis
-                                                  </small>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="col-6">
-                                      <div class="row">
-                                          <div class="col-12 mb-3">
-                                              <div class="form-group">
-                                                  <label for="palette-couleurs" class="form-label">
-                                                      Palette de couleurs :
-                                                  </label>
-                                                  <textarea type="text" id="palette-couleurs" class="form-control" name="color_palette"
-                                                      placeholder="Indiquez les couleurs souhaitées pour votre site">{{ isset($specification->design_content->color_palette) ? $specification->design_content->color_palette : '' }}</textarea>
-                                              </div>
-                                          </div>
+                                                    </div>
+                                                    <div class="col-sm-12" id="zoneTexteAutresStyle"
+                                                        style="display: {{ isset($specification->design_content->style_graphiques) && !is_null($specification->design_content->style_graphiques) && in_array('Autres', $specification->design_content->style_graphiques) ? '' : 'none' }};">
+                                                        <textarea class="form-control" id="autresStyleTexte" name="style_graphique_autre"
+                                                            placeholder="Précisez les autres styles graphiques attendus"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-md-10 mb-3">
+                                                <label class="form-label" for="nombrePropositions">Nombre de
+                                                    propositions
+                                                    attendues : <span class="text-danger">*</span></label>
+                                                <select class="select2" id="nombrePropositions"
+                                                    name="nombrePropositions">
+                                                    <option label=" "></option>
+                                                    <option value="1"
+                                                        {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions == 1 ? 'selected' : '' }}>
+                                                        1</option>
+                                                    <option value="2"
+                                                        {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions == 2 ? 'selected' : '' }}>
+                                                        2</option>
+                                                    <option value="3"
+                                                        {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions == 3 ? 'selected' : '' }}>
+                                                        3</option>
+                                                    <option value="autre"
+                                                        {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions > 3 ? 'selected' : '' }}>
+                                                        Autre</option>
+                                                </select>
+                                            </div>
+                                            <div id="autrePropositionInput"
+                                                style="display:  {{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions > 3 ? '' : 'none' }} ;">
+                                                <div class="col-sm-6 col-md-10 mb-3">
+                                                    <label class="form-label" for="autreProposition">Autre proposition
+                                                        :</label>
+                                                    <input placeholder="Saisissez votre autre proposition ici..."
+                                                        class="form-control" id="autreProposition" type="number"
+                                                        name="number_of_propositions"
+                                                        value="{{ isset($specification->design_content->number_of_propositions) && $specification->design_content->number_of_propositions }}" />
+                                                    <small id="msg_autreProposition" class="invalid-feedback d-none">
+                                                        Le nombre de propositions est
+                                                        requis
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                <div class="form-group">
+                                                    <label for="palette-couleurs" class="form-label">
+                                                        Palette de couleurs :
+                                                    </label>
+                                                    <textarea type="text" id="palette-couleurs" class="form-control" name="color_palette"
+                                                        placeholder="Indiquez les couleurs souhaitées pour votre site">{{ isset($specification->design_content->color_palette) ? $specification->design_content->color_palette : '' }}</textarea>
+                                                </div>
+                                            </div>
 
-                                          {{-- <div class="col-12 mb-3">
+                                            {{-- <div class="col-12 mb-3">
                                                   <div class="form-group">
                                                       <label for="typographie" class="form-label">Typographie :</label>
                                                       <textarea type="text" id="typographie" class="form-control" name="typography"
                                                           placeholder="Indiquez les préférences de typographie pour votre site"></textarea>
                                                   </div>
                                               </div> --}}
-                                          <div class="col-12">
-                                              <div class="form-group">
-                                                  <label for="exemples-sites" class="form-label">
-                                                      Exemples de sites avec commentaire :
-                                                  </label>
-                                                  <textarea id="exemples-sites" class="form-control" name="exemples_sites" rows="3"
-                                                      placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.).">{{ isset($specification->design_content->exemples_sites) ? $specification->design_content->exemples_sites : '' }}</textarea>
-                                              </div>
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="exemples-sites" class="form-label">
+                                                        Exemples de sites avec commentaire :
+                                                    </label>
+                                                    <textarea id="exemples-sites" class="form-control" name="exemples_sites" rows="3"
+                                                        placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.).">{{ isset($specification->design_content->exemples_sites) ? $specification->design_content->exemples_sites : '' }}</textarea>
+                                                </div>
 
-                                              <div class="form-group mb-3">
-                                                  <label for="telecharger-images-3" class="form-label">Télécharger
-                                                      des
-                                                      images :</label>
-                                                  <input type="file" class="form-control" id="telecharger-images-3"
-                                                      name="exemples_sites_files[]" accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx" multiple>
-                                                  <small id="images-help" class="form-text text-muted">
-                                                      Vous pouvez télécharger des images pour illustrer vos
-                                                      commentaires sur les sites.
-                                                  </small>
-                                                  <div class="row my-3" id="exemples_sites_files_container">
-                                                      @if (isset($specification->design_content->exemples_sites_files) && $specification->design_content->exemples_sites_files)
-                                                          @foreach ($specification->design_content->exemples_sites_files as $element)
-                                                              @php
-                                                                  $extension = strtolower(
-                                                                      pathinfo($element, PATHINFO_EXTENSION),
-                                                                  );
-                                                                  $image = ($extension == 'pdf'
-                                                                          ? 'assets/img/pdf/pdf.png'
-                                                                          : $extension == 'doc' ||
-                                                                              $extension == 'docx')
-                                                                      ? 'assets/img/pdf/doc.png'
-                                                                      : $element;
-                                                              @endphp
-                                                              <div class="col-auto">
-                                                                  <div
-                                                                      class="d-flex flex-column justify-content-center mb-2">
-                                                                      <div class="rounded border"
-                                                                          style="width: 100px; padding-top: 100px; background-size: cover;
+                                                <div class="form-group mb-3">
+                                                    <label for="telecharger-images-3" class="form-label">Télécharger
+                                                        des
+                                                        images :</label>
+                                                    <input type="file" class="form-control" id="telecharger-images-3"
+                                                        name="exemples_sites_files[]"
+                                                        accept=".jpg, .jpeg, .png, .gif, .svg, .webp, .pdf, .doc, .docx"
+                                                        multiple>
+                                                    <small id="images-help" class="form-text text-muted">
+                                                        Vous pouvez télécharger des images pour illustrer vos
+                                                        commentaires sur les sites.
+                                                    </small>
+                                                    <div class="row my-3" id="exemples_sites_files_container">
+                                                        @if (isset($specification->design_content->exemples_sites_files) && $specification->design_content->exemples_sites_files)
+                                                            @foreach ($specification->design_content->exemples_sites_files as $element)
+                                                                @php
+                                                                    $extension = strtolower(
+                                                                        pathinfo($element, PATHINFO_EXTENSION),
+                                                                    );
+                                                                    $image = ($extension == 'pdf'
+                                                                            ? 'assets/img/pdf/pdf.png'
+                                                                            : $extension == 'doc' ||
+                                                                                $extension == 'docx')
+                                                                        ? 'assets/img/pdf/doc.png'
+                                                                        : $element;
+                                                                @endphp
+                                                                <div class="col-auto">
+                                                                    <div
+                                                                        class="d-flex flex-column justify-content-center mb-2">
+                                                                        <div class="rounded border"
+                                                                            style="width: 100px; padding-top: 100px; background-size: cover;
                                                                   background-position: center; background-image: url(/{{ $image }})">
-                                                                      </div>
-                                                                      <div>
-                                                                          <div class="btn-group btn-group-sm"
-                                                                              role="group" aria-label="First group">
-                                                                              <a title="Voir"
-                                                                                  href="/{{ $element }}"
-                                                                                  target="_blank" type="button"
-                                                                                  class="btn btn-outline-info"><i
-                                                                                      class="ti ti-eye"></i></a>
-                                                                              <button type="button" title="Supprimer"
-                                                                                  data-id="{{ isset($specification->design_content->id) ? $specification->design_content->id : '' }}"
-                                                                                  data-href="{{ $element }}"
-                                                                                  data-type="exemples_sites_files"
-                                                                                  class="btn btn-outline-danger deletefile2"><i
-                                                                                      class="ti ti-trash"></i></button>
-                                                                          </div>
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                          @endforeach
-                                                      @endif
-                                                  </div>
-                                              </div>
-                                          </div>
-                                          <div class="col-12 mb-3 d-none ai-content">
-                                              <label class="form-label" for="iatext_exemples_sitesAi">
-                                                  Les éléments sur Mesure (ai content)
-                                              </label>
-                                              <div class="input-group mb-1">
-                                                  <input type="text" class="form-control"
-                                                      name="prompt_iatext_exemples_sites" readonly
-                                                      placeholder="Créer votre prompt" id="iatext_exemples_sitesAi"
-                                                      value="{{ isset($specification->design_content->prompt_iatext_exemples_sites) ? $specification->design_content->prompt_iatext_exemples_sites : '' }}">
-                                                  <button class="btn btn-outline-primary ai-generate-button"
-                                                      type="button" id="iatext_exemples_sitesAi-generate" disabled>
-                                                      <i class="ti ti-file-text-ai"></i> &nbsp; Générer
-                                                  </button>
-                                              </div>
-                                              <textarea name="iatext_exemples_sites" id="iatext_exemples_sites" class="form-control" rows="3" readonly>{{ isset($specification->design_content->iatext_exemples_sites) ? $specification->design_content->iatext_exemples_sites : '' }}</textarea>
-                                          </div>
-                                          {{-- <div class="col-sm-6 col-md-10 mb-3">
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-group btn-group-sm"
+                                                                                role="group" aria-label="First group">
+                                                                                <a title="Voir"
+                                                                                    href="/{{ $element }}"
+                                                                                    target="_blank" type="button"
+                                                                                    class="btn btn-outline-info"><i
+                                                                                        class="ti ti-eye"></i></a>
+                                                                                <button type="button" title="Supprimer"
+                                                                                    data-id="{{ isset($specification->design_content->id) ? $specification->design_content->id : '' }}"
+                                                                                    data-href="{{ $element }}"
+                                                                                    data-type="exemples_sites_files"
+                                                                                    class="btn btn-outline-danger deletefile2"><i
+                                                                                        class="ti ti-trash"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 mb-3 d-none ai-content">
+                                                <label class="form-label" for="iatext_exemples_sitesAi">
+                                                    Les éléments sur Mesure (ai content)
+                                                </label>
+                                                <div class="input-group mb-1">
+                                                    <input type="text" class="form-control"
+                                                        name="prompt_iatext_exemples_sites" readonly
+                                                        placeholder="Créer votre prompt" id="iatext_exemples_sitesAi"
+                                                        value="{{ isset($specification->design_content->prompt_iatext_exemples_sites) ? $specification->design_content->prompt_iatext_exemples_sites : '' }}">
+                                                    <button class="btn btn-outline-primary ai-generate-button"
+                                                        type="button" id="iatext_exemples_sitesAi-generate" disabled>
+                                                        <i class="ti ti-file-text-ai"></i> &nbsp; Générer
+                                                    </button>
+                                                </div>
+                                                <textarea name="iatext_exemples_sites" id="iatext_exemples_sites" class="form-control" rows="3" readonly>{{ isset($specification->design_content->iatext_exemples_sites) ? $specification->design_content->iatext_exemples_sites : '' }}</textarea>
+                                            </div>
+                                            {{-- <div class="col-sm-6 col-md-10 mb-3">
                                               </div>
                                               <div class="form-group" style="display: none;">
                                                   <label class="form-label">Zone de texte (non affichée au formulaire) :
@@ -1805,11 +1837,11 @@ site internet sur le cahier de charge de son site internet`
                                                       texte à mettre dans chaque section de site</label>
                                                   <textarea class="form-control" id="contenuSite" name="contenuSite" rows="3"></textarea>
                                               </div> --}}
-                                      </div>
-                                  </div>
-                              </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                              {{-- <!-- Téléchargement de fichier (non affiché au formulaire) : La maquette du site -->
+                                {{-- <!-- Téléchargement de fichier (non affiché au formulaire) : La maquette du site -->
                                   <input type="file" name="maquetteDuSite" style="display: none;">
 
                                   <!-- Zone de texte (non affichée au formulaire) : le lien vers la maquette -->
@@ -1828,16 +1860,16 @@ site internet sur le cahier de charge de son site internet`
                                   <input type="hidden" name="contenuDuSite"
                                       value="texte_a_mettre_dans_chaque_section"> --}}
 
-                              <div class="col-12 d-flex justify-content-between">
-                                  <button type="button" class="btn btn-label-secondary btn-prev"> <i
-                                          class="ti ti-arrow-left me-sm-1 me-0"></i>
-                                      <span class="align-middle d-sm-inline-block d-none">Précédent</span>
-                                  </button>
-                                  <button type="button" class="btn btn-primary btn-next" id="next-step-4"> <span
-                                          class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i
-                                          class="ti ti-arrow-right" id="icon-next-step-4"></i></button>
-                              </div>
-                          </form>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <button type="button" class="btn btn-label-secondary btn-prev"> <i
+                                            class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                        <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-next" id="next-step-4"> <span
+                                            class="align-middle d-sm-inline-block d-none me-sm-1">Suivant</span> <i
+                                            class="ti ti-arrow-right" id="icon-next-step-4"></i></button>
+                                </div>
+                            </form>
 
                         </div>
                         <!-- 5 -->
@@ -1846,336 +1878,341 @@ site internet sur le cahier de charge de son site internet`
                                 <h6 class="mb-0">Déroulement du projet</h6>
                             </div>
                             <form id="step-5-validation-form">
-                              <div class="row g-3 validation-field">
-                                  @csrf
-                                  <input type="number" name="deadline_id" id="deadline_id" readonly class="d-none"
-                                      value="{{ isset($specification->deadline_and_budget->id) ? $specification->deadline_and_budget->id : '' }}">
-                                  <div class="row">
-                                      <div class="col-6">
-                                          <div class="row">
-                                              <div class="col-10 mb-3">
-                                                  <label class="form-label">Gestion de projet : <span
-                                                          class="text-danger">*</span></label>
-                                                  <div class="row">
-                                                      <div class="col-auto">
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="radio"
-                                                                  id="gestionProjetBoutEnBout" name="gestion_projet"
-                                                                  value="Bout en bout"
-                                                                  {{ isset($specification->deadline_and_budget->gestion_projet) && $specification->deadline_and_budget->gestion_projet == 'Bout en bout' ? 'checked' : '' }}>
-                                                              <label class="form-check-label" for="gestionProjetBoutEnBout">
-                                                                  Bout en bout
-                                                              </label>
-                                                          </div>
-                                                      </div>
-                                                      <div class="col-auto">
-                                                          <div class="form-check">
-                                                              <input class="form-check-input" type="radio"
-                                                                  id="gestionProjetAgile" name="gestion_projet"
-                                                                  value="Agile"
-                                                                  {{ isset($specification->deadline_and_budget->gestion_projet) && $specification->deadline_and_budget->gestion_projet == 'Agile' ? 'checked' : '' }}>
-                                                              <label class="form-check-label" for="gestionProjetAgile">
-                                                                  Agile - être informé régulièrement de l’avancement du
-                                                                  projet
-                                                              </label>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                              <div class="col-10 mb-3">
-                                                  <label>Communication : <span class="text-danger">*</span></label>
-                                                  <br>
-                                                  @php
-                                                      $communications = [
-                                                          ['name' => 'Téléphone', 'alias' => 'telephone'],
-                                                          ['name' => 'E-mail', 'alias' => 'email'],
-                                                          [
-                                                              'name' => 'Visio-conférences',
-                                                              'alias' => 'visio_conference',
-                                                          ],
-                                                      ];
-                                                  @endphp
-                                                  <div class="row">
-                                                      @foreach ($communications as $item)
-                                                          <div class="col-auto">
-                                                              <div class="form-check">
-                                                                  <input class="form-check-input" type="checkbox"
-                                                                      id="communication_{{ $item['alias'] }}"
-                                                                      name="communication[]"
-                                                                      {{ isset($specification->deadline_and_budget->communication) && !is_null($specification->deadline_and_budget->communication) && in_array($item['name'], $specification->deadline_and_budget->communication) ? 'checked' : '' }}
-                                                                      value="{{ $item['name'] }}">
-                                                                  <label class="form-check-label"
-                                                                      for="communication_{{ $item['alias'] }}"">
-                                                                      {{ $item['name'] }}
-                                                                  </label>
-                                                              </div>
-                                                          </div>
-                                                      @endforeach
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="col-6">
-                                          <div class="row">
+                                <div class="row g-3 validation-field">
+                                    @csrf
+                                    <input type="number" name="deadline_id" id="deadline_id" readonly class="d-none"
+                                        value="{{ isset($specification->deadline_and_budget->id) ? $specification->deadline_and_budget->id : '' }}">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="row">
+                                                <div class="col-10 mb-3">
+                                                    <label class="form-label">Gestion de projet : <span
+                                                            class="text-danger">*</span></label>
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="gestionProjetBoutEnBout" name="gestion_projet"
+                                                                    value="Bout en bout"
+                                                                    {{ isset($specification->deadline_and_budget->gestion_projet) && $specification->deadline_and_budget->gestion_projet == 'Bout en bout' ? 'checked' : '' }}>
+                                                                <label class="form-check-label"
+                                                                    for="gestionProjetBoutEnBout">
+                                                                    Bout en bout
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="gestionProjetAgile" name="gestion_projet"
+                                                                    value="Agile"
+                                                                    {{ isset($specification->deadline_and_budget->gestion_projet) && $specification->deadline_and_budget->gestion_projet == 'Agile' ? 'checked' : '' }}>
+                                                                <label class="form-check-label" for="gestionProjetAgile">
+                                                                    Agile - être informé régulièrement de l’avancement du
+                                                                    projet
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-10 mb-3">
+                                                    <label>Communication : <span class="text-danger">*</span></label>
+                                                    <br>
+                                                    @php
+                                                        $communications = [
+                                                            ['name' => 'Téléphone', 'alias' => 'telephone'],
+                                                            ['name' => 'E-mail', 'alias' => 'email'],
+                                                            [
+                                                                'name' => 'Visio-conférences',
+                                                                'alias' => 'visio_conference',
+                                                            ],
+                                                        ];
+                                                    @endphp
+                                                    <div class="row">
+                                                        @foreach ($communications as $item)
+                                                            <div class="col-auto">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="communication_{{ $item['alias'] }}"
+                                                                        name="communication[]"
+                                                                        {{ isset($specification->deadline_and_budget->communication) && !is_null($specification->deadline_and_budget->communication) && in_array($item['name'], $specification->deadline_and_budget->communication) ? 'checked' : '' }}
+                                                                        value="{{ $item['name'] }}">
+                                                                    <label class="form-check-label"
+                                                                        for="communication_{{ $item['alias'] }}"">
+                                                                        {{ $item['name'] }}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row">
 
-                                              <div class="col-md-12 mb-3">
-                                                  <div class="form-group">
-                                                      <label class="form-label">Délais : <span
-                                                              class="text-danger">*</span></label>
-                                                      <input type="text" class="form-control" id="delais"
-                                                          name="deadline" placeholder="Délais"
-                                                          value="{{ isset($specification->deadline_and_budget->deadline) ? $specification->deadline_and_budget->deadline : '' }}">
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-12 mb-3">
-                                                  <label class="form-label">Plage budgétaire :</label>
-                                                  <div class="row">
-                                                      <div class="col">
-                                                          <div class="form-group">
-                                                              <label class="form-label">Budget minimum :</label>
-                                                              <div class="input-group input-group-merge">
-                                                                  <span class="input-group-text">€</span>
-                                                                  <input type="number" class="form-control"
-                                                                      placeholder="00" id="budget_from"
-                                                                      value="{{ isset($specification->deadline_and_budget->budget_from) ? $specification->deadline_and_budget->budget_from : '' }}"
-                                                                      name="budget_from" />
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                      <div class="col-1 d-flex align-items-center justify-content-center">
-                                                          <i class="m-auto mb-2 ti ti-arrow-big-right-filled"></i>
-                                                      </div>
-                                                      <div class="col">
-                                                          <div class="form-group">
-                                                              <label class="form-label">Budget maximum :</label>
-                                                              <div class="input-group input-group-merge">
-                                                                  <span class="input-group-text">€</span>
-                                                                  <input type="number" class="form-control"
-                                                                      placeholder="00" id="budget_to"
-                                                                      value="{{ isset($specification->deadline_and_budget->budget_to) ? $specification->deadline_and_budget->budget_to : '' }}"
-                                                                      name="budget_to" />
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
+                                                <div class="col-md-12 mb-3">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Délais : <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" class="form-control" id="delais"
+                                                            name="deadline" placeholder="Délais"
+                                                            value="{{ isset($specification->deadline_and_budget->deadline) ? $specification->deadline_and_budget->deadline : '' }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-3">
+                                                    <label class="form-label">Plage budgétaire :</label>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <label class="form-label">Budget minimum :</label>
+                                                                <div class="input-group input-group-merge">
+                                                                    <span class="input-group-text">€</span>
+                                                                    <input type="number" class="form-control"
+                                                                        placeholder="00" id="budget_from"
+                                                                        value="{{ isset($specification->deadline_and_budget->budget_from) ? $specification->deadline_and_budget->budget_from : '' }}"
+                                                                        name="budget_from" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="col-1 d-flex align-items-center justify-content-center">
+                                                            <i class="m-auto mb-2 ti ti-arrow-big-right-filled"></i>
+                                                        </div>
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <label class="form-label">Budget maximum :</label>
+                                                                <div class="input-group input-group-merge">
+                                                                    <span class="input-group-text">€</span>
+                                                                    <input type="number" class="form-control"
+                                                                        placeholder="00" id="budget_to"
+                                                                        value="{{ isset($specification->deadline_and_budget->budget_to) ? $specification->deadline_and_budget->budget_to : '' }}"
+                                                                        name="budget_to" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                  <hr class="mb-3">
+                                    <hr class="mb-3">
 
-                                  <div class="col-12">
-                                      <div class="row">
-                                          <input type="number" name="facturation_id" id="facturation_id" readonly
-                                              class="d-none"
-                                              value="{{ isset($specification->facturation->id) ? $specification->facturation->id : '' }}">
-                                          <div class="col-12">
-                                              <div class="table-responsive text-nowrap">
-                                                  <table class="table table table-bordered">
-                                                      <thead>
-                                                          <tr>
-                                                              <td rowspan="15"
-                                                                  style="text-align: center; vertical-align: middle;">
-                                                                  Délais
-                                                                  &
-                                                                  Budgétisation</td>
-                                                              <td>Désignation</td>
-                                                              <td>Nombre de jours</td>
-                                                              <td>Montant unitaire</td>
-                                                              <td>Total HT</td>
-                                                          </tr>
-                                                          @php
-                                                              $budgetisation = [
-                                                                  [
-                                                                      'title' => "Installation de l'environnement",
-                                                                      'alias' => 'installation-environnement',
-                                                                      'name' => 'installation_environment',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Intégration de la structure',
-                                                                      'alias' => 'integration-structure',
-                                                                      'name' => 'integration_structure',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Ebauche Des Textes et traductions',
-                                                                      'alias' => 'ebauche-textes-traductions',
-                                                                      'name' => 'draft_texts_translations',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Maquettage graphique',
-                                                                      'alias' => 'maquettage-graphique',
-                                                                      'name' => 'graphic_modeling',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Développement & intégrations web',
-                                                                      'alias' => 'developpement-integrations-web',
-                                                                      'name' => 'web_development_integrations',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Intégration des textes et images',
-                                                                      'alias' => 'integration-textes-images',
-                                                                      'name' => 'text_image_integration',
-                                                                  ],
-                                                                  [
-                                                                      'title' =>
-                                                                          "Intégration d'autres pages (contact, catégories ...etc.)",
-                                                                      'alias' => 'integration-autres-pages',
-                                                                      'name' => 'other_pages_integration',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Optimisation de la version Mobile',
-                                                                      'alias' => 'optimisation-version-mobile',
-                                                                      'name' => 'mobile_version_optimization',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Intégration du multilingue',
-                                                                      'alias' => 'integration-multilingue',
-                                                                      'name' => 'multilingual_integration',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Optimisation Pour SEO',
-                                                                      'alias' => 'optimisation-seo',
-                                                                      'name' => 'seo_optimisation',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Suivi et tests',
-                                                                      'alias' => 'suivi-tests',
-                                                                      'name' => 'testing_tracking',
-                                                                  ],
-                                                                  [
-                                                                      'title' => 'Gestion de projets',
-                                                                      'alias' => 'gestion-projet',
-                                                                      'name' => 'project_management',
-                                                                  ],
-                                                              ];
-                                                          @endphp
-                                                          @foreach ($budgetisation as $item)
-                                                              <tr>
-                                                                  <td class="p-0 px-3 py-1">{{ $item['title'] }}</td>
-                                                                  <td class="p-0 px-3 py-1">
-                                                                      <input type="number"
-                                                                          class="form-control form-control h-100"
-                                                                          placeholder="00" id="nj-{{ $item['alias'] }}"
-                                                                          value="{{ isset($specification->facturation->{'number_of_days_' . $item['name']}) ? $specification->facturation->{'number_of_days_' . $item['name']} : '' }}"
-                                                                          name="number_of_days_{{ $item['name'] }}">
-                                                                  </td>
-                                                                  <td class="p-0 px-3 py-1">
-                                                                      <div class="input-group input-group input-group-merge">
-                                                                          <span class="input-group-text py-0">€</span>
-                                                                          <input type="number" class="form-control py-1"
-                                                                              placeholder="00"
-                                                                              id="mu-{{ $item['alias'] }}"
-                                                                              value="{{ isset($specification->facturation->{'unit_amount_' . $item['name']}) ? $specification->facturation->{'unit_amount_' . $item['name']} : '' }}"
-                                                                              name="unit_amount_{{ $item['name'] }}" />
-                                                                      </div>
-                                                                  </td>
-                                                                  <td class="p-0 px-3 py-1">
-                                                                      <div class="input-group input-group input-group-merge">
-                                                                          <span class="input-group-text py-0">€</span>
-                                                                          <input type="number" class="form-control py-1"
-                                                                              placeholder="00" readonly
-                                                                              id="total-{{ $item['alias'] }}"
-                                                                              value="{{ isset($specification->facturation->{'total_' . $item['name']}) ? $specification->facturation->{'total_' . $item['name']} : '' }}"
-                                                                              name="total_{{ $item['name'] }}" />
-                                                                      </div>
-                                                                  </td>
-                                                              </tr>
-                                                          @endforeach
-                                                          <tr>
-                                                              <td class="p-0 px-3 py-1">Remise exceptionnelle </td>
-                                                              <td class="p-0 px-3 py-1" colspan="3">
-                                                                  <div class="input-group input-group-merge">
-                                                                      <span class="input-group-text">€</span>
-                                                                      <input type="number" class="form-control"
-                                                                          placeholder="00" id="remise-exceptionnelle"
-                                                                          value="{{ isset($specification->facturation->exceptional_discount) ? $specification->facturation->exceptional_discount : '' }}"
-                                                                          name="exceptional_discount" />
-                                                                  </div>
-                                                              </td>
-                                                          </tr>
-                                                          <tr>
-                                                              <td class="p-0 px-3 py-1">Total (HT) </td>
-                                                              <td class="p-0 px-3 py-1" colspan="3">
-                                                                  <div class="input-group input-group-merge">
-                                                                      <span class="input-group-text">€</span>
-                                                                      <input type="number" class="form-control"
-                                                                          placeholder="00" readonly id="total-total"
-                                                                          value="{{ isset($specification->facturation->total) ? $specification->facturation->total : '' }}"
-                                                                          name="total" />
-                                                                  </div>
-                                                              </td>
-                                                          </tr>
-                                                      </thead>
-                                                  </table>
-                                              </div>
-                                          </div>
-                                          <hr class="my-5">
-                                          <div id="pourcentages">
-                                              @php
-                                                  $index = 1;
-                                              @endphp
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <input type="number" name="facturation_id" id="facturation_id" readonly
+                                                class="d-none"
+                                                value="{{ isset($specification->facturation->id) ? $specification->facturation->id : '' }}">
+                                            <div class="col-12">
+                                                <div class="table-responsive text-nowrap">
+                                                    <table class="table table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <td rowspan="15"
+                                                                    style="text-align: center; vertical-align: middle;">
+                                                                    Délais
+                                                                    &
+                                                                    Budgétisation</td>
+                                                                <td>Désignation</td>
+                                                                <td>Nombre de jours</td>
+                                                                <td>Montant unitaire</td>
+                                                                <td>Total HT</td>
+                                                            </tr>
+                                                            @php
+                                                                $budgetisation = [
+                                                                    [
+                                                                        'title' => "Installation de l'environnement",
+                                                                        'alias' => 'installation-environnement',
+                                                                        'name' => 'installation_environment',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Intégration de la structure',
+                                                                        'alias' => 'integration-structure',
+                                                                        'name' => 'integration_structure',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Ebauche Des Textes et traductions',
+                                                                        'alias' => 'ebauche-textes-traductions',
+                                                                        'name' => 'draft_texts_translations',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Maquettage graphique',
+                                                                        'alias' => 'maquettage-graphique',
+                                                                        'name' => 'graphic_modeling',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Développement & intégrations web',
+                                                                        'alias' => 'developpement-integrations-web',
+                                                                        'name' => 'web_development_integrations',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Intégration des textes et images',
+                                                                        'alias' => 'integration-textes-images',
+                                                                        'name' => 'text_image_integration',
+                                                                    ],
+                                                                    [
+                                                                        'title' =>
+                                                                            "Intégration d'autres pages (contact, catégories ...etc.)",
+                                                                        'alias' => 'integration-autres-pages',
+                                                                        'name' => 'other_pages_integration',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Optimisation de la version Mobile',
+                                                                        'alias' => 'optimisation-version-mobile',
+                                                                        'name' => 'mobile_version_optimization',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Intégration du multilingue',
+                                                                        'alias' => 'integration-multilingue',
+                                                                        'name' => 'multilingual_integration',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Optimisation Pour SEO',
+                                                                        'alias' => 'optimisation-seo',
+                                                                        'name' => 'seo_optimisation',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Suivi et tests',
+                                                                        'alias' => 'suivi-tests',
+                                                                        'name' => 'testing_tracking',
+                                                                    ],
+                                                                    [
+                                                                        'title' => 'Gestion de projets',
+                                                                        'alias' => 'gestion-projet',
+                                                                        'name' => 'project_management',
+                                                                    ],
+                                                                ];
+                                                            @endphp
+                                                            @foreach ($budgetisation as $item)
+                                                                <tr>
+                                                                    <td class="p-0 px-3 py-1">{{ $item['title'] }}</td>
+                                                                    <td class="p-0 px-3 py-1">
+                                                                        <input type="number"
+                                                                            class="form-control form-control h-100"
+                                                                            placeholder="00"
+                                                                            id="nj-{{ $item['alias'] }}"
+                                                                            value="{{ isset($specification->facturation->{'number_of_days_' . $item['name']}) ? $specification->facturation->{'number_of_days_' . $item['name']} : '' }}"
+                                                                            name="number_of_days_{{ $item['name'] }}">
+                                                                    </td>
+                                                                    <td class="p-0 px-3 py-1">
+                                                                        <div
+                                                                            class="input-group input-group input-group-merge">
+                                                                            <span class="input-group-text py-0">€</span>
+                                                                            <input type="number"
+                                                                                class="form-control py-1" placeholder="00"
+                                                                                id="mu-{{ $item['alias'] }}"
+                                                                                value="{{ isset($specification->facturation->{'unit_amount_' . $item['name']}) ? $specification->facturation->{'unit_amount_' . $item['name']} : '' }}"
+                                                                                name="unit_amount_{{ $item['name'] }}" />
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="p-0 px-3 py-1">
+                                                                        <div
+                                                                            class="input-group input-group input-group-merge">
+                                                                            <span class="input-group-text py-0">€</span>
+                                                                            <input type="number"
+                                                                                class="form-control py-1" placeholder="00"
+                                                                                readonly id="total-{{ $item['alias'] }}"
+                                                                                value="{{ isset($specification->facturation->{'total_' . $item['name']}) ? $specification->facturation->{'total_' . $item['name']} : '' }}"
+                                                                                name="total_{{ $item['name'] }}" />
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                            <tr>
+                                                                <td class="p-0 px-3 py-1">Remise exceptionnelle </td>
+                                                                <td class="p-0 px-3 py-1" colspan="3">
+                                                                    <div class="input-group input-group-merge">
+                                                                        <span class="input-group-text">€</span>
+                                                                        <input type="number" class="form-control"
+                                                                            placeholder="00" id="remise-exceptionnelle"
+                                                                            value="{{ isset($specification->facturation->exceptional_discount) ? $specification->facturation->exceptional_discount : '' }}"
+                                                                            name="exceptional_discount" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="p-0 px-3 py-1">Total (HT) </td>
+                                                                <td class="p-0 px-3 py-1" colspan="3">
+                                                                    <div class="input-group input-group-merge">
+                                                                        <span class="input-group-text">€</span>
+                                                                        <input type="number" class="form-control"
+                                                                            placeholder="00" readonly id="total-total"
+                                                                            value="{{ isset($specification->facturation->total) ? $specification->facturation->total : '' }}"
+                                                                            name="total" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <hr class="my-5">
+                                            <div id="pourcentages">
+                                                @php
+                                                    $index = 1;
+                                                @endphp
 
-                                              @for ($i = 1; $i <= 10; $i++)
-                                                  <div class="row  @if (
-                                                      $index > 1 ||
-                                                          (isset($specification->facturation->{'installment_' . $index . '_title'}) &&
-                                                              $specification->facturation->{'installment_' . $index . '_title'} == null)) d-none @endif"
-                                                      id="pourcentage-{{ $index }}">
-                                                      <div
-                                                          class="border border-bottom-0 border-dark border-start-0 border-top-0 col-7 pb-4">
-                                                          <div class="row">
-                                                              <div class="col-2 mt-auto">
-                                                                  <div class="form-group">
-                                                                      <label class="form-label"
-                                                                          id="label-pourcentage-operation-{{ $index }}"
-                                                                          for="pourcentage-operation-{{ $index }}">
-                                                                          {{-- {{ $specification->facturation->installment_1_title }} --}}
-                                                                          {{ isset($specification->facturation->{'installment_' . $index . '_title'}) ? $specification->facturation->{'installment_' . $index . '_title'} : '' }}
-                                                                      </label>
-                                                                      <div class="input-group input-group-merge">
-                                                                          <span class="input-group-text">%</span>
-                                                                          <input type="number" class="form-control"
-                                                                              name="installment_{{ $index }}_percentage"
-                                                                              id="pourcentage-operation-{{ $index }}"
-                                                                              {{-- @if ($index == 1) value="20" @endif --}}
-                                                                              value="{{ isset($specification->facturation->{'installment_' . $index . '_percentage'}) ? $specification->facturation->{'installment_' . $index . '_percentage'} : '' }}"
-                                                                              placeholder="00" />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              <div class="col-3 mt-auto">
-                                                                  <div class="form-group">
-                                                                      <label class="form-label"
-                                                                          id="label-pourcentage-value-{{ $index }}"
-                                                                          for="pourcentage-value-{{ $index }}">
-                                                                          Montant
-                                                                      </label>
-                                                                      <div class="input-group input-group-merge">
-                                                                          <span class="input-group-text">€</span>
-                                                                          <input type="number" class="form-control"
-                                                                              name="installment_{{ $index }}_amount"
-                                                                              id="pourcentage-value-{{ $index }}"
-                                                                              value="{{ isset($specification->facturation->{'installment_' . $index . '_amount'}) ? $specification->facturation->{'installment_' . $index . '_amount'} : '' }}"
-                                                                              placeholder="00" readonly />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              <div class="col-5 mt-auto">
-                                                                  <label class="form-label"
-                                                                      for="titre-operation-{{ $index }}">
-                                                                      Titre de l'operation:
-                                                                  </label>
-                                                                  <input type="text" class="form-control"
-                                                                      placeholder="Titre de l'operation"
-                                                                      name="installment_{{ $index }}_title"
-                                                                      id="titre-operation-{{ $index }}"
-                                                                      @if ($index == 1) readonly
+                                                @for ($i = 1; $i <= 10; $i++)
+                                                    <div class="row  @if (
+                                                        $index > 1 ||
+                                                            (isset($specification->facturation->{'installment_' . $index . '_title'}) &&
+                                                                $specification->facturation->{'installment_' . $index . '_title'} == null)) d-none @endif"
+                                                        id="pourcentage-{{ $index }}">
+                                                        <div
+                                                            class="border border-bottom-0 border-dark border-start-0 border-top-0 col-7 pb-4">
+                                                            <div class="row">
+                                                                <div class="col-2 mt-auto">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label"
+                                                                            id="label-pourcentage-operation-{{ $index }}"
+                                                                            for="pourcentage-operation-{{ $index }}">
+                                                                            {{-- {{ $specification->facturation->installment_1_title }} --}}
+                                                                            {{ isset($specification->facturation->{'installment_' . $index . '_title'}) ? $specification->facturation->{'installment_' . $index . '_title'} : '' }}
+                                                                        </label>
+                                                                        <div class="input-group input-group-merge">
+                                                                            <span class="input-group-text">%</span>
+                                                                            <input type="number" class="form-control"
+                                                                                name="installment_{{ $index }}_percentage"
+                                                                                id="pourcentage-operation-{{ $index }}"
+                                                                                {{-- @if ($index == 1) value="20" @endif --}}
+                                                                                value="{{ isset($specification->facturation->{'installment_' . $index . '_percentage'}) ? $specification->facturation->{'installment_' . $index . '_percentage'} : '' }}"
+                                                                                placeholder="00" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-3 mt-auto">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label"
+                                                                            id="label-pourcentage-value-{{ $index }}"
+                                                                            for="pourcentage-value-{{ $index }}">
+                                                                            Montant
+                                                                        </label>
+                                                                        <div class="input-group input-group-merge">
+                                                                            <span class="input-group-text">€</span>
+                                                                            <input type="number" class="form-control"
+                                                                                name="installment_{{ $index }}_amount"
+                                                                                id="pourcentage-value-{{ $index }}"
+                                                                                value="{{ isset($specification->facturation->{'installment_' . $index . '_amount'}) ? $specification->facturation->{'installment_' . $index . '_amount'} : '' }}"
+                                                                                placeholder="00" readonly />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-5 mt-auto">
+                                                                    <label class="form-label"
+                                                                        for="titre-operation-{{ $index }}">
+                                                                        Titre de l'operation:
+                                                                    </label>
+                                                                    <input type="text" class="form-control"
+                                                                        placeholder="Titre de l'operation"
+                                                                        name="installment_{{ $index }}_title"
+                                                                        id="titre-operation-{{ $index }}"
+                                                                        @if ($index == 1) readonly
                                                                           value="{{ isset($specification->facturation->{'installment_' . $index . '_title'}) ? $specification->facturation->{'installment_' . $index . '_title'} : '' }}"
                                                                           title="Pourcentage à payer après la signature"
                                                                           value="Pourcentage à payer après la signature" @endif>
-                                                              </div>
-                                                              {{-- <div class="col-1 mt-auto">
+                                                                </div>
+                                                                {{-- <div class="col-1 mt-auto">
                                                                       <button type="button" data-bs-toggle="tooltip"
                                                                           data-bs-placement="top" title="Confirmer"
                                                                           class="btn btn-icon btn-label-success waves-effect waves-light"
@@ -2183,103 +2220,105 @@ site internet sur le cahier de charge de son site internet`
                                                                           <i class="ti ti-check"></i>
                                                                       </button>
                                                                   </div> --}}
-                                                              <div class="col-1 mt-auto">
-                                                                  @if ($index < 10)
-                                                                      <button type="button" data-bs-toggle="tooltip"
-                                                                          data-bs-placement="top" title="Ajouter"
-                                                                          class="btn btn-icon btn-label-primary waves-effect waves-light"
-                                                                          id="plus-btn-{{ $index }}">
-                                                                          <i class="ti ti-plus"></i>
-                                                                      </button>
-                                                                  @endif
-                                                              </div>
-                                                              <div class="col-1 mt-auto">
-                                                                  @if ($index > 1)
-                                                                      <button type="button" data-bs-toggle="tooltip"
-                                                                          data-bs-placement="top" title="Supprimer"
-                                                                          class="btn btn-icon  btn-label-danger waves-effect waves-light"
-                                                                          id="delete-btn-{{ $index }}">
-                                                                          <i class="ti ti-trash"></i>
-                                                                      </button>
-                                                                  @endif
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                      @if ($index == 1)
-                                                          <div class="col-5">
-                                                              <div class="form-group">
-                                                                  <label class="form-label fs-4"> <b> Le reste :</b>
-                                                                  </label>
-                                                                  <div class="input-group input-group-merge">
-                                                                      <span class="input-group-text">€</span>
-                                                                      <input type="number" class="form-control"
-                                                                          placeholder="00" id="reste"
-                                                                          value="{{ isset($specification->facturation->rest) ? $specification->facturation->rest : '' }}"
-                                                                          name="rest" />
-                                                                  </div>
-                                                              </div>
-                                                              <hr class="my-3">
-                                                              <div class="row">
+                                                                <div class="col-1 mt-auto">
+                                                                    @if ($index < 10)
+                                                                        <button type="button" data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Ajouter"
+                                                                            class="btn btn-icon btn-label-primary waves-effect waves-light"
+                                                                            id="plus-btn-{{ $index }}">
+                                                                            <i class="ti ti-plus"></i>
+                                                                        </button>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col-1 mt-auto">
+                                                                    @if ($index > 1)
+                                                                        <button type="button" data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Supprimer"
+                                                                            class="btn btn-icon  btn-label-danger waves-effect waves-light"
+                                                                            id="delete-btn-{{ $index }}">
+                                                                            <i class="ti ti-trash"></i>
+                                                                        </button>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @if ($index == 1)
+                                                            <div class="col-5">
+                                                                <div class="form-group">
+                                                                    <label class="form-label fs-4"> <b> Le reste :</b>
+                                                                    </label>
+                                                                    <div class="input-group input-group-merge">
+                                                                        <span class="input-group-text">€</span>
+                                                                        <input type="number" class="form-control"
+                                                                            placeholder="00" id="reste"
+                                                                            value="{{ isset($specification->facturation->rest) ? $specification->facturation->rest : '' }}"
+                                                                            name="rest" />
+                                                                    </div>
+                                                                </div>
+                                                                <hr class="my-3">
+                                                                <div class="row">
 
-                                                                  <div class="col-6 mb-3 mt-auto">
-                                                                      <div class="form-group">
-                                                                          <label class="form-label fs-4"
-                                                                              id="label-pourcentage-operation-maintenance"
-                                                                              for="pourcentage-operation-maintenance">
-                                                                              <b> Maintenance :</b>
-                                                                          </label>
-                                                                          <div class="input-group input-group-merge">
-                                                                              <span class="input-group-text">%</span>
-                                                                              <input type="number" class="form-control"
-                                                                                  id="pourcentage-operation-maintenance"
-                                                                                  name="maintenance_percentage"
-                                                                                  value="{{ isset($specification->facturation->maintenance_percentage) ? $specification->facturation->maintenance_percentage : '' }}"
-                                                                                  placeholder="00" value="20" />
-                                                                          </div>
-                                                                      </div>
-                                                                  </div>
-                                                                  <div class="col-6 mb-3 mt-auto">
-                                                                      <div class="form-group">
+                                                                    <div class="col-6 mb-3 mt-auto">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label fs-4"
+                                                                                id="label-pourcentage-operation-maintenance"
+                                                                                for="pourcentage-operation-maintenance">
+                                                                                <b> Maintenance :</b>
+                                                                            </label>
+                                                                            <div class="input-group input-group-merge">
+                                                                                <span class="input-group-text">%</span>
+                                                                                <input type="number"
+                                                                                    class="form-control"
+                                                                                    id="pourcentage-operation-maintenance"
+                                                                                    name="maintenance_percentage"
+                                                                                    value="{{ isset($specification->facturation->maintenance_percentage) ? $specification->facturation->maintenance_percentage : '' }}"
+                                                                                    placeholder="00" value="20" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-6 mb-3 mt-auto">
+                                                                        <div class="form-group">
 
-                                                                          <div class="input-group input-group-merge">
-                                                                              <span class="input-group-text">€</span>
-                                                                              <input type="number" class="form-control"
-                                                                                  id="pourcentage-value-maintenance"
-                                                                                  name="maintenance_amount"
-                                                                                  value="{{ isset($specification->facturation->maintenance_amount) ? $specification->facturation->maintenance_amount : '' }}"
-                                                                                  placeholder="00" value="20"
-                                                                                  readonly />
-                                                                          </div>
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                          </div>
-                                                      @endif
-                                                  </div>
-                                                  @php
-                                                      $index++;
-                                                  @endphp
-                                              @endfor
-                                          </div>
+                                                                            <div class="input-group input-group-merge">
+                                                                                <span class="input-group-text">€</span>
+                                                                                <input type="number"
+                                                                                    class="form-control"
+                                                                                    id="pourcentage-value-maintenance"
+                                                                                    name="maintenance_amount"
+                                                                                    value="{{ isset($specification->facturation->maintenance_amount) ? $specification->facturation->maintenance_amount : '' }}"
+                                                                                    placeholder="00" value="20"
+                                                                                    readonly />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    @php
+                                                        $index++;
+                                                    @endphp
+                                                @endfor
+                                            </div>
 
-                                      </div>
-                                  </div>
+                                        </div>
+                                    </div>
 
-                                  <div class="col-12 d-flex justify-content-between">
-                                      <button type="button" class="btn btn-label-secondary btn-prev"> <i
-                                              class="ti ti-arrow-left me-sm-1 me-0"></i>
-                                          <span class="align-middle d-sm-inline-block d-none">Précédent</span>
-                                      </button>
-                                      <button type="button" class="btn btn-primary btn-next btn-submit"
-                                          id="next-step-5">
-                                          <span>
-                                              Suivant
-                                          </span>
-                                          <i class="ti ti-arrow-right" id="icon-next-step-5"></i>
-                                      </button>
-                                  </div>
-                              </div>
-                          </form>
+                                    <div class="col-12 d-flex justify-content-between">
+                                        <button type="button" class="btn btn-label-secondary btn-prev"> <i
+                                                class="ti ti-arrow-left me-sm-1 me-0"></i>
+                                            <span class="align-middle d-sm-inline-block d-none">Précédent</span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-next btn-submit"
+                                            id="next-step-5">
+                                            <span>
+                                                Suivant
+                                            </span>
+                                            <i class="ti ti-arrow-right" id="icon-next-step-5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <!-- 6 -->
                         <div id="step-6-validation" class="content">
@@ -2307,6 +2346,26 @@ site internet sur le cahier de charge de son site internet`
                                         <span class="ti ti-checks text-primary fs-1"></span>
                                     </p>
                                     <h5 class="text-primary text-center mt-5 mb-2">Votre cahier des charges est prêt</h5>
+                                </div>
+
+                                <div class="col-12 mt-5 mb-2 d-none" id="spec-failed">
+                                    <p class="text-center">
+                                        <span class="ti ti-bug text-danger fs-1"></span>
+                                    </p>
+                                    <h5 class="text-danger text-center mt-5 mb-2">
+                                        Une erreur s'est produite lors de la génération de texte avec ChatGPT.
+                                        <br>
+                                        Merci de vérifier votre quota et régénérer les textes à partir
+                                        <br>
+                                        de <a href="/specifications" class="text-danger text-decoration-underline"> la liste de
+                                            cahiers des charges.</a>
+                                        <br>
+                                        <br>
+                                        <a href="/specifications" class="btn btn-label-primary text-primary mx-1"
+                                            id="spec-button-liste">
+                                            <span class="ti-xs ti ti-list me-1"></span>Liste des cahiers des charges
+                                        </a>
+                                    </h5>
                                 </div>
 
                                 <div class="col-12 d-flex justify-content-center my-5 d-none" id="spec-button">

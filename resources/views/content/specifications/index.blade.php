@@ -21,6 +21,10 @@
             animation: rotate 2s linear infinite;
         }
 
+        .hidden-button {
+            display: none !important;
+        }
+
         @keyframes rotate {
             from {
                 transform: rotate(0deg);
@@ -88,12 +92,345 @@
                 ],
             });
         });
+
+        $(document).on('click', '.rechat', async function() {
+
+            Swal.fire({
+                title: 'Génération de texte en cours',
+                html: 'Merci de patienter un petit moment. <br/>Veuillez ne pas actualiser la page tant que les textes sont en cours de génération.',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                showConfirmButton: true,
+                allowEscapeKey: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                    // Hide the buttons
+                    Swal.getConfirmButton().classList.remove('btn');
+                    Swal.getConfirmButton().classList.add('hidden-button');
+                    Swal.getCancelButton().classList.remove('btn');
+                    Swal.getCancelButton().classList.add('hidden-button');
+                    Swal.getDenyButton().classList.remove('btn');
+                    Swal.getDenyButton().classList.add('hidden-button');
+                }
+            });
+
+            $(this).addClass('disabled').find('i').addClass('rotate');
+
+            try {
+                var specId = $(this).data('spec-id');
+                var response = await $.ajax({
+                    url: '/specifications/' + specId + '/edit',
+                    method: 'GET',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                    }
+                });
+                console.log('Specification response:', response); // Log de la réponse de la spécification
+
+                let {
+                    id,
+
+                    prompt_description,
+                    iatext_description,
+
+                    prompt_services_products,
+                    iatext_services_products,
+
+                    prompt_main_activities,
+                    iatext_main_activities,
+
+                    prompt_target_audience,
+                    iatext_target_audience,
+
+                } = response.specification;
+
+                if (prompt_description && (!iatext_description || iatext_description == 'error')) {
+                    let descriptionResponse = await makeAjaxRequest('{{ route('reAskToChatGpt') }}', 'GET', {
+                        prompt: prompt_description,
+                        type: 'iatext_description',
+                        step: 1,
+                        id
+                    });
+                    console.log('Prompt description response:', descriptionResponse);
+                }
+
+                if (prompt_main_activities && (!iatext_main_activities || iatext_main_activities == 'error')) {
+                    let mainActivitiesResponse = await makeAjaxRequest('{{ route('reAskToChatGpt') }}',
+                        'GET', {
+                            prompt: prompt_main_activities,
+                            type: 'iatext_main_activities',
+                            step: 1,
+                            id
+                        });
+                    console.log('Main activities response:', mainActivitiesResponse);
+                }
+
+                if (prompt_services_products && (!iatext_services_products || iatext_services_products ==
+                        'error')) {
+                    let servicesProductsResponse = await makeAjaxRequest('{{ route('reAskToChatGpt') }}',
+                        'GET', {
+                            prompt: prompt_services_products,
+                            type: 'iatext_services_products',
+                            step: 1,
+                            id
+                        });
+                    console.log('Services products response:', servicesProductsResponse);
+                }
+
+                if (prompt_target_audience && (!iatext_target_audience || iatext_target_audience == 'error')) {
+                    let targetAudienceResponse = await makeAjaxRequest('{{ route('reAskToChatGpt') }}',
+                        'GET', {
+                            prompt: prompt_target_audience,
+                            type: 'iatext_target_audience',
+                            step: 1,
+                            id
+                        });
+                    console.log('Target audience response:', targetAudienceResponse);
+                }
+
+                ////
+                let {
+                    id: id_objectif_site,
+
+                    prompt_iatext_target_keywords,
+                    iatext_target_keywords,
+
+                    prompt_expected_client_objectives,
+                    iatext_expected_client_objectives,
+
+                    prompt_iatext_menu,
+                    iatext_menu,
+
+                    prompt_iatext_techniques_specs,
+                    iatext_techniques_specs,
+
+                } = response.specification.objectif_site;
+
+                if (prompt_iatext_target_keywords && (!iatext_target_keywords || iatext_target_keywords ==
+                        'error')) {
+                    let iatext_target_keywords_response = await makeAjaxRequest(
+                        '{{ route('reAskToChatGpt') }}', 'GET', {
+                            prompt: prompt_iatext_target_keywords,
+                            type: 'iatext_target_keywords',
+                            step: 2,
+                            id_objectif_site
+                        });
+                    console.log(iatext_target_keywords_response);
+                }
+
+                if (prompt_expected_client_objectives && (!iatext_expected_client_objectives ||
+                        iatext_expected_client_objectives == 'error')) {
+                    let iatext_expected_client_objectives_response = await makeAjaxRequest(
+                        '{{ route('reAskToChatGpt') }}', 'GET', {
+                            prompt: prompt_expected_client_objectives,
+                            type: 'iatext_expected_client_objectives',
+                            step: 2,
+                            id_objectif_site
+                        });
+                    console.log(iatext_expected_client_objectives_response);
+                }
+
+                if (prompt_iatext_menu && (!iatext_menu || iatext_menu == 'error')) {
+                    let iatext_menu_response = await makeAjaxRequest(
+                        '{{ route('reAskToChatGpt') }}', 'GET', {
+                            prompt: prompt_iatext_menu,
+                            type: 'iatext_menu',
+                            step: 2,
+                            id_objectif_site
+                        });
+                    console.log(iatext_menu_response);
+                }
+
+                if (prompt_iatext_techniques_specs && (!iatext_techniques_specs || iatext_techniques_specs ==
+                        'error')) {
+                    let iatext_techniques_specs_response = await makeAjaxRequest(
+                        '{{ route('reAskToChatGpt') }}', 'GET', {
+                            prompt: prompt_iatext_techniques_specs,
+                            type: 'iatext_techniques_specs',
+                            step: 2,
+                            id_objectif_site
+                        });
+                    console.log(iatext_techniques_specs_response);
+                }
+
+                //////
+                let {
+                    id: id_existing_analysis,
+
+                    prompt_iatext_competitors,
+                    iatext_competitors,
+
+                    prompt_iatext_constraints,
+                    iatext_constraints
+
+                } = response.specification.existing_analysis;
+
+                if (prompt_iatext_competitors && (!iatext_competitors || iatext_competitors == 'error')) {
+                    let iatext_competitors_response = await makeAjaxRequest(
+                        '{{ route('reAskToChatGpt') }}', 'GET', {
+                            prompt: prompt_iatext_competitors,
+                            type: 'iatext_competitors',
+                            step: 3,
+                            id_existing_analysis
+                        });
+                    console.log(iatext_competitors_response);
+                }
+
+                if (prompt_iatext_constraints && (!iatext_constraints || iatext_constraints == 'error')) {
+                    let iatext_constraints_response = await makeAjaxRequest(
+                        '{{ route('reAskToChatGpt') }}', 'GET', {
+                            prompt: prompt_iatext_constraints,
+                            type: 'iatext_constraints',
+                            step: 3,
+                            id_existing_analysis
+                        });
+                    console.log(iatext_constraints_response);
+                }
+
+                let {
+                    id: id_design_content,
+
+                    prompt_iatext_exemples_sites,
+                    iatext_exemples_sites
+
+                } = response.specification.design_content;
+                console.log('prompt_iatext_exemples_sites', prompt_iatext_exemples_sites);
+                console.log(id_design_content);
+                if (prompt_iatext_exemples_sites && (!iatext_exemples_sites || iatext_exemples_sites ==
+                    'error')) {
+                    let iatext_exemples_sites_response = await makeAjaxRequest(
+                        '{{ route('reAskToChatGpt') }}', 'GET', {
+                            prompt: prompt_iatext_exemples_sites,
+                            type: 'iatext_exemples_sites',
+                            step: 4,
+                            id_design_content
+                        });
+                    console.log(iatext_exemples_sites_response);
+                }
+
+                var table = $('#table-datatable').DataTable();
+
+                // Reload the DataTable with the same status
+                $(this).removeClass('disabled').find('i').removeClass('rotate');
+                table.ajax.reload(null, false);
+                Swal.close();
+
+                Swal.fire({
+                    title: 'Succès',
+                    text: 'L\'opération a été effectuée avec succès.',
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-success waves-effect waves-light'
+                    },
+                    willOpen: () => {
+                        Swal.getCancelButton().classList.remove('btn');
+                        Swal.getCancelButton().classList.add('hidden-button');
+                        Swal.getDenyButton().classList.remove('btn');
+                        Swal.getDenyButton().classList.add('hidden-button');
+                    }
+                });
+            } catch (error) {
+                $(this).removeClass('disabled').find('i').removeClass('rotate');
+                Swal.close();
+                Swal.fire({
+                    title: 'Erreur de génération de texte',
+                    text: "Une erreur s'est produite lors de la génération de texte avec ChatGPT. Merci de vérifier votre quota et régénérer les textes.",
+                    icon: 'error',
+                    showCancelButton: false,
+                    showDenyButton: false,
+                    showConfirmButton: true,
+                    customClass: {
+                        confirmButton: 'btn btn-danger waves-effect waves-light'
+                    },
+                    willOpen: () => {
+
+                        Swal.getCancelButton().classList.remove('btn');
+                        Swal.getCancelButton().classList.add('hidden-button');
+                        Swal.getDenyButton().classList.remove('btn');
+                        Swal.getDenyButton().classList.add('hidden-button');
+                    }
+                });
+                console.error('Error:', error); // Log des erreurs
+            }
+        });
+
+        function makeAjaxRequest(url, method, data) {
+            console.log('loading.....');
+            return $.ajax({
+                url: url,
+                method: method,
+                data: data,
+            });
+        }
+
+
+        // $(document).on('click', '.rechat', function() {
+        //     var specId = $(this).data('spec-id');
+
+        //     $.ajax({
+        //         url: '/specifications/' + specId + '/edit',
+        //         method: 'GET',
+        //         data: {
+        //             _token: '{{ csrf_token() }}',
+        //         },
+        //         success: function(response) {
+        //             console.log('Specification response:',
+        //             response); // Log de la réponse de la spécification
+        //             let {
+        //                 prompt_description,
+        //                 prompt_services_products,
+        //                 prompt_main_activities,
+        //                 prompt_target_audience,
+        //             } = response.specification;
+
+        //             makeAjaxRequest('{{ route('reAskToChatGpt') }}', 'GET', {
+        //                     prompt: prompt_description
+        //                 })
+        //                 .then(function(response) {
+        //                     console.log('Prompt description response:',
+        //                     response); // Log de la réponse de la description de la proposition
+        //                     return makeAjaxRequest('{{ route('reAskToChatGpt') }}', 'GET', {
+        //                         prompt: prompt_services_products,
+        //                         type: ''
+        //                     });
+        //                 })
+        //                 .then(function() {
+        //                     return makeAjaxRequest('{{ route('reAskToChatGpt') }}', 'GET', {
+        //                         prompt: prompt_main_activities
+        //                     });
+        //                 })
+        //                 .then(function() {
+        //                     return makeAjaxRequest('{{ route('reAskToChatGpt') }}', 'GET', {
+        //                         prompt: prompt_target_audience
+        //                     });
+        //                 })
+        //                 .catch(function(error) {
+        //                     console.error('Error:', error); // Log des erreurs
+        //                 });
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.error('XHR Error:', xhr.responseText); // Log des erreurs XHR
+        //         }
+        //     });
+        // });
+
+        // function makeAjaxRequest(url, method, data) {
+        //     return new Promise(function(resolve, reject) {
+        //         $.ajax({
+        //             url: url,
+        //             method: method,
+        //             data: data,
+        //             success: resolve,
+        //             error: reject
+        //         });
+        //     });
+        // }
     </script>
     <script src="{{ asset('assets/js/ui-popover.js') }}"></script>
 @endsection
 
 @section('content')
-<h4 class="py-3 mb-4"><span class="text-muted fw-light">Cahier des charges/</span> Liste de cahier des charges</h4>
+    <h4 class="py-3 mb-4"><span class="text-muted fw-light">Cahier des charges/</span> Liste de cahier des charges</h4>
 
     <!-- Users List Table -->
     <div class="card">

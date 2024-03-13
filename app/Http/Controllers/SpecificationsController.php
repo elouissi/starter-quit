@@ -37,32 +37,97 @@ class SpecificationsController extends Controller
 
     return DataTables::of(Specification::query())
       ->editColumn('step', function (Specification $specification) {
+
+        $specification = Specification::findOrFail($specification->id);
+        $relationships = [];
+        if (isset($specification->objectif_site)) {
+          $relationships[] = 'objectif_site';
+        }
+        if (isset($specification->existing_analysis)) {
+          $relationships[] = 'existing_analysis';
+        }
+        if (isset($specification->design_content)) {
+          $relationships[] = 'design_content';
+        }
+        if (isset($specification->deadline_and_budget)) {
+          $relationships[] = 'deadline_and_budget';
+        }
+        if (isset($specification->facturation)) {
+          $relationships[] = 'facturation';
+        }
+        $specification = $specification->load($relationships);
+
+        $ia_error_exist =
+          ($specification->prompt_description && ($specification->iatext_description == null || $specification->iatext_description == 'error')) ||
+          ($specification->prompt_main_activities && ($specification->iatext_main_activities == null || $specification->iatext_main_activities == 'error')) ||
+          ($specification->prompt_services_products && ($specification->iatext_services_products == null || $specification->iatext_services_products == 'error')) ||
+          ($specification->prompt_target_audience && ($specification->iatext_target_audience == null || $specification->iatext_target_audience == 'error')) ||
+          ($specification->objectif_site->prompt_iatext_target_keywords && ($specification->objectif_site->iatext_target_keywords == null || $specification->objectif_site->iatext_target_keywords == 'error')) ||
+          ($specification->objectif_site->prompt_expected_client_objectives && ($specification->objectif_site->iatext_expected_client_objectives == null || $specification->objectif_site->iatext_expected_client_objectives == 'error')) ||
+          ($specification->objectif_site->prompt_iatext_techniques_specs && ($specification->objectif_site->iatext_techniques_specs == null || $specification->objectif_site->iatext_techniques_specs == 'error')) ||
+          ($specification->objectif_site->prompt_iatext_menu && ($specification->objectif_site->iatext_menu == null || $specification->objectif_site->iatext_menu == 'error')) ||
+          ($specification->existing_analysis->prompt_iatext_competitors && ($specification->existing_analysis->iatext_competitors == null || $specification->existing_analysis->iatext_competitors == 'error')) ||
+          ($specification->existing_analysis->prompt_iatext_constraints && ($specification->existing_analysis->iatext_constraints == null || $specification->existing_analysis->iatext_constraints == 'error')) ||
+          ($specification->design_content->prompt_iatext_exemples_sites && ($specification->design_content->iatext_exemples_sites == null || $specification->design_content->iatext_exemples_sites == 'error'));
+
         if ($specification->step == 1 || $specification->step == 2 || $specification->step == 3 || $specification->step == 4) {
-          return '<span class="badge rounded-pill bg-label-danger">' . $specification->step * 20 . ' %</span>';
+          return '<span class="badge rounded-pill bg-label-danger">' . $specification->step * 20 . ' % ' . '</span>';
+        } elseif (($specification->step == 5) && ($ia_error_exist)) {
+          return '<span class="badge rounded-pill bg-label-warning">Erreur d\'IA</span>';
         } elseif ($specification->step == 5) {
-          return '<span class="badge rounded-pill bg-label-success">terminé</span>';
+          return '<span class="badge rounded-pill bg-label-success">Terminé</span>';
         }
       })
-      ->addColumn('actions', function ($item) {
-        if ($item->step == 5) {
+      ->addColumn('actions', function (Specification $specification) {
+        if ($specification->step == 5) {
+
+
+          $ia_error_exist =
+          ($specification->prompt_description && ($specification->iatext_description == null || $specification->iatext_description == 'error')) ||
+          ($specification->prompt_main_activities && ($specification->iatext_main_activities == null || $specification->iatext_main_activities == 'error')) ||
+          ($specification->prompt_services_products && ($specification->iatext_services_products == null || $specification->iatext_services_products == 'error')) ||
+          ($specification->prompt_target_audience && ($specification->iatext_target_audience == null || $specification->iatext_target_audience == 'error')) ||
+          ($specification->objectif_site->prompt_iatext_target_keywords && ($specification->objectif_site->iatext_target_keywords == null || $specification->objectif_site->iatext_target_keywords == 'error')) ||
+          ($specification->objectif_site->prompt_expected_client_objectives && ($specification->objectif_site->iatext_expected_client_objectives == null || $specification->objectif_site->iatext_expected_client_objectives == 'error')) ||
+          ($specification->objectif_site->prompt_iatext_techniques_specs && ($specification->objectif_site->iatext_techniques_specs == null || $specification->objectif_site->iatext_techniques_specs == 'error')) ||
+          ($specification->objectif_site->prompt_iatext_menu && ($specification->objectif_site->iatext_menu == null || $specification->objectif_site->iatext_menu == 'error')) ||
+          ($specification->existing_analysis->prompt_iatext_competitors && ($specification->existing_analysis->iatext_competitors == null || $specification->existing_analysis->iatext_competitors == 'error')) ||
+          ($specification->existing_analysis->prompt_iatext_constraints && ($specification->existing_analysis->iatext_constraints == null || $specification->existing_analysis->iatext_constraints == 'error')) ||
+          ($specification->design_content->prompt_iatext_exemples_sites && ($specification->design_content->iatext_exemples_sites == null || $specification->design_content->iatext_exemples_sites == 'error'));
+
+          if ($ia_error_exist) {
+            return '
+                <div class="gap-1 row">
+                 <!-- <a class="btn btn-sm btn-icon btn-primary text-white" title="Voir" target="_blank" href="specifications/' . $specification->id . '" data-id="' . $specification->id . '">
+                      <i class="ti ti-eye"></i>
+                  </a>
+                  <a class="btn btn-sm btn-icon btn-primary text-white" title="Télécharger" target="_blank" href="specifications/upload/' . $specification->id . '" data-id="' . $specification->id . '">
+                      <i class="ti ti-download"></i>
+                  </a> -->
+                  <a class="btn btn-sm btn-icon btn-primary text-white" title="Modifier" target="_blank" href="specifications/' . $specification->id . '/edit">
+                      <i class="ti ti-pencil"></i>
+                  </a>
+                  <button class="btn btn-sm btn-icon btn-primary text-white rechat" title="Régénérer les textes avec ChatGPT" data-spec-id="' . $specification->id . '" target="_blank">
+                      <i class="ti ti-brand-openai"></i>
+                  </button>
+                </div> ';
+          }
           return '
-              <div class="gap-1 row">
-                <a class="btn btn-sm btn-icon btn-primary text-white" title="Voir" target="_blank" href="specifications/' . $item->id . '" data-id="' . $item->id . '">
-                    <i class="ti ti-eye"></i>
-                </a>
-                <a class="btn btn-sm btn-icon btn-primary text-white" title="Télécharger" target="_blank" href="specifications/upload/' . $item->id . '" data-id="' . $item->id . '">
-                    <i class="ti ti-download"></i>
-                </a>
-                <a class="btn btn-sm btn-icon btn-primary text-white" title="Modifier" target="_blank" href="specifications/' . $item->id . '/edit">
-                    <i class="ti ti-pencil"></i>
-                </a>
-                </div>
-                ';
+                  <div class="gap-1 row">
+                    <a class="btn btn-sm btn-icon btn-primary text-white" title="Voir" target="_blank" href="specifications/' . $specification->id . '" data-id="' . $specification->id . '">
+                        <i class="ti ti-eye"></i>
+                    </a>
+                    <a class="btn btn-sm btn-icon btn-primary text-white" title="Télécharger" target="_blank" href="specifications/upload/' . $specification->id . '" data-id="' . $specification->id . '">
+                        <i class="ti ti-download"></i>
+                    </a>
+                    <a class="btn btn-sm btn-icon btn-primary text-white" title="Modifier" target="_blank" href="specifications/' . $specification->id . '/edit">
+                        <i class="ti ti-pencil"></i>
+                    </a>
+                  </div> ';
         }
-        // return '';
         return '
             <div class="gap-1 row">
-              <a class="btn btn-sm btn-icon btn-primary text-white" title="Compléter" href="specifications/' . $item->id . '/edit">
+              <a class="btn btn-sm btn-icon btn-primary text-white" title="Compléter" href="specifications/' . $specification->id . '/edit">
                   <i class="ti ti-arrow-right"></i>
               </a>
             </div>
@@ -169,6 +234,14 @@ class SpecificationsController extends Controller
     $specification = $specification->load($relationships);
 
     // return $specification;
+
+    // return view('content.specifications.edit', compact('specification', 'expected_functions'));
+
+    if (request()->ajax()) {
+      return response()->json([
+        'specification' => $specification
+      ]);
+    }
 
     return view('content.specifications.edit', compact('specification', 'expected_functions'));
   }

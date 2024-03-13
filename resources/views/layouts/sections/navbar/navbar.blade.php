@@ -130,7 +130,8 @@
                                       <div class="d-flex">
                                           <div class="flex-grow-1">
                                               <h6 class="mb-1">Nouveau cahier des charges</h6>
-                                              <p class="mb-0 py-1 small text-dark">Votre cahier des charges est bien élaboré. Cliquez ici pour y accéder.</p>
+                                              <p class="mb-0 py-1 small text-dark">Votre cahier des charges pour <b class='text-primary'>${element.entreprise_name}</b> est bien élaboré. Cliquez ici pour y accéder.</p>
+                                              <!-- <a class="btn-link d-none" href="#">Voir</a> <a class="btn-link d-none" href="#">Télécharger</a> <br/> -->
                                               <small class="text-muted">${formattedDate}</small>
                                           </div>
                                           <div class="flex-shrink-0 dropdown-notifications-actions">
@@ -150,6 +151,7 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
+                      console.log(response);
                         getNotificationsCount(response);
                         getNotifications(response);
                     },

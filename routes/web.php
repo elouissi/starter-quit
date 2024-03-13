@@ -53,7 +53,8 @@ Route::middleware([
 
   // chatgpt
   Route::get('/chat', [ChatGPTController::class, 'askToChatGpt'])->name('askToChatGpt');
-  Route::post('/chat', [ChatController::class, 'chat'])->name('askToChatgpt4');
+  Route::get('/rechat', [ChatGPTController::class, 'reAskToChatGpt'])->name('reAskToChatGpt');
+  // Route::post('/chat', [ChatController::class, 'chat'])->name('askToChatgpt4');
 
   // config
   Route::get('configuration/expectedfunction/datatable', [ExpectedFunctionController::class, 'indexDataTable'])->name('configuration.expectedfunction.datatable');

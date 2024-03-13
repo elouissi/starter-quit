@@ -500,6 +500,10 @@ site internet sur le cahier de charge de son site internet`
                     $(`#${element}Ai-generate`).prop("disabled", true);
                 }
             });
+            if (!$(`#${element}Ai-generate`).data('errorCount')) {
+                $(`#${element}Ai-generate`).data('errorCount', 0);
+            }
+
             $(`#${element}Ai-generate`).click(function() {
                 $(`#${element}Ai-generate`).html(
                     `<i class="ti ti-loader rotate"></i> &nbsp; Chargement ...`);
@@ -524,13 +528,25 @@ site internet sur le cahier de charge de son site internet`
                         console.log('success');
                     },
                     error: function(xhr, status, error) {
-                        setTimeout(() => {
-                            $(`#${element}Ai-generate`).html(
-                                ` <i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
-                            $(`#${element}Ai-generate`).prop("disabled", false);
-                            $(`#${element}Ai-generate`).click();
-                        }, 10000);
-                        console.error("Error:", error);
+                        let errorCount = $(`#${element}Ai-generate`).data('errorCount');
+                        if (errorCount < 5) { // Check if error count is less than 5
+                            errorCount++; // Increment error count
+                            $(`#${element}Ai-generate`).data('errorCount', errorCount);
+                            setTimeout(() => {
+                                $(`#${element}Ai-generate`).html(
+                                    `<i class="ti ti-file-text-ai"></i> &nbsp; Générer`);
+                                $(`#${element}Ai-generate`).prop("disabled", false);
+                                $(`#${element}Ai-generate`).click();
+                            }, 10000);
+                        } else {
+                            $(`#${element}`).text("error");
+                            console.error("Error occurred 5 times. Stopping further error handling.");
+                        }
+                        console.error({
+                            xhr,
+                            status,
+                            error
+                        });
                     }
                 });
             });
@@ -1789,9 +1805,7 @@ site internet sur le cahier de charge de son site internet`
                                             </div>
                                         </div>
                                     </div>
-
                                     <hr class="mb-3">
-
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-12">
@@ -2121,6 +2135,27 @@ site internet sur le cahier de charge de son site internet`
                                         <span class="ti ti-checks text-primary fs-1"></span>
                                     </p>
                                     <h5 class="text-primary text-center mt-5 mb-2">Votre cahier des charges est prêt</h5>
+                                </div>
+                                <div class="col-12 mt-5 mb-2 d-none" id="spec-failed">
+                                    <p class="text-center">
+                                        <span class="ti ti-bug text-danger fs-1"></span>
+                                    </p>
+                                    <h5 class="text-danger text-center mt-5 mb-2">
+                                        Une erreur s'est produite lors de la génération de texte avec ChatGPT.
+                                        <br>
+                                        Merci de vérifier votre quota et régénérer les textes à partir
+                                        <br>
+                                        de <a href="/specifications" class="text-danger text-decoration-underline"> la liste de
+                                            cahiers des charges.</a>
+
+                                        <br>
+                                        <br>
+
+                                        <a href="/specifications" class="btn btn-label-primary text-primary mx-1"
+                                            id="spec-button-liste">
+                                            <span class="ti-xs ti ti-list me-1"></span>Liste des cahiers des charges
+                                        </a>
+                                    </h5>
                                 </div>
 
                                 <div class="col-12 d-flex justify-content-center my-5 d-none" id="spec-button">
