@@ -94,7 +94,7 @@
     </style>
 </head>
 
-<body style="background: #f1f1f1;">
+<body>
     <div class="card" style="background: white;">
         <div class="card-body">
             <p>{{ auth()->user()->name }}</p>
