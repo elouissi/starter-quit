@@ -120,7 +120,7 @@ class SpecificationsController extends Controller
                     <a class="btn btn-sm btn-icon btn-primary text-white" title="Télécharger" target="_blank" href="specifications/upload/' . $specification->id . '" data-id="' . $specification->id . '">
                         <i class="ti ti-download"></i>
                     </a>
-                    <a class="btn btn-sm btn-icon btn-primary text-white" title="Modifier" target="_blank" href="specifications/' . $specification->id . '/edit">
+                    <a class="btn btn-sm btn-icon btn-primary text-white" title="Modifier" href="specifications/' . $specification->id . '/edit">
                         <i class="ti ti-pencil"></i>
                     </a>
                   </div> ';

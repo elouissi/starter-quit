@@ -164,10 +164,11 @@
                     $(`#pourcentage-value-${i}`).val('');
                     $(`#pourcentage-operation-${i}`).val('');
                     $(`#titre-operation-${i}`).val('');
+                    calculReste();
                 });
 
                 $(`#pourcentage-operation-${i}`).on('input', function() {
-                    calculReste()
+                    calculReste();
                 });
             }
 
@@ -2154,11 +2155,9 @@ site internet sur le cahier de charge de son site internet`
                                                 @endphp
 
                                                 @for ($i = 1; $i <= 10; $i++)
-                                                    <div class="row  @if (
-                                                        $index > 1 ||
-                                                            (isset($specification->facturation->{'installment_' . $index . '_title'}) &&
-                                                                $specification->facturation->{'installment_' . $index . '_title'} == null)) d-none @endif"
-                                                        id="pourcentage-{{ $index }}">
+                                                    <div class="row @if (!isset($specification->facturation->{'installment_' . $index . '_title'})) d-none @endif"
+                                                        id="pourcentage-{{ $index }}"
+                                                        @if (isset($specification->facturation->{'installment_' . $index . '_title'})) data-rr="{{ $specification->facturation->{'installment_' . $index . '_title'} }}" @endif>
                                                         <div
                                                             class="border border-bottom-0 border-dark border-start-0 border-top-0 col-7 pb-4">
                                                             <div class="row">
@@ -2207,10 +2206,9 @@ site internet sur le cahier de charge de son site internet`
                                                                         placeholder="Titre de l'operation"
                                                                         name="installment_{{ $index }}_title"
                                                                         id="titre-operation-{{ $index }}"
-                                                                        @if ($index == 1) readonly
-                                                                          value="{{ isset($specification->facturation->{'installment_' . $index . '_title'}) ? $specification->facturation->{'installment_' . $index . '_title'} : '' }}"
-                                                                          title="Pourcentage à payer après la signature"
-                                                                          value="Pourcentage à payer après la signature" @endif>
+                                                                        @if ($index == 1) readonly @endif
+                                                                        value="{{ isset($specification->facturation->{'installment_' . $index . '_title'}) ? $specification->facturation->{'installment_' . $index . '_title'} : '' }}"
+                                                                        title="{{ isset($specification->facturation->{'installment_' . $index . '_title'}) ? $specification->facturation->{'installment_' . $index . '_title'} : '' }}">
                                                                 </div>
                                                                 {{-- <div class="col-1 mt-auto">
                                                                       <button type="button" data-bs-toggle="tooltip"
@@ -2357,7 +2355,8 @@ site internet sur le cahier de charge de son site internet`
                                         <br>
                                         Merci de vérifier votre quota et régénérer les textes à partir
                                         <br>
-                                        de <a href="/specifications" class="text-danger text-decoration-underline"> la liste de
+                                        de <a href="/specifications" class="text-danger text-decoration-underline"> la
+                                            liste de
                                             cahiers des charges.</a>
                                         <br>
                                         <br>

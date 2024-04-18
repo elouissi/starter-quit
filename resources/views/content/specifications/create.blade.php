@@ -164,10 +164,11 @@
                     $(`#pourcentage-value-${i}`).val('');
                     $(`#pourcentage-operation-${i}`).val('');
                     $(`#titre-operation-${i}`).val('');
+                    calculReste();
                 });
 
                 $(`#pourcentage-operation-${i}`).on('input', function() {
-                    calculReste()
+                    calculReste();
                 });
             }
 
@@ -2049,7 +2050,6 @@ site internet sur le cahier de charge de son site internet`
                                                                 </div>
                                                                 <hr class="my-3">
                                                                 <div class="row">
-
                                                                     <div class="col-6 mb-3 mt-auto">
                                                                         <div class="form-group">
                                                                             <label class="form-label fs-4"
