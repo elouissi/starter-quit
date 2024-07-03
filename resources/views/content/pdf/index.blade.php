@@ -2649,7 +2649,7 @@
 
                     <thead>
                         <tr>
-                            <td rowspan="15"
+                            <td rowspan="16"
                                 style="width: 20%;  text-align: center; vertical-align: middle;padding: 10px">
                                 Délais & Budgétisation</td>
                             <td style="width: 32%; padding: 2px 10px;">Désignation</td>
@@ -2689,11 +2689,11 @@
                                     'alias' => 'integration-textes-images',
                                     'name' => 'text_image_integration',
                                 ],
-                                [
-                                    'title' => "Intégration d'autres pages (contact, catégories ...etc.)",
-                                    'alias' => 'integration-autres-pages',
-                                    'name' => 'other_pages_integration',
-                                ],
+                                // [
+                                //     'title' => "Intégration d'autres pages (contact, catégories ...etc.)",
+                                //     'alias' => 'integration-autres-pages',
+                                //     'name' => 'other_pages_integration',
+                                // ],
                                 [
                                     'title' => 'Optimisation de la version Mobile',
                                     'alias' => 'optimisation-version-mobile',
@@ -2727,9 +2727,9 @@
 
                         @foreach ($budgetisation as $item)
                             @php
-                                $randomNumber = rand(2, 10);
-                                $randomEuroAmount = rand(2000, 10000) / 100;
-                                $total += $randomNumber * $randomEuroAmount;
+                                // $randomNumber = rand(2, 10);
+                                // $randomEuroAmount = rand(2000, 10000) / 100;
+                                $total += $specification->facturation->{'total_' . $item['name']};
                             @endphp
                             <tr>
                                 <td style="padding: 2px 10px;">{{ $item['title'] }}</td>
@@ -2749,22 +2749,53 @@
                         @endforeach
 
                         <tr>
+                            <td style="padding: 2px 10px;">Total sans remise (HT) </td>
+                            <td style="padding: 2px 10px;"> </td>
+                            <td style="padding: 2px 10px; text-align: center;" colspan="2">
+                              {{ number_format($total, 2, ',', '.') }} €
+                            </td>
+                          </tr>
+                          <tr>
                             <td style="padding: 2px 10px;">Remise exceptionnelle </td>
-                            <td style="padding: 2px 10px; text-align: center;" colspan="3">
-                                {{ number_format($specification->facturation->exceptional_discount, 2, ',', '.') }}
+                            <td style="padding: 2px 10px; text-align: center;" colspan="1">
+                                {{ number_format($specification->facturation->exceptional_discount_percentage, 2, ',', '.') }}
+                                %
+                            </td>
+                            <td style="padding: 2px 10px; text-align: center;" colspan="2">
+                             - {{ number_format($specification->facturation->exceptional_discount, 2, ',', '.') }}
                                 €
                             </td>
                         </tr>
 
                         <tr>
-                            <td style="padding: 2px 10px;">Total (HT) </td>
-                            <td style="padding: 2px 10px; text-align: center;" colspan="3">
+                          <td style="padding: 2px 10px;">Total avec remise (HT) </td>
+                          <td style="padding: 2px 10px;"> </td>
+                            <td style="padding: 2px 10px; text-align: center;" colspan="2">
                                 {{ number_format($specification->facturation->total, 2, ',', '.') }} €
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 2px 10px;">Total des jours vendu</td>
+                            <td style="padding: 2px 10px; text-align: center;" colspan="3">
+                                {{ number_format($specification->facturation->total_days, 2, ',', '.') }}
                             </td>
                         </tr>
                     </thead>
                 </table>
                 {{-- </div> --}}
+                <p>
+                <h4>
+
+                    <b>Le coût total du projet</b>
+                    : {{ number_format($specification->facturation->total, 2, ',', '.') }} € HT
+                </h4>
+                <h4>
+
+                    <b>Le délais de réalisation du projet</b>
+                    : {{ number_format($specification->facturation->total_days, 2, ',', '.') }} Jours
+                </h4>
+                {{-- “Le délais de réalisation du projet : $valeurstotaldesjours --}}
+                </p>
                 <p>
                     Afin d'assurer une transparence totale et de faciliter la compréhension de nos modalités de
                     collaboration, nous détaillons ci-après les conditions de paiement associées au développement de
@@ -2810,7 +2841,7 @@
                         <ul>
                             <li>
                                 Paiement du solde :
-                                {{ number_format($specification->facturation->total, 2, ',', '.') }} € HT à régler à la
+                                {{ number_format($specification->facturation->rest, 2, ',', '.') }} € HT à régler à la
                                 fin de la recette
                                 globale, validée par un Procès-Verbal (PV) de réception, confirmant la satisfaction
                                 du client et l'achèvement du projet.

@@ -8,6 +8,7 @@ use App\Models\DesignContent;
 use App\Models\ExistingAnalysis;
 use App\Models\ExpectedFunction;
 use App\Models\Facturation;
+use App\Models\Langue;
 use App\Models\Notification;
 use App\Models\ObjectifSite;
 use App\Models\Specification;
@@ -83,17 +84,17 @@ class SpecificationsController extends Controller
 
 
           $ia_error_exist =
-          ($specification->prompt_description && ($specification->iatext_description == null || $specification->iatext_description == 'error')) ||
-          ($specification->prompt_main_activities && ($specification->iatext_main_activities == null || $specification->iatext_main_activities == 'error')) ||
-          ($specification->prompt_services_products && ($specification->iatext_services_products == null || $specification->iatext_services_products == 'error')) ||
-          ($specification->prompt_target_audience && ($specification->iatext_target_audience == null || $specification->iatext_target_audience == 'error')) ||
-          ($specification->objectif_site->prompt_iatext_target_keywords && ($specification->objectif_site->iatext_target_keywords == null || $specification->objectif_site->iatext_target_keywords == 'error')) ||
-          ($specification->objectif_site->prompt_expected_client_objectives && ($specification->objectif_site->iatext_expected_client_objectives == null || $specification->objectif_site->iatext_expected_client_objectives == 'error')) ||
-          ($specification->objectif_site->prompt_iatext_techniques_specs && ($specification->objectif_site->iatext_techniques_specs == null || $specification->objectif_site->iatext_techniques_specs == 'error')) ||
-          ($specification->objectif_site->prompt_iatext_menu && ($specification->objectif_site->iatext_menu == null || $specification->objectif_site->iatext_menu == 'error')) ||
-          ($specification->existing_analysis->prompt_iatext_competitors && ($specification->existing_analysis->iatext_competitors == null || $specification->existing_analysis->iatext_competitors == 'error')) ||
-          ($specification->existing_analysis->prompt_iatext_constraints && ($specification->existing_analysis->iatext_constraints == null || $specification->existing_analysis->iatext_constraints == 'error')) ||
-          ($specification->design_content->prompt_iatext_exemples_sites && ($specification->design_content->iatext_exemples_sites == null || $specification->design_content->iatext_exemples_sites == 'error'));
+            ($specification->prompt_description && ($specification->iatext_description == null || $specification->iatext_description == 'error')) ||
+            ($specification->prompt_main_activities && ($specification->iatext_main_activities == null || $specification->iatext_main_activities == 'error')) ||
+            ($specification->prompt_services_products && ($specification->iatext_services_products == null || $specification->iatext_services_products == 'error')) ||
+            ($specification->prompt_target_audience && ($specification->iatext_target_audience == null || $specification->iatext_target_audience == 'error')) ||
+            ($specification->objectif_site->prompt_iatext_target_keywords && ($specification->objectif_site->iatext_target_keywords == null || $specification->objectif_site->iatext_target_keywords == 'error')) ||
+            ($specification->objectif_site->prompt_expected_client_objectives && ($specification->objectif_site->iatext_expected_client_objectives == null || $specification->objectif_site->iatext_expected_client_objectives == 'error')) ||
+            ($specification->objectif_site->prompt_iatext_techniques_specs && ($specification->objectif_site->iatext_techniques_specs == null || $specification->objectif_site->iatext_techniques_specs == 'error')) ||
+            ($specification->objectif_site->prompt_iatext_menu && ($specification->objectif_site->iatext_menu == null || $specification->objectif_site->iatext_menu == 'error')) ||
+            ($specification->existing_analysis->prompt_iatext_competitors && ($specification->existing_analysis->iatext_competitors == null || $specification->existing_analysis->iatext_competitors == 'error')) ||
+            ($specification->existing_analysis->prompt_iatext_constraints && ($specification->existing_analysis->iatext_constraints == null || $specification->existing_analysis->iatext_constraints == 'error')) ||
+            ($specification->design_content->prompt_iatext_exemples_sites && ($specification->design_content->iatext_exemples_sites == null || $specification->design_content->iatext_exemples_sites == 'error'));
 
           if ($ia_error_exist) {
             return '
@@ -144,7 +145,8 @@ class SpecificationsController extends Controller
   {
     //
     $expected_functions = ExpectedFunction::orderBy('order')->get();
-    return view('content.specifications.create', compact('expected_functions'));
+    $languages = Langue::orderBy('order')->get();
+    return view('content.specifications.create', compact('expected_functions', 'languages'));
   }
 
   /**
@@ -213,6 +215,7 @@ class SpecificationsController extends Controller
    */
   public function edit(string $id)
   {
+    $languages = Langue::orderBy('order')->get();
     $expected_functions = ExpectedFunction::orderBy('order')->get();
     $specification = Specification::findOrFail($id);
     $relationships = [];
@@ -243,7 +246,7 @@ class SpecificationsController extends Controller
       ]);
     }
 
-    return view('content.specifications.edit', compact('specification', 'expected_functions'));
+    return view('content.specifications.edit', compact('specification', 'expected_functions', 'languages'));
   }
 
   /**
@@ -572,7 +575,7 @@ class SpecificationsController extends Controller
       $validator = Validator::make($request->all(), [
         'specification_id' => 'required|numeric',
         'competitors' => 'required|string',
-        'sample_sites' => 'required|string',
+        'sample_sites' => 'nullable|string',
         'prompt_iatext_competitors' => 'nullable|string',
         // 'iatext_competitors' => 'nullable|string',
         'sample_sites_files' => ['nullable', 'array'],
@@ -666,7 +669,7 @@ class SpecificationsController extends Controller
       $validator = Validator::make($request->all(), [
         'specification_id' => 'required|numeric',
         'competitors' => 'required|string',
-        'sample_sites' => 'required|string',
+        'sample_sites' => 'nullable|string',
         'prompt_iatext_competitors' => 'nullable|string',
         // 'iatext_competitors' => 'nullable|string',
         'sample_sites_files' => ['nullable', 'array'],
@@ -1024,8 +1027,8 @@ class SpecificationsController extends Controller
         'communication' => 'required|array',
         'communication.*' => 'required|string',
         'deadline' => 'required|string',
-        'budget_from' => 'required|numeric',
-        'budget_to' => 'required|numeric',
+        'budget_from' => 'nullable|numeric',
+        'budget_to' => 'nullable|numeric',
         'number_of_days_installation_environment' => 'nullable|numeric',
         'unit_amount_installation_environment' => 'nullable|numeric',
         'total_installation_environment' => 'nullable|numeric',
@@ -1044,9 +1047,9 @@ class SpecificationsController extends Controller
         'number_of_days_text_image_integration' => 'nullable|numeric',
         'unit_amount_text_image_integration' => 'nullable|numeric',
         'total_text_image_integration' => 'nullable|numeric',
-        'number_of_days_other_pages_integration' => 'nullable|numeric',
-        'unit_amount_other_pages_integration' => 'nullable|numeric',
-        'total_other_pages_integration' => 'nullable|numeric',
+        // 'number_of_days_other_pages_integration' => 'nullable|numeric',
+        // 'unit_amount_other_pages_integration' => 'nullable|numeric',
+        // 'total_other_pages_integration' => 'nullable|numeric',
         'number_of_days_mobile_version_optimization' => 'nullable|numeric',
         'unit_amount_mobile_version_optimization' => 'nullable|numeric',
         'total_mobile_version_optimization' => 'nullable|numeric',
@@ -1066,6 +1069,7 @@ class SpecificationsController extends Controller
         'unit_amount_project_management' => 'nullable|numeric',
         'total_project_management' => 'nullable|numeric',
         'exceptional_discount' => 'nullable|numeric',
+        'exceptional_discount_percentage' => 'nullable|numeric',
         'total' => 'nullable|numeric',
         'rest' => 'nullable|numeric',
         'installment_1_percentage' => 'nullable|numeric',
@@ -1100,6 +1104,8 @@ class SpecificationsController extends Controller
         'installment_10_title' => 'nullable|string',
         'maintenance_percentage' => 'nullable|string',
         'maintenance_amount' => 'nullable|string',
+        'host_amount' => 'nullable|string',
+        'total_days' => 'nullable|string',
       ], [
         'required' => 'Le champ :attribute est requis.',
         'numeric' => 'Le champ :attribute doit être numérique.',
@@ -1143,9 +1149,9 @@ class SpecificationsController extends Controller
       $facture->number_of_days_text_image_integration = $validatedData['number_of_days_text_image_integration'];
       $facture->unit_amount_text_image_integration = $validatedData['unit_amount_text_image_integration'];
       $facture->total_text_image_integration = $validatedData['total_text_image_integration'];
-      $facture->number_of_days_other_pages_integration = $validatedData['number_of_days_other_pages_integration'];
-      $facture->unit_amount_other_pages_integration = $validatedData['unit_amount_other_pages_integration'];
-      $facture->total_other_pages_integration = $validatedData['total_other_pages_integration'];
+      // $facture->number_of_days_other_pages_integration = $validatedData['number_of_days_other_pages_integration'];
+      // $facture->unit_amount_other_pages_integration = $validatedData['unit_amount_other_pages_integration'];
+      // $facture->total_other_pages_integration = $validatedData['total_other_pages_integration'];
       $facture->number_of_days_mobile_version_optimization = $validatedData['number_of_days_mobile_version_optimization'];
       $facture->unit_amount_mobile_version_optimization = $validatedData['unit_amount_mobile_version_optimization'];
       $facture->total_mobile_version_optimization = $validatedData['total_mobile_version_optimization'];
@@ -1162,6 +1168,7 @@ class SpecificationsController extends Controller
       $facture->unit_amount_project_management = $validatedData['unit_amount_project_management'];
       $facture->total_project_management = $validatedData['total_project_management'];
       $facture->exceptional_discount = $validatedData['exceptional_discount'];
+      $facture->exceptional_discount_percentage = $validatedData['exceptional_discount_percentage'];
       $facture->total = $validatedData['total'];
       $facture->rest = $validatedData['rest'];
       $facture->installment_1_percentage  = $validatedData['installment_1_percentage'];
@@ -1196,6 +1203,8 @@ class SpecificationsController extends Controller
       $facture->installment_10_title      = $validatedData['installment_10_title'];
       $facture->maintenance_percentage    = $validatedData['maintenance_percentage'];
       $facture->maintenance_amount        = $validatedData['maintenance_amount'];
+      $facture->host_amount        = $validatedData['host_amount'];
+      $facture->total_days        = $validatedData['total_days'];
 
       $facture->save();
 
@@ -1223,8 +1232,8 @@ class SpecificationsController extends Controller
         'communication' => 'required|array',
         'communication.*' => 'required|string',
         'deadline' => 'required|string',
-        'budget_from' => 'required|numeric',
-        'budget_to' => 'required|numeric',
+        'budget_from' => 'nullable|numeric',
+        'budget_to' => 'nullable|numeric',
         'number_of_days_installation_environment' => 'nullable|numeric',
         'unit_amount_installation_environment' => 'nullable|numeric',
         'total_installation_environment' => 'nullable|numeric',
@@ -1243,9 +1252,9 @@ class SpecificationsController extends Controller
         'number_of_days_text_image_integration' => 'nullable|numeric',
         'unit_amount_text_image_integration' => 'nullable|numeric',
         'total_text_image_integration' => 'nullable|numeric',
-        'number_of_days_other_pages_integration' => 'nullable|numeric',
-        'unit_amount_other_pages_integration' => 'nullable|numeric',
-        'total_other_pages_integration' => 'nullable|numeric',
+        // 'number_of_days_other_pages_integration' => 'nullable|numeric',
+        // 'unit_amount_other_pages_integration' => 'nullable|numeric',
+        // 'total_other_pages_integration' => 'nullable|numeric',
         'number_of_days_mobile_version_optimization' => 'nullable|numeric',
         'unit_amount_mobile_version_optimization' => 'nullable|numeric',
         'total_mobile_version_optimization' => 'nullable|numeric',
@@ -1265,6 +1274,7 @@ class SpecificationsController extends Controller
         'unit_amount_project_management' => 'nullable|numeric',
         'total_project_management' => 'nullable|numeric',
         'exceptional_discount' => 'nullable|numeric',
+        'exceptional_discount_percentage' => 'nullable|numeric',
         'total' => 'nullable|numeric',
         'rest' => 'nullable|numeric',
         'installment_1_percentage' => 'nullable|numeric',
@@ -1299,6 +1309,8 @@ class SpecificationsController extends Controller
         'installment_10_title' => 'nullable|string',
         'maintenance_percentage' => 'nullable|string',
         'maintenance_amount' => 'nullable|string',
+        'host_amount' => 'nullable|string',
+        'total_days' => 'nullable|string',
       ], [
         'required' => 'Le champ :attribute est requis.',
         'numeric' => 'Le champ :attribute doit être numérique.',
@@ -1319,8 +1331,10 @@ class SpecificationsController extends Controller
 
       ///
 
-      $facture = Facturation::find($request->facturation_id);
-      $facture->specification_id = $validatedData['specification_id'];
+      $facture = Facturation::firstOrNew(['specification_id' => $validatedData['specification_id']]);
+
+      // $facture = Facturation::find('specification_id',$validatedData['specification_id']);
+      // $facture->specification_id = $validatedData['specification_id'];
       $facture->number_of_days_installation_environment = $validatedData['number_of_days_installation_environment'];
       $facture->unit_amount_installation_environment = $validatedData['unit_amount_installation_environment'];
       $facture->total_installation_environment = $validatedData['total_installation_environment'];
@@ -1342,9 +1356,9 @@ class SpecificationsController extends Controller
       $facture->number_of_days_text_image_integration = $validatedData['number_of_days_text_image_integration'];
       $facture->unit_amount_text_image_integration = $validatedData['unit_amount_text_image_integration'];
       $facture->total_text_image_integration = $validatedData['total_text_image_integration'];
-      $facture->number_of_days_other_pages_integration = $validatedData['number_of_days_other_pages_integration'];
-      $facture->unit_amount_other_pages_integration = $validatedData['unit_amount_other_pages_integration'];
-      $facture->total_other_pages_integration = $validatedData['total_other_pages_integration'];
+      // $facture->number_of_days_other_pages_integration = $validatedData['number_of_days_other_pages_integration'];
+      // $facture->unit_amount_other_pages_integration = $validatedData['unit_amount_other_pages_integration'];
+      // $facture->total_other_pages_integration = $validatedData['total_other_pages_integration'];
       $facture->number_of_days_mobile_version_optimization = $validatedData['number_of_days_mobile_version_optimization'];
       $facture->unit_amount_mobile_version_optimization = $validatedData['unit_amount_mobile_version_optimization'];
       $facture->total_mobile_version_optimization = $validatedData['total_mobile_version_optimization'];
@@ -1361,6 +1375,7 @@ class SpecificationsController extends Controller
       $facture->unit_amount_project_management = $validatedData['unit_amount_project_management'];
       $facture->total_project_management = $validatedData['total_project_management'];
       $facture->exceptional_discount = $validatedData['exceptional_discount'];
+      $facture->exceptional_discount_percentage = $validatedData['exceptional_discount_percentage'];
       $facture->total = $validatedData['total'];
       $facture->rest = $validatedData['rest'];
       $facture->installment_1_percentage  = $validatedData['installment_1_percentage'];
@@ -1395,16 +1410,18 @@ class SpecificationsController extends Controller
       $facture->installment_10_title      = $validatedData['installment_10_title'];
       $facture->maintenance_percentage    = $validatedData['maintenance_percentage'];
       $facture->maintenance_amount        = $validatedData['maintenance_amount'];
+      $facture->host_amount        = $validatedData['host_amount'];
+      $facture->total_days        = $validatedData['total_days'];
 
       $facture->save();
 
       ///
 
-      // $specification = Specification::find($request->specification_id);
-      // if ($specification) {
-      //   $specification->step = 5;
-      //   $specification->save();
-      // }
+      $specification = Specification::find($request->specification_id);
+      if ($specification) {
+        $specification->step = 5;
+        $specification->save();
+      }
 
       // $recordId = $record->id;
       return response()->json(['success' => true, 'message' => 'Record updated successfully'], 200);
@@ -1429,7 +1446,7 @@ class SpecificationsController extends Controller
         'iatext_competitors' => 'nullable|string',
         'iatext_constraints' => 'nullable|string',
         'iatext_exemples_sites' => 'nullable|string',
-
+        'send_email' => 'nullable|string',
       ], [
         'required' => 'Le champ :attribute est requis.',
         'numeric' => 'Le champ :attribute doit être numérique.',
@@ -1497,23 +1514,26 @@ class SpecificationsController extends Controller
 
       $specification = Specification::with('objectif_site', 'existing_analysis', 'design_content', 'deadline_and_budget', 'facturation')->findOrFail($request->specification_id);
 
-      // Send the email
-      $user = auth()->user();
-      Mail::to($user->email)->send(new SpecificationMail($specification));
+      if ($request->send_email == "1") {
 
-      ///
+        // Send the email
+        $user = auth()->user();
+        Mail::to($user->email)->send(new SpecificationMail($specification));
 
-      // Assuming $notification is an instance of Notification model
-      $notification = new Notification();
+        ///
 
-      //
-      $userId = auth()->user()->id;
-      $message  = 'Nouveau cahier des charges';
-      $pdfLink = $specification->pdf_link;
-      $specificationId = $specification->id;
+        // Assuming $notification is an instance of Notification model
+        $notification = new Notification();
 
-      // Call the sendNotification method
-      $notification->sendNotification($userId, $message, $pdfLink, $specificationId);
+        //
+        $userId = auth()->user()->id;
+        $message  = 'Nouveau cahier des charges';
+        $pdfLink = $specification->pdf_link;
+        $specificationId = $specification->id;
+
+        // Call the sendNotification method
+        $notification->sendNotification($userId, $message, $pdfLink, $specificationId);
+      }
 
 
       return response()->json(['success' => true, 'message' => 'Record created successfully', 'pdf' => $specification->pdf_link], 201);

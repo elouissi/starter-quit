@@ -119,6 +119,46 @@
     </script>
     <script>
         $(document).ready(function() {
+
+            $('#remise-exceptionnelle-percentage').on('input', function() {
+                // Get the percentage value
+                var percentage = parseFloat($(this).val());
+
+                // Get the total value
+                var total = parseFloat($('#total-total').val());
+
+                // Calculate the discounted amount
+                var discountedAmount = (percentage / 100) * total;
+
+                // Set the discounted amount to the appropriate element
+                $('#remise-exceptionnelle').val(discountedAmount.toFixed(2)); // Round to 2 decimal places
+                $('#remise-exceptionnelle').trigger('input');
+            });
+
+            $(document).on('input', '.number-of-days', function() {
+                var total = 0;
+                $('.number-of-days').each(function() {
+                    var value = parseFloat($(this).val()) ||
+                        0; // Get the value as a float, default to 0 if NaN
+                    total += value;
+                });
+                console.log('Total of all values: ' + total);
+
+                $('#total-total-days').val(total);
+            });
+
+            ////
+
+            $('.language-item:gt(2)').hide(); // Hide languages beyond the first three
+
+            $('#voir-plus').click(function() {
+                $('.language-item:hidden').show(); // Show next three hidden languages
+                if ($('.language-item:hidden').length === 0) {
+                    $('#voir-plus').hide(); // Hide the button if there are no more hidden languages
+                }
+            });
+
+            ///
             generateByAi(`descriptionEntreprise`, 1);
             generateByAi(`activitePrincipale`, 1);
             generateByAi(`servicesProduits`, 1);
@@ -963,16 +1003,16 @@ site internet sur le cahier de charge de son site internet`
                                                     @endforeach
                                                 </div>
                                             </div>
-                                            <div class="col-12 mb-3"> <label class="form-label">Langue : <span
+                                            <div class="col-10 mb-3"> <label class="form-label">Langue : <span
                                                         class="text-danger">*</span></label>
-                                                @php
+                                                {{-- @php
                                                     $languages = [
                                                         ['name' => 'Français', 'alias' => 'fr'],
                                                         ['name' => 'Anglais', 'alias' => 'en'],
                                                         ['name' => 'Italien', 'alias' => 'it'],
                                                     ];
-                                                @endphp
-                                                <div class="row">
+                                                @endphp --}}
+                                                {{-- <div class="row">
                                                     @foreach ($languages as $item)
                                                         <div class="col-auto">
                                                             <div class="form-check">
@@ -984,6 +1024,22 @@ site internet sur le cahier de charge de son site internet`
                                                             </div>
                                                         </div>
                                                     @endforeach
+                                                </div> --}}
+
+                                                <div class="row languages-container">
+                                                    @foreach ($languages as $item)
+                                                        <div class="col-auto language-item">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="langue_{{ $loop->index }}" name="languages[]"
+                                                                    value="{{ $item['name'] }}">
+                                                                <label class="form-check-label"
+                                                                    for="langue_{{ $loop->index }}">{{ $item['name'] }}</label>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                    <span id="voir-plus" style="cursor: pointer"
+                                                        class="text-primary">Voir plus</span>
                                                 </div>
                                             </div>
                                             <div class="col-10 mb-3">
@@ -1156,8 +1212,7 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-sm-6 col-md-10">
                                                 <div class="form-group">
                                                     <label for="exemples-sites" class="form-label">
-                                                        Exemples de sites avec commentaire : <span
-                                                            class="text-danger">*</span>
+                                                        Exemples de sites avec commentaire :
                                                     </label>
                                                     <textarea id="exemples-sites" class="form-control" name="sample_sites" rows="3"
                                                         placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.)."></textarea>
@@ -1294,7 +1349,7 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-12 mb-3">
                                                 <div class="col-sm-6 col-md-12">
                                                     <div class="form-group">
-                                                        <label class="form-label">Hébergement : <span
+                                                        <label class="form-label">Avez-vous un hébergement ? <span
                                                                 class="text-danger">*</span></label>
                                                         <div class="radio-group">
                                                             <div class="row">
@@ -1830,62 +1885,67 @@ site internet sur le cahier de charge de son site internet`
                                                                         'title' => "Installation de l'environnement",
                                                                         'alias' => 'installation-environnement',
                                                                         'name' => 'installation_environment',
+                                                                        'default' => '280.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Intégration de la structure',
                                                                         'alias' => 'integration-structure',
                                                                         'name' => 'integration_structure',
+                                                                        'default' => '280.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Ebauche Des Textes et traductions',
                                                                         'alias' => 'ebauche-textes-traductions',
                                                                         'name' => 'draft_texts_translations',
+                                                                        'default' => '280.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Maquettage graphique',
                                                                         'alias' => 'maquettage-graphique',
                                                                         'name' => 'graphic_modeling',
+                                                                        'default' => '250.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Développement & intégrations web',
                                                                         'alias' => 'developpement-integrations-web',
                                                                         'name' => 'web_development_integrations',
+                                                                        'default' => '380.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Intégration des textes et images',
                                                                         'alias' => 'integration-textes-images',
                                                                         'name' => 'text_image_integration',
-                                                                    ],
-                                                                    [
-                                                                        'title' =>
-                                                                            "Intégration d'autres pages (contact, catégories ...etc.)",
-                                                                        'alias' => 'integration-autres-pages',
-                                                                        'name' => 'other_pages_integration',
+                                                                        'default' => '380.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Optimisation de la version Mobile',
                                                                         'alias' => 'optimisation-version-mobile',
                                                                         'name' => 'mobile_version_optimization',
+                                                                        'default' => '380.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Intégration du multilingue',
                                                                         'alias' => 'integration-multilingue',
                                                                         'name' => 'multilingual_integration',
+                                                                        'default' => '380.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Optimisation Pour SEO',
                                                                         'alias' => 'optimisation-seo',
                                                                         'name' => 'seo_optimisation',
+                                                                        'default' => '280.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Suivi et tests',
                                                                         'alias' => 'suivi-tests',
                                                                         'name' => 'testing_tracking',
+                                                                        'default' => '280.0',
                                                                     ],
                                                                     [
                                                                         'title' => 'Gestion de projets',
                                                                         'alias' => 'gestion-projet',
                                                                         'name' => 'project_management',
+                                                                        'default' => '500.0',
                                                                     ],
                                                                 ];
                                                             @endphp
@@ -1894,7 +1954,7 @@ site internet sur le cahier de charge de son site internet`
                                                                     <td class="p-0 px-3 py-1">{{ $item['title'] }}</td>
                                                                     <td class="p-0 px-3 py-1">
                                                                         <input type="number"
-                                                                            class="form-control form-control h-100"
+                                                                            class="form-control form-control h-100 number-of-days"
                                                                             placeholder="00" id="nj-{{ $item['alias'] }}"
                                                                             name="number_of_days_{{ $item['name'] }}">
                                                                     </td>
@@ -1903,6 +1963,7 @@ site internet sur le cahier de charge de son site internet`
                                                                             class="input-group input-group input-group-merge">
                                                                             <span class="input-group-text py-0">€</span>
                                                                             <input type="number"
+                                                                                value="{{ $item['default'] }}"
                                                                                 class="form-control py-1" placeholder="00"
                                                                                 id="mu-{{ $item['alias'] }}"
                                                                                 name="unit_amount_{{ $item['name'] }}" />
@@ -1922,12 +1983,21 @@ site internet sur le cahier de charge de son site internet`
                                                             @endforeach
                                                             <tr>
                                                                 <td class="p-0 px-3 py-1">Remise exceptionnelle </td>
-                                                                <td class="p-0 px-3 py-1" colspan="3">
+                                                                <td class="p-0 px-3 py-1" colspan="1">
+                                                                    <div class="input-group input-group-merge">
+                                                                        <span class="input-group-text">%</span>
+                                                                        <input type="number" class="form-control"
+                                                                            placeholder="00"
+                                                                            id="remise-exceptionnelle-percentage"
+                                                                            name="exceptional_discount_percentage" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="p-0 px-3 py-1" colspan="2">
                                                                     <div class="input-group input-group-merge">
                                                                         <span class="input-group-text">€</span>
                                                                         <input type="number" class="form-control"
                                                                             placeholder="00" id="remise-exceptionnelle"
-                                                                            name="exceptional_discount" />
+                                                                            readonly name="exceptional_discount" />
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -1939,6 +2009,17 @@ site internet sur le cahier de charge de son site internet`
                                                                         <input type="number" class="form-control"
                                                                             placeholder="00" readonly id="total-total"
                                                                             name="total" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="p-0 px-3 py-1">Total des jours vendu </td>
+                                                                <td class="p-0 px-3 py-1" colspan="3">
+                                                                    <div class="input-group input-group-merge">
+                                                                        <input type="number"
+                                                                            class="form-control total-total-days"
+                                                                            placeholder="00" id="total-total-days"
+                                                                            name="total_days" />
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -2028,7 +2109,7 @@ site internet sur le cahier de charge de son site internet`
                                                                     @if ($index > 1)
                                                                         <button type="button" data-bs-toggle="tooltip"
                                                                             data-bs-placement="top" title="Supprimer"
-                                                                            class="btn btn-icon  btn-label-danger waves-effect waves-light"
+                                                                            class="btn btn-icon  btn-label-danger waves-effect waves-light d-none"
                                                                             id="delete-btn-{{ $index }}">
                                                                             <i class="ti ti-trash"></i>
                                                                         </button>
@@ -2059,7 +2140,8 @@ site internet sur le cahier de charge de son site internet`
                                                                             </label>
                                                                             <div class="input-group input-group-merge">
                                                                                 <span class="input-group-text">%</span>
-                                                                                <input type="number" class="form-control"
+                                                                                <input type="number"
+                                                                                    class="form-control"
                                                                                     id="pourcentage-operation-maintenance"
                                                                                     name="maintenance_percentage"
                                                                                     placeholder="00" value="20" />
@@ -2077,6 +2159,26 @@ site internet sur le cahier de charge de son site internet`
                                                                                     name="maintenance_amount"
                                                                                     placeholder="00" value="20"
                                                                                     readonly />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <hr class="my-3">
+                                                                <div class="row">
+                                                                    <div class="col-12 mb-3 mt-auto">
+                                                                        <div class="form-group">
+                                                                            <label class="form-label fs-4"
+                                                                                id="label-pourcentage-operation-host"
+                                                                                for="pourcentage-operation-host">
+                                                                                <b> Hébergement :</b>
+                                                                            </label>
+                                                                            <div class="input-group input-group-merge">
+                                                                                <span class="input-group-text">€</span>
+                                                                                <input type="number"
+                                                                                    class="form-control"
+                                                                                    id="pourcentage-value-host"
+                                                                                    name="host_amount"
+                                                                                    placeholder="00" />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -2130,6 +2232,99 @@ site internet sur le cahier de charge de son site internet`
                                     <h5 class="text-primary text-center mt-5 mb-2">Préparation du cahier des charges</h5>
                                 </div>
 
+
+                                <div class="col-12 mt-5 mb-2 d-none" id="spec-confirm">
+                                    <p class="text-center">
+                                        <span class="ti ti-check text-primary fs-1"></span>
+                                    </p>
+                                    <h5 class="text-primary text-center mt-5 mb-2">Confirmation du texte généré par IA
+                                    </h5>
+                                    <div class="row">
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_description_confirm">
+                                                Description de l'entreprise
+                                            </label>
+                                            <textarea name="iatext_description_confirm" id="iatext_description_confirm" class="form-control"
+                                                rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_main_activities_confirm">
+                                                Activité principale de l'entreprise
+                                            </label>
+                                            <textarea name="iatext_main_activities_confirm" id="iatext_main_activities_confirm" class="form-control"
+                                                rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_services_products_confirm">
+                                                Services ou produits vendus
+                                            </label>
+                                            <textarea name="iatext_services_products_confirm" id="iatext_services_products_confirm" class="form-control"
+                                                rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_target_audience_confirm">
+                                                Public Cible
+                                            </label>
+                                            <textarea name="iatext_target_audience_confirm" id="iatext_target_audience_confirm" class="form-control"
+                                                rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_target_keywords_confirm">
+                                                Mots-clés cibles
+                                            </label>
+                                            <textarea name="iatext_target_keywords_confirm" id="iatext_target_keywords_confirm" class="form-control"
+                                                rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_expected_client_objectives_confirm">
+                                                Objectifs attendus du client
+                                            </label>
+                                            <textarea name="iatext_expected_client_objectives_confirm" id="iatext_expected_client_objectives_confirm"
+                                                class="form-control" rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_menu_confirm">
+                                                Menu
+                                            </label>
+                                            <textarea name="iatext_menu_confirm" id="iatext_menu_confirm" class="form-control" rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_techniques_specs_confirm">
+                                                Spécifications Techniques
+                                            </label>
+                                            <textarea name="iatext_techniques_specs_confirm" id="iatext_techniques_specs_confirm" class="form-control"
+                                                rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_competitors_confirm">
+                                                Concurrence
+                                            </label>
+                                            <textarea name="iatext_competitors_confirm" id="iatext_competitors_confirm" class="form-control" rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_constraints_confirm">
+                                                Contraintes
+                                            </label>
+                                            <textarea name="iatext_constraints_confirm" id="iatext_constraints_confirm" class="form-control" rows="5"></textarea>
+                                        </div>
+                                        <div class="col-4 mb-3">
+                                            <label class="form-label" for="iatext_exemples_sites_confirm">
+                                                Les éléments sur Mesure
+                                            </label>
+                                            <textarea name="iatext_exemples_sites_confirm" id="iatext_exemples_sites_confirm" class="form-control"
+                                                rows="5"></textarea>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-center my-5" >
+                                          <button type="button" class="btn btn-label-success  mx-1"
+                                              id="spec-confirm-button">
+                                              <span class="ti-xs ti ti-check me-1"  id="icon-spec-confirm"></span>Confirmer
+                                          </button>
+
+                                      </div>
+                                    </div>
+                                    {{-- (ai content) --}}
+                                </div>
+
                                 <div class="col-12 mt-5 mb-2 d-none" id="spec-done">
                                     <p class="text-center">
                                         <span class="ti ti-checks text-primary fs-1"></span>
@@ -2145,7 +2340,8 @@ site internet sur le cahier de charge de son site internet`
                                         <br>
                                         Merci de vérifier votre quota et régénérer les textes à partir
                                         <br>
-                                        de <a href="/specifications" class="text-danger text-decoration-underline"> la liste de
+                                        de <a href="/specifications" class="text-danger text-decoration-underline"> la
+                                            liste de
                                             cahiers des charges.</a>
 
                                         <br>

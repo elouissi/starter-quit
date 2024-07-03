@@ -7,21 +7,59 @@
       "slug": "pages-home"
     },
     {
-      "name": "Cahier des charges",
+      "name": "Créer un Cahier des charges",
       "slug": "specifications",
       "icon": "menu-icon tf-icons ti ti-book-2",
       "submenu": [
         {
-          "url": "specifications",
-          "name": "Liste de cahier des charges",
-          "slug": "specifications.index"
+          "name": "Web",
+          "slug": "specifications.create",
+          "submenu": [
+            {
+              "url": "specifications-web-site_vitrine/create",
+              "name": "Site Vitrine",
+              "slug": "specifications-web-site_vitrine.create"
+            },
+            {
+              "url": "specifications-web-E_Commerce/create",
+              "name": "E-Commerce",
+              "slug": "specifications-web-E_Commerce.create"
+            },
+            {
+              "url": "specifications-web-Blog/create",
+              "name": "Blog",
+              "slug": "specifications-web-Blog.create"
+            },
+            {
+              "url": "specifications-/create",
+              "name": "site d'affiliation",
+              "slug": "specifications-.create"
+            }
+          ]
         },
         {
-          "url": "specifications/create",
-          "name": "Créer un cahier des charges",
-          "slug": "specifications.create"
+          "name": "mobile",
+          "slug": "specifications.create",
+          "submenu": [
+            {
+              "url": "specifications-mobile-E_Commerce/create",
+              "name": "App E-Commerce",
+              "slug": "specifications-mobile-E_Commerce.create"
+            },
+            {
+              "url": "specifications-mobile-E_learning/create",
+              "name": "App E-learning",
+              "slug": "specifications-mobile-E_learning.create"
+            }
+          ]
         }
       ]
+    },
+    {
+      "url": "specifications",
+      "name": "Liste de cahier des charges",
+      "icon": "menu-icon tf-icons ti ti-view-list",
+      "slug": "specifications.index"
     },
     {
       "name": "Utilisateurs",
@@ -54,6 +92,11 @@
           "url": "configuration/prompttype",
           "name": "Gestion les types prompt",
           "slug": "configuration.prompttype.index"
+        },
+        {
+          "url": "configuration/langue",
+          "name": "Gestion les langues",
+          "slug": "configuration.langue.index"
         }
       ]
     }

@@ -2,6 +2,8 @@
  *  Form Wizard
  */
 
+// console.log("dddddddddddddd");
+
 function customValidation(id1, id2) {
   if (getCheckedRadioValue(id1) == 'Oui' && !document.getElementById(id2).value) {
     $(`#${id2}`).addClass('border').addClass('border-danger');
@@ -412,13 +414,13 @@ function sweetAlertErrorMessage() {
             }
           }
         },
-        sample_sites: {
-          validators: {
-            notEmpty: {
-              message: 'Veuillez entrer des exemples de sites'
-            }
-          }
-        },
+        // sample_sites: {
+        //   validators: {
+        //     notEmpty: {
+        //       message: 'Veuillez entrer des exemples de sites'
+        //     }
+        //   }
+        // },
         domain: {
           validators: {
             notEmpty: {
@@ -1410,6 +1412,8 @@ function sweetAlertErrorMessage() {
                 success: function (response) {
                   console.log('insert success', response);
                   let ai_texts_object = {
+                    _token: window.csrfToken,
+                    specification_id: $('#specification_id').val(),
                     iatext_description: $('#descriptionEntreprise').val(),
                     iatext_main_activities: $('#activitePrincipale').val(),
                     iatext_services_products: $('#servicesProduits').val(),
@@ -1420,7 +1424,8 @@ function sweetAlertErrorMessage() {
                     iatext_techniques_specs: $('#iatext_techniques_specs').val(),
                     iatext_competitors: $('#iatext_competitors').val(),
                     iatext_constraints: $('#iatext_constraints').val(),
-                    iatext_exemples_sites: $('#iatext_exemples_sites').val()
+                    iatext_exemples_sites: $('#iatext_exemples_sites').val(),
+                    send_email: 0
                   };
                   console.log('-------------');
                   if (hasErrorValus(ai_texts_object)) {
@@ -1428,29 +1433,83 @@ function sweetAlertErrorMessage() {
                     $('#spec-failed').removeClass('d-none');
                   } else {
                     $('#spec-loading').addClass('d-none');
-                    $('#spec-done').removeClass('d-none');
-                    $('#spec-button').removeClass('d-none');
+                    $('#spec-confirm').removeClass('d-none');
+                    //
+                    $('#iatext_description_confirm').val($('#descriptionEntreprise').val());
+                    $('#iatext_main_activities_confirm').val($('#activitePrincipale').val());
+                    $('#iatext_services_products_confirm').val($('#servicesProduits').val());
+                    $('#iatext_target_audience_confirm').val($('#target_audience').val());
+                    $('#iatext_target_keywords_confirm').val($('#iatext_target_keywords').val());
+                    $('#iatext_expected_client_objectives_confirm').val($('#expectedObjectives').val());
+                    $('#iatext_menu_confirm').val($('#iatext_menu').val());
+                    $('#iatext_techniques_specs_confirm').val($('#iatext_techniques_specs').val());
+                    $('#iatext_competitors_confirm').val($('#iatext_competitors').val());
+                    $('#iatext_constraints_confirm').val($('#iatext_constraints').val());
+                    $('#iatext_exemples_sites_confirm').val($('#iatext_exemples_sites').val());
+                    //
+                    $('#spec-confirm-button').on('click', function () {
+                      // $('#next-step-5').removeClass('disabled');
+                      // $('#icon-next-step-5').removeClass().addClass('ti ti-arrow-right');
+                      // $('#spec-confirm').addClass('d-none');
+                      $('#spec-confirm-button').addClass('disabled');
+                      $('#icon-spec-confirm').removeClass().addClass('ti ti-loader rotate');
 
-                    let specification_id = $('#specification_id').val();
-                    if (specification_id) {
-                      $('#spec-button-show').prop('href', `/specifications/${specification_id}`);
-                      $('#spec-button-download').prop('href', `/specifications/upload/${specification_id}`);
-                    }
+                      let ai_texts_object_confirm = {
+                        _token: window.csrfToken,
+                        specification_id: $('#specification_id').val(),
+                        iatext_description: $('#iatext_description_confirm').val(),
+                        iatext_main_activities: $('#iatext_main_activities_confirm').val(),
+                        iatext_services_products: $('#iatext_services_products_confirm').val(),
+                        iatext_target_audience: $('#iatext_target_audience_confirm').val(),
+                        iatext_target_keywords: $('#iatext_target_keywords_confirm').val(),
+                        iatext_expected_client_objectives: $('#iatext_expected_client_objectives_confirm').val(),
+                        iatext_menu: $('#iatext_menu_confirm').val(),
+                        iatext_techniques_specs: $('#iatext_techniques_specs_confirm').val(),
+                        iatext_competitors: $('#iatext_competitors_confirm').val(),
+                        iatext_constraints: $('#iatext_constraints_confirm').val(),
+                        iatext_exemples_sites: $('#iatext_exemples_sites_confirm').val(),
+                        send_email: 1
+                      };
+                      let formData_confirm = objectToFormData(ai_texts_object_confirm);
+                      $.ajax({
+                        headers: {},
+                        url: '/specifications/step6',
+                        type: 'POST',
+                        processData: false,
+                        contentType: false,
+                        data: formData_confirm,
+                        success: function (response) {
+                          $('#spec-done').removeClass('d-none');
+                          $('#spec-button').removeClass('d-none');
+                          $('#spec-confirm').addClass('d-none');
+
+                          let specification_id = $('#specification_id').val();
+                          if (specification_id) {
+                            $('#spec-button-show').prop('href', `/specifications/${specification_id}`);
+                            $('#spec-button-download').prop('href', `/specifications/upload/${specification_id}`);
+                          }
+
+                          $.ajax({
+                            url: '/notifications',
+                            type: 'GET',
+                            dataType: 'json',
+                            success: function (response) {
+                              getNotificationsCount(response);
+                              getNotifications(response);
+                            },
+                            error: function (xhr, status, error) {
+                              console.error('Error fetching notifications:', error);
+                            }
+                          });
+                        },
+                        error: function (xhr, status, error) {
+                          console.log(xhr, status, error);
+                        }
+                      });
+                    });
+                    //
                   }
                   console.log(hasErrorValus(ai_texts_object));
-
-                  $.ajax({
-                    url: '/notifications',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (response) {
-                      getNotificationsCount(response);
-                      getNotifications(response);
-                    },
-                    error: function (xhr, status, error) {
-                      console.error('Error fetching notifications:', error);
-                    }
-                  });
                 },
                 error: function (xhr, status, error) {
                   console.log(xhr, status, error);

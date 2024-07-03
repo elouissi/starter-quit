@@ -12,6 +12,7 @@ use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ExpectedFunctionController;
+use App\Http\Controllers\LangueController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PromptController;
 use App\Http\Controllers\PromptTypeController;
@@ -63,6 +64,8 @@ Route::middleware([
   Route::resource('configuration/prompt', PromptController::class)->names('configuration.prompt');
   Route::get('configuration/prompttype/datatable', [PromptTypeController::class, 'indexDataTable'])->name('configuration.prompttype.datatable');
   Route::resource('configuration/prompttype', PromptTypeController::class)->names('configuration.prompttype');
+  Route::get('configuration/langue/datatable', [LangueController::class, 'indexDataTable'])->name('configuration.langue.datatable');
+  Route::resource('configuration/langue', LangueController::class)->names('configuration.langue');
   // users
   Route::get('/user/list', [UserList::class, 'index'])->name('user-list');
   Route::get('/config/list', [UserList::class, 'index'])->name('config-list');
@@ -101,7 +104,11 @@ Route::middleware([
   // Route::get('specifications/step5/{id}', [SpecificationsController::class, 'showstep5'])->name('specifications.showstep5');
   Route::get('specifications/upload/{id}', [SpecificationsController::class, 'upload'])->name('specifications.upload');
   // ressources
+
+  
   Route::resource('specifications', SpecificationsController::class);
+
+
   Route::get('/dashboard', function () {
     return view('dashboard');
   })->name('dashboard');

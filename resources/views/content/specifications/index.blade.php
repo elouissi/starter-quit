@@ -57,7 +57,7 @@
         $(document).ready(function() {
             var dataTable = $('#table-datatable').DataTable({
                 language: {
-                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json',
+                    url:   '{{ url('assets/json/datatable/fr.json') }}',
                     // search: "Filtrer par: ",
                     // searchPlaceholder: "Nom compte, Nom contact, Chargé ...",
                 },

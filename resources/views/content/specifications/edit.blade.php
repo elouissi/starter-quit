@@ -119,6 +119,53 @@
     </script>
     <script>
         $(document).ready(function() {
+
+          setTimeout(() => {
+
+            var total = 0;
+            $('.number-of-days').each(function() {
+              var value = parseFloat($(this).val()) ||
+              0; // Get the value as a float, default to 0 if NaN
+              total += value;
+            });
+            console.log('Total of all values: ' + total);
+
+            $('#total-total-days').val(total);
+
+            $('#exceptional_discount').trigger('input')
+          }, 1000);
+
+            // // if ($('.number-of-days')) {
+            //     $('.number-of-days').trigger('input');
+            // // }
+
+            $('#remise-exceptionnelle-percentage').on('input', function() {
+                // Get the percentage value
+                var percentage = parseFloat($(this).val());
+
+                // Get the total value
+                var total = parseFloat($('#total-total').val());
+
+                // Calculate the discounted amount
+                var discountedAmount = (percentage / 100) * total;
+
+                // Set the discounted amount to the appropriate element
+                $('#remise-exceptionnelle').val(discountedAmount.toFixed(2)); // Round to 2 decimal places
+                $('#remise-exceptionnelle').trigger('input');
+            });
+
+            $(document).on('input', '.number-of-days', function() {
+                var total = 0;
+                $('.number-of-days').each(function() {
+                    var value = parseFloat($(this).val()) ||
+                        0; // Get the value as a float, default to 0 if NaN
+                    total += value;
+                });
+                console.log('Total of all values: ' + total);
+
+                $('#total-total-days').val(total);
+            });
+            //
             generateByAi(`descriptionEntreprise`, 1);
             generateByAi(`activitePrincipale`, 1);
             generateByAi(`servicesProduits`, 1);
@@ -989,23 +1036,23 @@ site internet sur le cahier de charge de son site internet`
                                             </div>
                                             <div class="col-12 mb-3"> <label class="form-label">Langue : <span
                                                         class="text-danger">*</span></label>
-                                                @php
+                                                {{-- @php
                                                     $languages = [
                                                         ['name' => 'Français', 'alias' => 'fr'],
                                                         ['name' => 'Anglais', 'alias' => 'en'],
                                                         ['name' => 'Italien', 'alias' => 'it'],
                                                     ];
-                                                @endphp
+                                                @endphp --}}
                                                 <div class="row">
                                                     @foreach ($languages as $item)
                                                         <div class="col-auto">
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    id="langue_{{ $item['alias'] }}" name="languages[]"
+                                                                    id="langue_{{ $loop->index }}" name="languages[]"
                                                                     value="{{ $item['name'] }}"
                                                                     {{ isset($specification->objectif_site->languages) && !is_null($specification->objectif_site->languages) && in_array($item['name'], $specification->objectif_site->languages) ? 'checked' : '' }}>
                                                                 <label class="form-check-label"
-                                                                    for="langue_{{ $item['alias'] }}">{{ $item['name'] }}</label>
+                                                                    for="langue_{{ $loop->index }}">{{ $item['name'] }}</label>
                                                             </div>
                                                         </div>
                                                     @endforeach
@@ -1188,8 +1235,7 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-sm-6 col-md-10">
                                                 <div class="form-group">
                                                     <label for="exemples-sites" class="form-label">
-                                                        Exemples de sites avec commentaire : <span
-                                                            class="text-danger">*</span>
+                                                        Exemples de sites avec commentaire :
                                                     </label>
                                                     <textarea id="exemples-sites" class="form-control" name="sample_sites" rows="3"
                                                         placeholder="Ajoutez des exemples de sites que vous aimez avec des commentaires sur ce que vous aimez bien sur ces sites (éléments, animation, couleurs, architecture d’informations, fonctionnalités, etc.).">{{ isset($specification->existing_analysis->sample_sites) ? $specification->existing_analysis->sample_sites : '' }}</textarea>
@@ -1414,7 +1460,7 @@ site internet sur le cahier de charge de son site internet`
                                             <div class="col-12 mb-3">
                                                 <div class="col-sm-6 col-md-12">
                                                     <div class="form-group">
-                                                        <label class="form-label">Hébergement : <span
+                                                        <label class="form-label">Avez-vous un hébergement ? <span
                                                                 class="text-danger">*</span></label>
                                                         <div class="radio-group">
                                                             <div class="row">
@@ -2052,12 +2098,12 @@ site internet sur le cahier de charge de son site internet`
                                                                         'alias' => 'integration-textes-images',
                                                                         'name' => 'text_image_integration',
                                                                     ],
-                                                                    [
-                                                                        'title' =>
-                                                                            "Intégration d'autres pages (contact, catégories ...etc.)",
-                                                                        'alias' => 'integration-autres-pages',
-                                                                        'name' => 'other_pages_integration',
-                                                                    ],
+                                                                    // [
+                                                                    //     'title' =>
+                                                                    //         "Intégration d'autres pages (contact, catégories ...etc.)",
+                                                                    //     'alias' => 'integration-autres-pages',
+                                                                    //     'name' => 'other_pages_integration',
+                                                                    // ],
                                                                     [
                                                                         'title' => 'Optimisation de la version Mobile',
                                                                         'alias' => 'optimisation-version-mobile',
@@ -2090,7 +2136,7 @@ site internet sur le cahier de charge de son site internet`
                                                                     <td class="p-0 px-3 py-1">{{ $item['title'] }}</td>
                                                                     <td class="p-0 px-3 py-1">
                                                                         <input type="number"
-                                                                            class="form-control form-control h-100"
+                                                                            class="form-control form-control h-100 number-of-days"
                                                                             placeholder="00"
                                                                             id="nj-{{ $item['alias'] }}"
                                                                             value="{{ isset($specification->facturation->{'number_of_days_' . $item['name']}) ? $specification->facturation->{'number_of_days_' . $item['name']} : '' }}"
@@ -2120,7 +2166,7 @@ site internet sur le cahier de charge de son site internet`
                                                                     </td>
                                                                 </tr>
                                                             @endforeach
-                                                            <tr>
+                                                            {{-- <tr>
                                                                 <td class="p-0 px-3 py-1">Remise exceptionnelle </td>
                                                                 <td class="p-0 px-3 py-1" colspan="3">
                                                                     <div class="input-group input-group-merge">
@@ -2129,6 +2175,28 @@ site internet sur le cahier de charge de son site internet`
                                                                             placeholder="00" id="remise-exceptionnelle"
                                                                             value="{{ isset($specification->facturation->exceptional_discount) ? $specification->facturation->exceptional_discount : '' }}"
                                                                             name="exceptional_discount" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr> --}}
+                                                            <tr>
+                                                                <td class="p-0 px-3 py-1">Remise exceptionnelle </td>
+                                                                <td class="p-0 px-3 py-1" colspan="1">
+                                                                    <div class="input-group input-group-merge">
+                                                                        <span class="input-group-text">%</span>
+                                                                        <input type="number" class="form-control"
+                                                                            placeholder="00"
+                                                                            value="{{ isset($specification->facturation->exceptional_discount_percentage) ? $specification->facturation->exceptional_discount_percentage : '' }}"
+                                                                            id="remise-exceptionnelle-percentage"
+                                                                            name="exceptional_discount_percentage" />
+                                                                    </div>
+                                                                </td>
+                                                                <td class="p-0 px-3 py-1" colspan="2">
+                                                                    <div class="input-group input-group-merge">
+                                                                        <span class="input-group-text">€</span>
+                                                                        <input type="number" class="form-control"
+                                                                            placeholder="00" id="remise-exceptionnelle"
+                                                                            value="{{ isset($specification->facturation->exceptional_discount) ? $specification->facturation->exceptional_discount : '' }}"
+                                                                            readonly name="exceptional_discount" />
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -2144,6 +2212,18 @@ site internet sur le cahier de charge de son site internet`
                                                                     </div>
                                                                 </td>
                                                             </tr>
+                                                            <tr>
+                                                                <td class="p-0 px-3 py-1">Total des jours vendu </td>
+                                                                <td class="p-0 px-3 py-1" colspan="3">
+                                                                    <div class="input-group input-group-merge">
+                                                                        <input type="number"
+                                                                            value="{{ isset($specification->facturation->total_days) ? $specification->facturation->total_days : '' }}"
+                                                                            class="form-control total-total-days"
+                                                                            placeholder="00" id="total-total-days"
+                                                                            name="total_days" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
                                                         </thead>
                                                     </table>
                                                 </div>
@@ -2155,7 +2235,7 @@ site internet sur le cahier de charge de son site internet`
                                                 @endphp
 
                                                 @for ($i = 1; $i <= 10; $i++)
-                                                    <div class="row @if (!isset($specification->facturation->{'installment_' . $index . '_title'})) d-none @endif"
+                                                    <div class="row @if (!isset($specification->facturation->{'installment_' . $index . '_title'}) || $i==1) d-none @endif"
                                                         id="pourcentage-{{ $index }}"
                                                         @if (isset($specification->facturation->{'installment_' . $index . '_title'})) data-rr="{{ $specification->facturation->{'installment_' . $index . '_title'} }}" @endif>
                                                         <div
@@ -2255,7 +2335,6 @@ site internet sur le cahier de charge de son site internet`
                                                                 </div>
                                                                 <hr class="my-3">
                                                                 <div class="row">
-
                                                                     <div class="col-6 mb-3 mt-auto">
                                                                         <div class="form-group">
                                                                             <label class="form-label fs-4"
@@ -2270,7 +2349,7 @@ site internet sur le cahier de charge de son site internet`
                                                                                     id="pourcentage-operation-maintenance"
                                                                                     name="maintenance_percentage"
                                                                                     value="{{ isset($specification->facturation->maintenance_percentage) ? $specification->facturation->maintenance_percentage : '' }}"
-                                                                                    placeholder="00" value="20" />
+                                                                                    placeholder="00" />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -2284,8 +2363,30 @@ site internet sur le cahier de charge de son site internet`
                                                                                     id="pourcentage-value-maintenance"
                                                                                     name="maintenance_amount"
                                                                                     value="{{ isset($specification->facturation->maintenance_amount) ? $specification->facturation->maintenance_amount : '' }}"
-                                                                                    placeholder="00" value="20"
-                                                                                    readonly />
+                                                                                    placeholder="00" readonly />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr class="my-3">
+                                                                    <div class="row">
+                                                                        <div class="col-12 mb-3 mt-auto">
+                                                                            <div class="form-group">
+                                                                                <label class="form-label fs-4"
+                                                                                    id="label-pourcentage-operation-host"
+                                                                                    for="pourcentage-operation-host">
+                                                                                    <b> Hébergement :</b>
+                                                                                </label>
+                                                                                <div
+                                                                                    class="input-group input-group-merge">
+                                                                                    <span
+                                                                                        class="input-group-text">€</span>
+                                                                                    <input type="number"
+                                                                                        class="form-control"
+                                                                                        id="pourcentage-value-host"
+                                                                                        name="host_amount"
+                                                                                        value="{{ isset($specification->facturation->host_amount) ? $specification->facturation->host_amount : '' }}"
+                                                                                        placeholder="00" />
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -2338,6 +2439,7 @@ site internet sur le cahier de charge de son site internet`
                                     </div>
                                     <h5 class="text-primary text-center mt-5 mb-2">Préparation du cahier des charges</h5>
                                 </div>
+
 
                                 <div class="col-12 mt-5 mb-2 d-none" id="spec-done">
                                     <p class="text-center">
