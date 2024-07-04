@@ -103,9 +103,28 @@ Route::middleware([
   Route::post('specifications/step6', [SpecificationsController::class, 'storestep6'])->name('specifications.storestep5');
   // Route::get('specifications/step5/{id}', [SpecificationsController::class, 'showstep5'])->name('specifications.showstep5');
   Route::get('specifications/upload/{id}', [SpecificationsController::class, 'upload'])->name('specifications.upload');
-  // ressources
 
-  
+  //route CDC web  create
+  Route::get('specifications-web-site_vitrine/create', [SpecificationsController::class,'create_vitrine'])->name('specifications-web-site_vitrine.create');
+  Route::get('specifications-web-E_Commerce/create', [SpecificationsController::class,'create_E_commerce'])->name('specifications-web-E_Commerce.create');
+  Route::get('specifications-web-Blog/create', [SpecificationsController::class,'create_blog'])->name('specifications-web-Blog.create');
+  Route::get('specifications-web-Affiliation/create', [SpecificationsController::class,'create_affiliation'])->name('specifications-web-Affiliation.create');
+
+  //route CDC mobile create
+  Route::get('specifications-mobile-E_Commerce/create', [SpecificationsController::class,'create_App_E_commerce'])->name('specifications-mobile-E_Commerce.create');
+  Route::get('specifications-mobile-E_learning/create', [SpecificationsController::class,'create_E_learning'])->name('specifications-mobile-E_learning.create');
+
+  //route CDC web edit
+  Route::get('/specifications/{id}/edit', [SpecificationsController::class, 'edit'])->name('specifications.edit');
+  Route::get('specifications-web-site_vitrine/{id}/edit', [SpecificationsController::class,'edit_vitrine'])->name('specifications-web-site_vitrine.edit');
+  Route::get('specifications-web-E_Commerce/{id}/edit', [SpecificationsController::class,'edit_E_commerce'])->name('specifications-web-E_Commerce.edit');
+  Route::get('specifications-web-Blog/{id}/edit', [SpecificationsController::class,'edit_blog'])->name('specifications-web-Blog.edit');
+  Route::get('specifications-web-Affiliation/{id}/edit', [SpecificationsController::class,'edit_affiliation'])->name('specifications-web-Affiliation.edit');
+
+  //route CDC mobile edit
+  Route::get('specifications-mobile-m-E_Commerce/{id}/edit', [SpecificationsController::class, 'edit_App_E_commerce'])->name('specifications-mobile-E_Commerce.edit');
+  Route::get('specifications-mobile-E_learning/{id}/edit', [SpecificationsController::class,'edit_E_learning'])->name('specifications-mobile-E_learning.edit');
+  // ressources
   Route::resource('specifications', SpecificationsController::class);
 
 

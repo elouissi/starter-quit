@@ -407,6 +407,7 @@ function sweetAlertErrorMessage() {
 
     const FormValidation3 = FormValidation.formValidation(wizardValidationFormStep3, {
       fields: {
+        // Supprimer la validation pour le champ "competitors"
         competitors: {
           validators: {
             notEmpty: {
@@ -414,13 +415,6 @@ function sweetAlertErrorMessage() {
             }
           }
         },
-        // sample_sites: {
-        //   validators: {
-        //     notEmpty: {
-        //       message: 'Veuillez entrer des exemples de sites'
-        //     }
-        //   }
-        // },
         domain: {
           validators: {
             notEmpty: {

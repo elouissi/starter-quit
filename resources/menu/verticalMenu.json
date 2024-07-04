@@ -7,9 +7,15 @@
       "slug": "pages-home"
     },
     {
+      "url": "specifications",
+      "name": "Liste de cahier des charges",
+      "icon": "menu-icon tf-icons ti ti-book-2",
+      "slug": "specifications.index"
+    },
+    {
       "name": "Créer un Cahier des charges",
       "slug": "specifications",
-      "icon": "menu-icon tf-icons ti ti-book-2",
+      "icon": "menu-icon tf-icons ti ti-book",
       "submenu": [
         {
           "name": "Web",
@@ -31,9 +37,9 @@
               "slug": "specifications-web-Blog.create"
             },
             {
-              "url": "specifications-/create",
+              "url": "specifications-web-Affiliation/create",
               "name": "site d'affiliation",
-              "slug": "specifications-.create"
+              "slug": "specifications-web-Affiliation.create"
             }
           ]
         },
@@ -54,12 +60,6 @@
           ]
         }
       ]
-    },
-    {
-      "url": "specifications",
-      "name": "Liste de cahier des charges",
-      "icon": "menu-icon tf-icons ti ti-view-list",
-      "slug": "specifications.index"
     },
     {
       "name": "Utilisateurs",
